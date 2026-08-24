@@ -34,6 +34,8 @@ export default function PublicNav() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-label={item.label}
+                  title={item.label}
                   className="flex h-9 items-center gap-2 border px-2.5 text-xs transition-colors sm:px-3"
                   style={{
                     color: active ? "#f4f5f6" : "#7f8995",
@@ -48,7 +50,7 @@ export default function PublicNav() {
             })}
           </nav>
           <a
-            href="https://github.com/xieyuh03/global-market-intelligence"
+            href="https://github.com/xieyuh03/Global-market-intelligence"
             target="_blank"
             rel="noreferrer"
             title="查看源代码"
