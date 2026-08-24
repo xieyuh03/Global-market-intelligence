@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "snapshots": {
+    "marketFlows": {
+      "generatedAt": "2026-08-24T09:28:13.529Z",
+      "marketCount": 12
+    },
+    "mainlandLedger": {
+      "latestDate": "2026-08-06",
+      "status": "sanitized_snapshot"
+    },
+    "hongKongLedger": {
+      "latestDate": "2026-08-06",
+      "status": "sanitized_snapshot"
+    }
+  },
+  "generatedAt": "2026-08-24T09:28:13.540Z",
+  "sourceRevision": null
+}
