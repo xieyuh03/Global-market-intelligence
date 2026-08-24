@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "以国家、市场和共同因子为线索观察全球风险偏好与资本方向。",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN" data-scroll-behavior="smooth">
       <body>

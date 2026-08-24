@@ -100,7 +100,7 @@ type CapitalVisual = {
 
 const WIDTH = 1320;
 const HEIGHT = 650;
-const topology = atlas as unknown as Topology<{ countries: GeometryCollection }>; 
+const topology = atlas as unknown as Topology<{ countries: GeometryCollection }>;
 const countries = feature(topology, topology.objects.countries) as unknown as FeatureCollection<Geometry, AtlasProperties>;
 const projection = geoNaturalEarth1().fitExtent([[28, 28], [WIDTH - 28, HEIGHT - 28]], countries);
 const drawPath = geoPath(projection);
