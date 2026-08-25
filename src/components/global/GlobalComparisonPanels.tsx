@@ -103,7 +103,7 @@ function signed(value: number, digits = 1, suffix = "%") {
 function directionColor(value: number) {
   if (value > 0) return "#e7685d";
   if (value < 0) return "#55a8a1";
-  return "#8b949e";
+  return "#aab4be";
 }
 
 function quadrantFor(market: GlobalComparisonMarket): QuadrantKey {

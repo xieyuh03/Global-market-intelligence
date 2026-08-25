@@ -117,9 +117,9 @@ const STATUS_COLORS: Record<string, string> = {
   contracting: "#55a8a1",
   neutral: "#9199a3",
   partial: "#a88d60",
-  unavailable: "#626b75",
+  unavailable: "#8f9aa5",
   live: "#55a8a1",
-  planned: "#555e68",
+  planned: "#87939f",
 };
 
 const TOOLTIP_STYLE = {
@@ -143,7 +143,7 @@ function formatCapital(value: number | null | undefined, unit = "CNY", showPosit
 }
 
 function statusColor(status: string) {
-  return STATUS_COLORS[status] ?? "#7f8995";
+  return STATUS_COLORS[status] ?? "#aab4be";
 }
 
 function metricMap(metrics: CapitalMetric[]) {
@@ -289,7 +289,7 @@ export default function GlobalCapitalLedgerPanel({ preferredMarket }: { preferre
                 key={code}
                 onClick={() => setMarket(code)}
                 className="px-3 py-1.5 rounded-md text-xs transition-colors"
-                style={{ background: market === code ? "rgba(255,255,255,0.10)" : "transparent", color: market === code ? "#fff" : "#737d87" }}
+                style={{ background: market === code ? "rgba(255,255,255,0.10)" : "transparent", color: market === code ? "#fff" : "#a0abb5" }}
               >
                 {code === "CN-A" ? "A股" : "港股"}
               </button>
@@ -341,12 +341,12 @@ export default function GlobalCapitalLedgerPanel({ preferredMarket }: { preferre
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={chartData} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
-                    <XAxis dataKey="date" tick={{ fill: "#616a74", fontSize: 10 }} axisLine={false} tickLine={false} minTickGap={24} />
-                    <YAxis yAxisId="left" tick={{ fill: "#616a74", fontSize: 10 }} axisLine={false} tickLine={false} width={55} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fill: "#616a74", fontSize: 10 }} axisLine={false} tickLine={false} width={50} />
+                    <XAxis dataKey="date" tick={{ fill: "#a3adb7", fontSize: 10 }} axisLine={false} tickLine={false} minTickGap={24} />
+                    <YAxis yAxisId="left" tick={{ fill: "#a3adb7", fontSize: 10 }} axisLine={false} tickLine={false} width={55} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fill: "#a3adb7", fontSize: 10 }} axisLine={false} tickLine={false} width={50} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={{ color: "#8d96a0" }} />
                     <ReferenceLine yAxisId="right" y={0} stroke="rgba(255,255,255,0.16)" />
-                    <Bar yAxisId="right" dataKey="daily" name={market === "CN-A" ? "融资余额变化(亿)" : "当日净买入(亿)"} fill="#73808c" opacity={0.5} />
+                    <Bar yAxisId="right" dataKey="daily" name={market === "CN-A" ? "融资余额变化(亿)" : "当日净买入(亿)"} fill="#8795a1" opacity={0.65} />
                     <Line yAxisId="left" type="monotone" dataKey={market === "CN-A" ? "balance" : "cumulative"} name={market === "CN-A" ? "融资余额(万亿)" : "累计净买入(亿)"} stroke="#d49a54" strokeWidth={2} dot={false} />
                   </ComposedChart>
                 </ResponsiveContainer>

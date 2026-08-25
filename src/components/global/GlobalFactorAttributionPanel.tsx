@@ -58,10 +58,10 @@ function signed(value: number | null, digits = 2, suffix = "%") {
 }
 
 function directionColor(value: number | null) {
-  if (value == null) return "#737d87";
+  if (value == null) return "#9ba7b3";
   if (value > 0) return "#d49a54";
   if (value < 0) return "#55a8a1";
-  return "#8b949e";
+  return "#aab4be";
 }
 
 function confidenceLabel(confidence: MarketDecomposition["confidence"]) {

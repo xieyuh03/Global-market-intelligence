@@ -157,7 +157,7 @@ function signalColor(value: number, scale: "score" | "momentum" = "score") {
   if (value >= mild) return "#d49a54";
   if (value <= -strong) return "#39a77c";
   if (value <= -mild) return "#55a8a1";
-  return "#7f8995";
+  return "#aab4be";
 }
 
 function ledgerMarketFor(marketId: string): LedgerMarket | null {
@@ -347,7 +347,7 @@ export default function GlobalSituationWorkspace() {
       : null;
 
   return (
-    <div className="pb-16">
+    <div className="global-intelligence pb-16">
       <header className="mb-7">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-px bg-white/20" />
@@ -390,7 +390,7 @@ export default function GlobalSituationWorkspace() {
               title={layer.decisionQuestion}
               className="h-10 shrink-0 flex items-center gap-2 px-3 rounded-lg border text-xs transition-colors"
               style={{
-                color: active ? "#f4f5f6" : "#7f8995",
+                color: active ? "#f4f5f6" : "#a8b2bc",
                 borderColor: active ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.07)",
                 background: active ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
               }}
@@ -535,7 +535,7 @@ export default function GlobalSituationWorkspace() {
                 <h2 className="text-2xl font-semibold text-white">{selectedCountry?.label ?? "选择国家"}</h2>
                 <p className="text-xs text-gray-500 mt-2">{activeLayer.label} · {activeLayer.cadence}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg grid place-items-center border border-white/[0.08]" style={{ color: selectedValue == null ? "#66707a" : signalColor(selectedValue, selectedScale) }}>
+              <div className="w-10 h-10 rounded-lg grid place-items-center border border-white/[0.08]" style={{ color: selectedValue == null ? "#8f9aa5" : signalColor(selectedValue, selectedScale) }}>
                 {selectedValue == null ? <Landmark size={19} /> : selectedValue >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}
               </div>
             </div>
@@ -549,7 +549,7 @@ export default function GlobalSituationWorkspace() {
                     onClick={() => setSelectedMarketId(market.id)}
                     className="px-2.5 py-1.5 rounded-md text-[11px] border transition-colors"
                     style={{
-                      color: selectedMarket?.id === market.id ? "#fff" : "#78828d",
+                      color: selectedMarket?.id === market.id ? "#fff" : "#a0abb5",
                       borderColor: selectedMarket?.id === market.id ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.07)",
                       background: selectedMarket?.id === market.id ? "rgba(255,255,255,0.08)" : "transparent",
                     }}
@@ -702,7 +702,7 @@ export default function GlobalSituationWorkspace() {
               {GLOBAL_LAYERS.map((layer) => (
                 <button type="button" key={layer.id} onClick={() => setLayerId(layer.id)} className="w-full flex items-center justify-between gap-3 py-2 text-left">
                   <span className="text-xs text-gray-400">{layer.label}</span>
-                  <span className="text-[10px]" style={{ color: layer.status === "live" ? "#55a8a1" : "#555e68" }}>{layer.status === "live" ? "运行中" : layer.cadence}</span>
+                  <span className="text-[10px]" style={{ color: layer.status === "live" ? "#55a8a1" : "#9ba7b3" }}>{layer.status === "live" ? "运行中" : layer.cadence}</span>
                 </button>
               ))}
             </div>

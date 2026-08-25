@@ -96,6 +96,7 @@ export default function Card({
   const { background, borderColor } = VARIANT_STYLE[variant];
   return (
     <div
+      data-ui-card="true"
       onClick={onClick}
       className={cn(
         "backdrop-blur-sm rounded-2xl border",

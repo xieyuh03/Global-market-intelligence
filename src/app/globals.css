@@ -90,3 +90,34 @@ select {
 .recharts-surface *:focus-visible {
 	outline: none !important;
 }
+
+/* Global intelligence is dense, so its secondary text needs stronger contrast. */
+.global-intelligence {
+	color: #eef2f5;
+}
+
+.global-intelligence .text-gray-700 { color: #8d99a5 !important; }
+.global-intelligence .text-gray-600 { color: #9ba7b3 !important; }
+.global-intelligence .text-gray-500 { color: #aeb8c2 !important; }
+.global-intelligence .text-gray-400 { color: #c4cbd2 !important; }
+.global-intelligence .text-gray-300 { color: #dde2e6 !important; }
+.global-intelligence .text-gray-200 { color: #eef1f4 !important; }
+
+.global-intelligence [data-ui-card="true"] {
+	background: linear-gradient(135deg, rgba(28, 35, 39, 0.98), rgba(17, 22, 25, 0.98)) !important;
+	border-color: rgba(255, 255, 255, 0.16) !important;
+	box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+}
+
+.global-intelligence .bg-\[\#0b0d0f\] {
+	background-color: #141a1e !important;
+}
+
+.global-intelligence [class*="border-white"],
+.global-intelligence [class*="divide-white"] > * {
+	border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.global-intelligence .recharts-cartesian-axis-tick-value {
+	fill: #a3adb7 !important;
+}
