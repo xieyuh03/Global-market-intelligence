@@ -13,6 +13,7 @@
 公开站始终使用只读 JSON 快照：
 
 - `market-flows.json`: Yahoo Finance 区域 ETF 与共同因子模型，每个工作日自动刷新
+- `global-context.json`: 黄金储备、能源通道、贸易结构和事件/地缘监测图层
 - `global-capital-CN-A.json`: A 股公开资金账本的裁剪快照
 - `global-capital-HK.json`: 港股南向资金账本的裁剪快照
 

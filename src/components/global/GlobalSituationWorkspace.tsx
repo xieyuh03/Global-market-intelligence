@@ -27,13 +27,19 @@ import {
 import Card from "@/components/ui/Card";
 import GlobalCapitalLedgerPanel from "@/components/global/GlobalCapitalLedgerPanel";
 import GlobalComparisonPanels, { type GlobalComparisonMarket } from "@/components/global/GlobalComparisonPanels";
+import GlobalContextPanel from "@/components/global/GlobalContextPanel";
 import GlobalFactorAttributionPanel, { type GlobalFactorModel } from "@/components/global/GlobalFactorAttributionPanel";
 import {
   GLOBAL_LAYERS,
   getGlobalLayer,
   type GlobalLayerId,
 } from "@/lib/global-intelligence/layers";
-import { capitalLedgerUrl, marketFlowsUrl, withCurrentFreshness } from "@/lib/data-source";
+import type {
+  ContextCountry,
+  ContextLayerId,
+  GlobalContextResponse,
+} from "@/lib/global-intelligence/context-data";
+import { capitalLedgerUrl, globalContextUrl, marketFlowsUrl, withCurrentFreshness } from "@/lib/data-source";
 
 interface AtlasProperties {
   name?: string;
@@ -142,12 +148,23 @@ const LAYER_ICONS: Record<GlobalLayerId, LucideIcon> = {
   geopolitics: ShieldAlert,
 };
 
+const CONTEXT_LAYER_IDS = new Set<GlobalLayerId>(["gold", "energy", "trade", "events", "geopolitics"]);
+
+function isContextLayer(id: GlobalLayerId): id is ContextLayerId {
+  return CONTEXT_LAYER_IDS.has(id);
+}
+
 function countryLabel(id: string, fallback?: string) {
   return COUNTRY_LABELS[id] ?? fallback ?? `国家 ${id}`;
 }
 
 function signed(value: number, digits = 1) {
   return `${value > 0 ? "+" : ""}${value.toFixed(digits)}%`;
+}
+
+function contextMetric(value: number | null | undefined, unit = "") {
+  if (value == null || !Number.isFinite(value)) return "--";
+  return `${value > 0 && unit === "吨" ? "+" : ""}${value.toLocaleString("zh-CN", { maximumFractionDigits: 2 })}${unit ? ` ${unit}` : ""}`;
 }
 
 function signalColor(value: number, scale: "score" | "momentum" = "score") {
@@ -158,6 +175,32 @@ function signalColor(value: number, scale: "score" | "momentum" = "score") {
   if (value <= -strong) return "#39a77c";
   if (value <= -mild) return "#55a8a1";
   return "#aab4be";
+}
+
+function contextSignalColor(layerId: ContextLayerId, value: number) {
+  if (layerId === "gold") {
+    if (value >= 15) return "#d8aa55";
+    if (value > 0) return "#b78c4b";
+    if (value <= -15) return "#55a8a1";
+    if (value < 0) return "#6e9696";
+    return "#7f8b95";
+  }
+  if (layerId === "energy") {
+    if (value <= -60) return "#e7685d";
+    if (value < -20) return "#d49a54";
+    if (value >= 60) return "#55a8a1";
+    if (value > 20) return "#70a18f";
+    return "#7f8b95";
+  }
+  if (layerId === "trade") {
+    if (value >= 65) return "#d49a54";
+    if (value >= 35) return "#a89969";
+    return "#718792";
+  }
+  if (value >= 70) return "#e7685d";
+  if (value >= 45) return "#d49a54";
+  if (value > 0) return "#8c8994";
+  return "#7f8b95";
 }
 
 function ledgerMarketFor(marketId: string): LedgerMarket | null {
@@ -202,13 +245,16 @@ function EvidenceRow({ label, value, tone }: { label: string; value: string; ton
 
 export default function GlobalSituationWorkspace() {
   const [data, setData] = useState<FlowResponse | null>(null);
+  const [contextData, setContextData] = useState<GlobalContextResponse | null>(null);
   const [ledgers, setLedgers] = useState<Partial<Record<LedgerMarket, LedgerSnapshot>>>({});
   const [layerId, setLayerId] = useState<GlobalLayerId>("capital");
   const [selectedCountryId, setSelectedCountryId] = useState("840");
   const [selectedMarketId, setSelectedMarketId] = useState<string | null>("us");
   const [hoveredCountryId, setHoveredCountryId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [contextLoading, setContextLoading] = useState(true);
   const [error, setError] = useState("");
+  const [contextError, setContextError] = useState("");
 
   const activeLayer = getGlobalLayer(layerId);
 
@@ -230,8 +276,27 @@ export default function GlobalSituationWorkspace() {
     }
   }
 
+  async function loadContextData() {
+    setContextLoading(true);
+    setContextError("");
+    try {
+      const response = await fetch(globalContextUrl(), { cache: "no-store" });
+      if (!response.ok) throw new Error("资源与事件图层暂时不可用");
+      setContextData(await response.json() as GlobalContextResponse);
+    } catch (reason) {
+      setContextError(reason instanceof Error ? reason.message : "资源与事件图层加载失败");
+    } finally {
+      setContextLoading(false);
+    }
+  }
+
   useEffect(() => {
     const timer = window.setTimeout(() => void loadData(), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void loadContextData(), 0);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -255,6 +320,17 @@ export default function GlobalSituationWorkspace() {
   }, []);
 
   const markets = useMemo(() => data?.markets ?? [], [data?.markets]);
+  const marketLayer = layerId === "capital" || layerId === "equities";
+  const activeContextLayer = isContextLayer(layerId) ? contextData?.layers[layerId] ?? null : null;
+  const contextCountriesById = useMemo(() => {
+    const result = new Map<string, ContextCountry[]>();
+    for (const country of activeContextLayer?.countries ?? []) {
+      const list = result.get(country.countryId) ?? [];
+      list.push(country);
+      result.set(country.countryId, list);
+    }
+    return result;
+  }, [activeContextLayer]);
   const marketsByCountry = useMemo(() => {
     const result = new Map<string, MarketFlow[]>();
     for (const market of markets) {
@@ -279,6 +355,7 @@ export default function GlobalSituationWorkspace() {
   }), [layerId, markets]);
 
   const selectedCountry = countryOptions.find((country) => country.id === selectedCountryId);
+  const selectedContextCountry = contextCountriesById.get(selectedCountryId)?.[0] ?? null;
   const countryMarkets = marketsByCountry.get(selectedCountryId) ?? [];
   const selectedMarket = markets.find((market) => market.id === selectedMarketId)
     ?? countryMarkets[0]
@@ -309,7 +386,14 @@ export default function GlobalSituationWorkspace() {
 
   const countryValues = useMemo(() => {
     const result = new Map<string, number>();
-    if (activeLayer.status !== "live") return result;
+    if (activeContextLayer) {
+      for (const [countryId, list] of contextCountriesById) {
+        const values = list.flatMap((country) => country.signalValue == null ? [] : [country.signalValue]);
+        if (values.length) result.set(countryId, values.reduce((sum, value) => sum + value, 0) / values.length);
+      }
+      return result;
+    }
+    if (!marketLayer || activeLayer.status !== "live") return result;
     for (const [countryId, list] of marketsByCountry) {
       const values = list.map((market) => layerId === "equities"
         ? market.return20d
@@ -317,7 +401,7 @@ export default function GlobalSituationWorkspace() {
       result.set(countryId, values.reduce((sum, value) => sum + value, 0) / values.length);
     }
     return result;
-  }, [activeLayer.status, capitalVisuals, layerId, marketsByCountry]);
+  }, [activeContextLayer, activeLayer.status, capitalVisuals, contextCountriesById, layerId, marketLayer, marketsByCountry]);
 
   const conflictCount = markets.filter((market) => market.return5d * market.return20d < 0).length;
   const riskRegime = !data ? "等待数据"
@@ -345,6 +429,12 @@ export default function GlobalSituationWorkspace() {
   const preferredCapitalMarket = selectedMarket?.id === "cn" ? "CN-A" as const
     : selectedMarket?.id === "hk" ? "HK" as const
       : null;
+  const contextFocus = activeContextLayer
+    ? [...activeContextLayer.countries]
+      .filter((country) => country.signalValue != null)
+      .sort((left, right) => Math.abs(right.signalValue ?? 0) - Math.abs(left.signalValue ?? 0))[0]
+    : null;
+  const selectedDeskValue = activeContextLayer ? selectedContextCountry?.signalValue ?? null : selectedValue;
 
   return (
     <div className="global-intelligence pb-16">
@@ -364,15 +454,19 @@ export default function GlobalSituationWorkspace() {
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
               <p className="text-[10px] uppercase tracking-wider text-gray-600">Data freshness</p>
-              <p className="text-xs text-gray-400 mt-1">{data ? new Date(data.generatedAt).toLocaleString("zh-CN") : "等待更新"}</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {activeContextLayer
+                  ? new Date(activeContextLayer.generatedAt).toLocaleString("zh-CN")
+                  : data ? new Date(data.generatedAt).toLocaleString("zh-CN") : "等待更新"}
+              </p>
             </div>
             <button
               type="button"
-              onClick={() => void loadData()}
+              onClick={() => { void loadData(); void loadContextData(); }}
               title="刷新全球态势数据"
               className="w-10 h-10 grid place-items-center rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
             >
-              <RefreshCw size={17} className={loading ? "animate-spin" : ""} />
+              <RefreshCw size={17} className={loading || contextLoading ? "animate-spin" : ""} />
             </button>
           </div>
         </div>
@@ -382,6 +476,7 @@ export default function GlobalSituationWorkspace() {
         {GLOBAL_LAYERS.map((layer) => {
           const Icon = LAYER_ICONS[layer.id];
           const active = layer.id === layerId;
+          const contextStatus = isContextLayer(layer.id) ? contextData?.layers[layer.id]?.status : null;
           return (
             <button
               type="button"
@@ -397,21 +492,35 @@ export default function GlobalSituationWorkspace() {
             >
               <Icon size={15} />
               <span>{layer.label}</span>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: layer.status === "live" ? "#55a8a1" : "#424a53" }} />
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: contextStatus === "partial" ? "#d49a54" : layer.status === "live" ? "#55a8a1" : "#424a53" }}
+              />
             </button>
           );
         })}
       </nav>
 
-      {error ? (
-        <div className="mb-6 px-4 py-3 rounded-lg border border-red-400/20 bg-red-400/[0.05] text-sm text-red-300">{error}</div>
+      {error || contextError ? (
+        <div className="mb-6 px-4 py-3 rounded-lg border border-red-400/20 bg-red-400/[0.05] text-sm text-red-300">{error || contextError}</div>
       ) : null}
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-px rounded-xl overflow-hidden border border-white/10 bg-white/10 mb-6" aria-label="全球态势摘要">
-        <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="当前环境" value={activeLayer.status === "live" ? riskRegime : "等待接入"} tone={data ? signalColor(data.summary.averageScore) : undefined} /></div>
-        <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="领导市场" value={activeLayer.status === "live" ? ranked[0]?.shortName ?? "--" : "--"} tone="#d49a54" /></div>
-        <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="强弱差" value={activeLayer.status === "live" ? String(leadershipGap) : "--"} tone="#aeb4bc" /></div>
-        <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="国家底座" value={`${countries.features.length} 国`} tone="#55a8a1" /></div>
+        {activeContextLayer ? (
+          <>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="数据状态" value={activeContextLayer.status === "ready" ? "完整" : "部分降级"} tone={activeContextLayer.status === "ready" ? "#55a8a1" : "#d49a54"} /></div>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="结构焦点" value={contextFocus?.name ?? activeContextLayer.signals[0]?.label ?? "待监测"} tone="#d49a54" /></div>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="结构覆盖" value={`${activeContextLayer.countries.length} 国 · ${activeContextLayer.routes.length} 通道`} tone="#aeb4bc" /></div>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="数据截至" value={activeContextLayer.asOf} tone="#55a8a1" /></div>
+          </>
+        ) : (
+          <>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="当前环境" value={activeLayer.status === "live" ? riskRegime : "等待接入"} tone={data ? signalColor(data.summary.averageScore) : undefined} /></div>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="领导市场" value={activeLayer.status === "live" ? ranked[0]?.shortName ?? "--" : "--"} tone="#d49a54" /></div>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="强弱差" value={activeLayer.status === "live" ? String(leadershipGap) : "--"} tone="#aeb4bc" /></div>
+            <div className="bg-[#0b0d0f] p-4 sm:p-5"><Metric label="国家底座" value={`${countries.features.length} 国`} tone="#55a8a1" /></div>
+          </>
+        )}
       </section>
 
       <section className="grid xl:grid-cols-[minmax(0,1fr)_350px] gap-6 items-start">
@@ -460,7 +569,9 @@ export default function GlobalSituationWorkspace() {
                   const value = countryValues.get(countryId);
                   const selected = countryId === selectedCountryId;
                   const hovered = countryId === hoveredCountryId;
-                  const tone = value == null ? "#12181c" : signalColor(value, selectedScale);
+                  const tone = value == null
+                    ? "#12181c"
+                    : activeContextLayer ? contextSignalColor(activeContextLayer.id, value) : signalColor(value, selectedScale);
                   return (
                     <path
                       key={countryId}
@@ -480,7 +591,7 @@ export default function GlobalSituationWorkspace() {
                 })}
               </g>
 
-              {activeLayer.status === "live" ? (
+              {marketLayer && activeLayer.status === "live" ? (
                 <g>
                   {markets.map((market) => {
                     const point = projection(market.coordinates);
@@ -514,16 +625,39 @@ export default function GlobalSituationWorkspace() {
                   })}
                 </g>
               ) : null}
+
+              {activeContextLayer?.routes.some((route) => route.coordinates) ? (
+                <g>
+                  {activeContextLayer.routes.map((route) => {
+                    if (!route.coordinates) return null;
+                    const point = projection(route.coordinates);
+                    if (!point) return null;
+                    const color = route.risk === "critical" ? "#e7685d" : route.risk === "elevated" ? "#d49a54" : "#aab4be";
+                    const radius = 5 + Math.min(6, (route.share ?? route.value ?? 0) / 5);
+                    return (
+                      <g key={route.id} transform={`translate(${point[0]},${point[1]})`}>
+                        <circle r={radius + 8} fill={color} opacity="0.10" filter="url(#situation-glow)" />
+                        <circle r={radius} fill="#080a0c" stroke={color} strokeWidth="2" />
+                        <circle r={Math.max(2.5, radius - 4)} fill={color} />
+                        <text x="0" y={radius + 17} textAnchor="middle" fill="#c4cbd2" fontSize="9">{route.name}</text>
+                        <title>{`${route.name} · ${route.value ?? "--"} ${route.unit} · ${route.detail}`}</title>
+                      </g>
+                    );
+                  })}
+                </g>
+              ) : null}
             </svg>
           </div>
 
           <div className="px-4 sm:px-5 py-3 border-t border-white/[0.08] flex items-center justify-between gap-4 text-[10px] text-gray-600 flex-wrap">
             <span>{activeLayer.sourceHint}</span>
-            <span>{activeLayer.status === "live"
-              ? layerId === "capital"
-                ? `真实账本 ${capitalEvidenceCounts.ledger} · ETF代理 ${capitalEvidenceCounts.proxy} · 过期账本 ${capitalEvidenceCounts.stale}`
-                : `覆盖 ${data?.summary.marketCount ?? 0} 个市场 · 20日价格动量`
-              : "图层接口待接入"}</span>
+            <span>{activeContextLayer
+              ? `国家数据 ${activeContextLayer.countries.length} · 通道 ${activeContextLayer.routes.length} · ${activeContextLayer.status === "ready" ? "完整" : "部分降级"}`
+              : activeLayer.status === "live"
+                ? layerId === "capital"
+                  ? `真实账本 ${capitalEvidenceCounts.ledger} · ETF代理 ${capitalEvidenceCounts.proxy} · 过期账本 ${capitalEvidenceCounts.stale}`
+                  : `覆盖 ${data?.summary.marketCount ?? 0} 个市场 · 20日价格动量`
+                : "图层接口待接入"}</span>
           </div>
         </Card>
 
@@ -532,15 +666,18 @@ export default function GlobalSituationWorkspace() {
             <div className="flex items-start justify-between gap-4 mb-5">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-600 mb-2">Country desk</p>
-                <h2 className="text-2xl font-semibold text-white">{selectedCountry?.label ?? "选择国家"}</h2>
+                <h2 className="text-2xl font-semibold text-white">{selectedContextCountry?.name ?? selectedCountry?.label ?? "选择国家"}</h2>
                 <p className="text-xs text-gray-500 mt-2">{activeLayer.label} · {activeLayer.cadence}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg grid place-items-center border border-white/[0.08]" style={{ color: selectedValue == null ? "#8f9aa5" : signalColor(selectedValue, selectedScale) }}>
-                {selectedValue == null ? <Landmark size={19} /> : selectedValue >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}
+              <div
+                className="w-10 h-10 rounded-lg grid place-items-center border border-white/[0.08]"
+                style={{ color: selectedDeskValue == null ? "#8f9aa5" : activeContextLayer ? contextSignalColor(activeContextLayer.id, selectedDeskValue) : signalColor(selectedDeskValue, selectedScale) }}
+              >
+                {selectedDeskValue == null ? <Landmark size={19} /> : selectedDeskValue >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}
               </div>
             </div>
 
-            {countryMarkets.length > 1 && activeLayer.status === "live" ? (
+            {marketLayer && countryMarkets.length > 1 && activeLayer.status === "live" ? (
               <div className="flex gap-1.5 mb-5">
                 {countryMarkets.map((market) => (
                   <button
@@ -560,7 +697,46 @@ export default function GlobalSituationWorkspace() {
               </div>
             ) : null}
 
-            {activeLayer.status === "live" && selectedMarket ? (
+            {activeContextLayer ? selectedContextCountry ? (
+              <div className="space-y-5">
+                <div className="border-l-2 pl-4" style={{ borderColor: selectedDeskValue == null ? "#8f9aa5" : contextSignalColor(activeContextLayer.id, selectedDeskValue) }}>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-600 mb-1.5">结构角色</p>
+                  <p className="text-sm font-medium text-gray-200">{selectedContextCountry.role}</p>
+                  <p className="mt-2 text-xs leading-5 text-gray-500">{selectedContextCountry.detail}</p>
+                </div>
+
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-600 mb-2">可验证证据</p>
+                  <EvidenceRow label={selectedContextCountry.metricLabel} value={contextMetric(selectedContextCountry.metricValue, selectedContextCountry.metricUnit)} />
+                  {selectedContextCountry.secondaryLabel ? (
+                    <EvidenceRow
+                      label={selectedContextCountry.secondaryLabel}
+                      value={contextMetric(selectedContextCountry.secondaryValue, selectedContextCountry.secondaryUnit)}
+                      tone={(selectedContextCountry.secondaryValue ?? 0) > 0 ? "#d49a54" : (selectedContextCountry.secondaryValue ?? 0) < 0 ? "#55a8a1" : undefined}
+                    />
+                  ) : null}
+                  <EvidenceRow label="证据类型" value={selectedContextCountry.evidence === "official" ? "官方披露" : selectedContextCountry.evidence === "model" ? "结构模型" : "监测代理"} />
+                  <EvidenceRow label="数据截至" value={selectedContextCountry.asOf} />
+                </div>
+
+                <div className="pt-4 border-t border-white/[0.08]">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-600 mb-2">待确认</p>
+                  <p className="text-xs text-gray-500 leading-5">{activeContextLayer.caveat}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-5">
+                <div className="border-l-2 border-[#d49a54]/50 pl-4">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-600 mb-1.5">全局判断</p>
+                  <p className="text-sm text-gray-200 leading-6">{activeContextLayer.decision.headline}</p>
+                  <p className="mt-2 text-xs text-gray-500 leading-5">{activeContextLayer.decision.summary}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-600 mb-2">该国状态</p>
+                  <p className="text-xs text-gray-500 leading-5">该图层没有该国的可验证结构值，地图保持无着色，不以全球新闻或价格代理补值。</p>
+                </div>
+              </div>
+            ) : activeLayer.status === "live" && selectedMarket ? (
               <div className="space-y-5">
                 <div className="border-l-2 pl-4" style={{ borderColor: signalColor(selectedValue ?? 0, selectedScale) }}>
                   <p className="text-[10px] uppercase tracking-wider text-gray-600 mb-1.5">当前判断</p>
@@ -617,16 +793,24 @@ export default function GlobalSituationWorkspace() {
 
           <div className="px-1">
             <div className="flex items-center gap-2 mb-3 text-xs text-gray-400"><Database size={14} /><span>证据等级</span></div>
-            <div className="space-y-2 text-[11px]">
-              <div className="flex items-center justify-between"><span className="text-gray-600">高频方向</span><span className="text-[#55a8a1]">已接入</span></div>
-              <div className="flex items-center justify-between"><span className="text-gray-600">真实跨境流量</span><span className="text-gray-500">待确认</span></div>
-              <div className="flex items-center justify-between"><span className="text-gray-600">事件因果归因</span><span className="text-gray-500">未接入</span></div>
-            </div>
+            {activeContextLayer ? (
+              <div className="space-y-2 text-[11px]">
+                <div className="flex items-center justify-between"><span className="text-gray-600">官方结构来源</span><span className="text-[#55a8a1]">{activeContextLayer.sources.filter((source) => source.evidence === "official").length} 个</span></div>
+                <div className="flex items-center justify-between"><span className="text-gray-600">市场驱动代理</span><span className="text-[#d49a54]">{activeContextLayer.indicators.length} 个</span></div>
+                <div className="flex items-center justify-between"><span className="text-gray-600">媒体/模型层</span><span className="text-gray-400">{activeContextLayer.status === "ready" ? "可用" : "部分降级"}</span></div>
+              </div>
+            ) : (
+              <div className="space-y-2 text-[11px]">
+                <div className="flex items-center justify-between"><span className="text-gray-600">高频方向</span><span className="text-[#55a8a1]">已接入</span></div>
+                <div className="flex items-center justify-between"><span className="text-gray-600">真实跨境流量</span><span className="text-gray-500">待确认</span></div>
+                <div className="flex items-center justify-between"><span className="text-gray-600">事件因果归因</span><span className="text-gray-500">未接入</span></div>
+              </div>
+            )}
           </div>
         </aside>
       </section>
 
-      {data?.factorModel ? (
+      {marketLayer && data?.factorModel ? (
         <GlobalFactorAttributionPanel
           model={data.factorModel}
           selectedMarketId={selectedMarket?.id ?? null}
@@ -641,7 +825,7 @@ export default function GlobalSituationWorkspace() {
         <GlobalCapitalLedgerPanel preferredMarket={preferredCapitalMarket} />
       ) : null}
 
-      {activeLayer.status === "live" ? (
+      {marketLayer && activeLayer.status === "live" ? (
         <GlobalComparisonPanels
           markets={markets}
           selectedMarketId={selectedMarket?.id ?? null}
@@ -652,7 +836,16 @@ export default function GlobalSituationWorkspace() {
         />
       ) : null}
 
-      <section className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-6 mt-6">
+      {activeContextLayer ? (
+        <GlobalContextPanel
+          layer={activeContextLayer}
+          selectedCountryId={selectedCountryId}
+          onSelectCountry={chooseCountry}
+        />
+      ) : null}
+
+      {marketLayer ? (
+        <section className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-6 mt-6">
         <Card padding="none" className="overflow-hidden">
           <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-sm text-white"><Activity size={16} /><span>全球强弱序列</span></div>
@@ -708,11 +901,12 @@ export default function GlobalSituationWorkspace() {
             </div>
           </div>
         </div>
-      </section>
+        </section>
+      ) : null}
 
       <footer className="mt-6 flex items-center justify-between gap-4 flex-wrap text-[10px] text-gray-700">
-        <span>{data?.methodology ?? "高频市场代理数据等待加载"}</span>
-        <span>{data?.source ?? "StockBase Global Intelligence"}</span>
+        <span>{activeContextLayer?.methodology ?? data?.methodology ?? "高频市场代理数据等待加载"}</span>
+        <span>{activeContextLayer ? activeContextLayer.sources.map((source) => source.organization).join(" · ") : data?.source ?? "StockBase Global Intelligence"}</span>
       </footer>
     </div>
   );

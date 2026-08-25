@@ -85,8 +85,9 @@ async function readManifest() {
 }
 
 async function main() {
-const [marketFlows, mainlandLedger, hongKongLedger] = await Promise.all([
+const [marketFlows, globalContext, mainlandLedger, hongKongLedger] = await Promise.all([
   fetchJson("/api/market-flows"),
+  fetchJson("/api/global-context"),
   fetchJson("/api/global-capital?market=CN-A&days=120"),
   fetchJson("/api/global-capital?market=HK&days=120"),
 ]);
@@ -101,6 +102,7 @@ const snapshots = existingManifest.snapshots && typeof existingManifest.snapshot
 await mkdir(dataDir, { recursive: true });
 await Promise.all([
   writeFile(path.join(dataDir, "market-flows.json"), `${JSON.stringify(sanitizedMarketFlows)}\n`),
+  writeFile(path.join(dataDir, "global-context.json"), `${JSON.stringify(globalContext)}\n`),
   writeFile(path.join(dataDir, "global-capital-CN-A.json"), `${JSON.stringify(sanitizedMainlandLedger)}\n`),
   writeFile(path.join(dataDir, "global-capital-HK.json"), `${JSON.stringify(sanitizedHongKongLedger)}\n`),
   writeFile(path.join(dataDir, "manifest.json"), `${JSON.stringify({
@@ -111,6 +113,7 @@ await Promise.all([
     snapshots: {
       ...snapshots,
       marketFlows: { generatedAt: sanitizedMarketFlows.generatedAt, marketCount: sanitizedMarketFlows.markets.length },
+      globalContext: { generatedAt: globalContext.generatedAt, layerCount: Object.keys(asObject(globalContext.layers)).length },
       mainlandLedger: { latestDate: sanitizedMainlandLedger.latestDate, status: "sanitized_snapshot" },
       hongKongLedger: { latestDate: sanitizedHongKongLedger.latestDate, status: "sanitized_snapshot" },
     },

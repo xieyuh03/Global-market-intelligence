@@ -2,8 +2,9 @@
   "schemaVersion": 1,
   "snapshots": {
     "marketFlows": {
-      "generatedAt": "2026-08-24T09:28:13.529Z",
-      "marketCount": 12
+      "generatedAt": "2026-08-25T08:38:03.500Z",
+      "marketCount": 12,
+      "source": "Yahoo Finance 区域 ETF 日线"
     },
     "mainlandLedger": {
       "latestDate": "2026-08-06",
@@ -12,8 +13,33 @@
     "hongKongLedger": {
       "latestDate": "2026-08-06",
       "status": "sanitized_snapshot"
+    },
+    "globalContext": {
+      "generatedAt": "2026-08-25T08:38:02.808Z",
+      "layers": {
+        "gold": {
+          "status": "ready",
+          "asOf": "2026-03-31"
+        },
+        "energy": {
+          "status": "ready",
+          "asOf": "2025-06-30"
+        },
+        "trade": {
+          "status": "ready",
+          "asOf": "2025"
+        },
+        "events": {
+          "status": "partial",
+          "asOf": "2026-08-25"
+        },
+        "geopolitics": {
+          "status": "partial",
+          "asOf": "2026-08-25"
+        }
+      }
     }
   },
-  "generatedAt": "2026-08-24T09:28:13.540Z",
+  "generatedAt": "2026-08-25T08:38:07.823Z",
   "sourceRevision": null
 }

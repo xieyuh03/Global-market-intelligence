@@ -11,6 +11,10 @@ export function marketFlowsUrl() {
   return publicSnapshotMode ? withBasePath("/data/market-flows.json") : "/api/market-flows";
 }
 
+export function globalContextUrl() {
+  return publicSnapshotMode ? withBasePath("/data/global-context.json") : "/api/global-context";
+}
+
 export function capitalLedgerUrl(market: CapitalMarketCode) {
   return publicSnapshotMode
     ? withBasePath(`/data/global-capital-${market}.json`)
