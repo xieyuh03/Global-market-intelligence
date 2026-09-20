@@ -7,6 +7,10 @@ function withBasePath(pathname: string) {
   return `${basePath}${pathname}`;
 }
 
+export function publicAssetUrl(pathname: string) {
+  return withBasePath(pathname);
+}
+
 export function marketFlowsUrl() {
   return publicSnapshotMode ? withBasePath("/data/market-flows.json") : "/api/market-flows";
 }

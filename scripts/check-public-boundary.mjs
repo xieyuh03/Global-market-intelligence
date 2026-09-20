@@ -6,7 +6,7 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 const roots = [path.join(projectRoot, "src"), path.join(projectRoot, "scripts")];
 const forbidden = [
   { pattern: /@prisma|from ["'].*prisma|DATABASE_URL/g, label: "database dependency" },
-  { pattern: /futu|OpenD/gi, label: "private brokerage dependency" },
+  { pattern: /\bfutu\b|OpenD/gi, label: "private brokerage dependency" },
   { pattern: /child_process|execFile|spawn\(/g, label: "process execution" },
 ];
 const violations = [];

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "data:refresh-market": "tsx scripts/refresh-market-data.ts",
+    "research:volatility": "node scripts/analyze-index-volatility.mjs",
     "data:export-internal": "tsx scripts/export-internal-data.ts",
     "boundary:check": "node scripts/check-public-boundary.mjs",
     "check": "npm run boundary:check && npm run lint && npm run typecheck && npm run build"

@@ -2,6 +2,8 @@
 
 全球态势与公开市场数据站点。它从国家和区域市场出发，展示风险偏好代理、价格确认、共同因子拆解与 A/H 市场资金账本的公开快照。
 
+波动率研究页位于 `/market/volatility/`，提供标普500、纳斯达克综合、上证指数和沪深300的完整历史数据、派生指标与图表下载。
+
 - Website: <https://xieyuh03.github.io/Global-market-intelligence/>
 - Source mirror: <https://github.com/xieyuh03/Global-market-intelligence>
 - Data boundary: 公开价格、模型结果和经过裁剪的账本快照，不包含账户、持仓、交易、成本、Futu 或数据库凭据

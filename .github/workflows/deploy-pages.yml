@@ -35,6 +35,9 @@ jobs:
       - name: Refresh public market snapshot
         run: npm run data:refresh-market
 
+      - name: Refresh index volatility research
+        run: npm run research:volatility
+
       - name: Validate and export site
         run: npm run check
 

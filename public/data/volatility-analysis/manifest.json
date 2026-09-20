@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-09-20T05:50:52.667Z",
+  "methodology": {
+    "return": "daily log return from adjustedClose (indices have no distributions)",
+    "realizedVolatility": "trailing 20/60 trading-day sample standard deviation, annualized with sqrt(252); forwardVol20 uses the next 20 returns",
+    "comparableSample": "2005-01-04 onward for all four indices",
+    "predictiveReturn": "forward 5/20/60 trading-day log return; no overlapping correction applied",
+    "leverageEffect": "correlation(daily log return, daily change in trailing 20-day realized volatility)"
+  },
+  "sources": [
+    {
+      "id": "sp500",
+      "name": "标普500",
+      "source": "Yahoo Finance",
+      "symbol": "^GSPC"
+    },
+    {
+      "id": "nasdaq-composite",
+      "name": "纳斯达克综合指数",
+      "source": "Yahoo Finance",
+      "symbol": "^IXIC"
+    },
+    {
+      "id": "shanghai-composite",
+      "name": "上证指数",
+      "source": "东方财富",
+      "symbol": "1.000001"
+    },
+    {
+      "id": "csi300",
+      "name": "沪深300",
+      "source": "东方财富",
+      "symbol": "1.000300"
+    }
+  ],
+  "quality": [
+    {
+      "id": "sp500",
+      "name": "标普500",
+      "source": "Yahoo Finance",
+      "received": 24796,
+      "valid": 24796,
+      "dropped": 0,
+      "firstDate": "1927-12-30",
+      "lastDate": "2026-09-18"
+    },
+    {
+      "id": "nasdaq-composite",
+      "name": "纳斯达克综合指数",
+      "source": "Yahoo Finance",
+      "received": 14022,
+      "valid": 14022,
+      "dropped": 0,
+      "firstDate": "1971-02-05",
+      "lastDate": "2026-09-18"
+    },
+    {
+      "id": "shanghai-composite",
+      "name": "上证指数",
+      "source": "东方财富",
+      "received": 8729,
+      "valid": 8729,
+      "dropped": 0,
+      "firstDate": "1990-12-19",
+      "lastDate": "2026-09-18"
+    },
+    {
+      "id": "csi300",
+      "name": "沪深300",
+      "source": "东方财富",
+      "received": 5275,
+      "valid": 5275,
+      "dropped": 0,
+      "firstDate": "2005-01-04",
+      "lastDate": "2026-09-18"
+    }
+  ],
+  "crossValidation": [
+    {
+      "id": "sp500",
+      "comparison": "FRED SP500",
+      "overlap": 500,
+      "medianAbsolutePctError": 0.000002,
+      "maxAbsolutePctError": 0.000004
+    },
+    {
+      "id": "nasdaq-composite",
+      "comparison": "FRED NASDAQCOM",
+      "overlap": 500,
+      "medianAbsolutePctError": 0.000002,
+      "maxAbsolutePctError": 0.035748
+    }
+  ],
+  "files": {
+    "raw": "raw/*.csv",
+    "derived": "derived/*.csv",
+    "summary": "summary.json",
+    "charts": "charts/*.svg",
+    "report": "report.html"
+  }
+}
