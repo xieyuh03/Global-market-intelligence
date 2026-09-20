@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, ChartNoAxesCombined, Code2, Database, Globe2 } from "lucide-react";
+import { Activity, ArrowLeftRight, ChartNoAxesCombined, Code2, Database, Globe2 } from "lucide-react";
 
 const links = [
   { href: "/", label: "全球态势", icon: Globe2 },
   { href: "/markets", label: "市场数据", icon: ChartNoAxesCombined },
-  { href: "/market/volatility", label: "波动研究", icon: Activity },
+  { href: "/market/etf-flows", label: "ETF申赎", icon: ArrowLeftRight },
+  { href: "/market/deviation", label: "偏离度", icon: Activity },
 ];
 
 export default function PublicNav() {

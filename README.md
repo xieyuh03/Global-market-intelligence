@@ -2,7 +2,9 @@
 
 全球态势与公开市场数据站点。它从国家和区域市场出发，展示风险偏好代理、价格确认、共同因子拆解与 A/H 市场资金账本的公开快照。
 
-波动率研究页位于 `/market/volatility/`，提供标普500、纳斯达克综合、上证指数和沪深300的完整历史数据、派生指标与图表下载。
+`/market/volatility/` 保留为兼容入口，当前指向均线对数偏离度看板。
+
+宽基 ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估算净申购金额。均线对数偏离度页位于 `/market/deviation/`，提供可滑动日频图和分段历史概率。
 
 - Website: <https://xieyuh03.github.io/Global-market-intelligence/>
 - Source mirror: <https://github.com/xieyuh03/Global-market-intelligence>

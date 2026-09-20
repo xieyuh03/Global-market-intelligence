@@ -1,0 +1,5308 @@
+{
+  "generatedAt": "2026-09-20T08:38:11.586Z",
+  "asOf": "2026-09-17",
+  "coverage": {
+    "startDate": "2026-09-08",
+    "endDate": "2026-09-17",
+    "tradingDays": 8,
+    "funds": 164,
+    "sseFunds": 58,
+    "szseFunds": 106,
+    "partialDatesExcluded": [
+      {
+        "date": "2026-09-01",
+        "exchanges": [
+          "SZSE"
+        ]
+      },
+      {
+        "date": "2026-09-02",
+        "exchanges": [
+          "SZSE"
+        ]
+      },
+      {
+        "date": "2026-09-03",
+        "exchanges": [
+          "SZSE"
+        ]
+      },
+      {
+        "date": "2026-09-04",
+        "exchanges": [
+          "SZSE"
+        ]
+      },
+      {
+        "date": "2026-09-07",
+        "exchanges": [
+          "SZSE"
+        ]
+      },
+      {
+        "date": "2026-09-18",
+        "exchanges": [
+          "SSE"
+        ]
+      }
+    ]
+  },
+  "methodology": {
+    "scope": "A-share broad-market ETFs classified by explicit benchmark-name rules",
+    "shareChange": "current exchange-reported shares minus prior reported trading-day shares",
+    "amount": "share change multiplied by same-day unadjusted ETF close; estimated primary-market net subscription amount",
+    "sseUnit": "SSE TOT_VOL is reported in 10,000 shares and converted to shares",
+    "szseUnit": "SZSE 基金规模(份) is used directly as shares",
+    "anomalyRule": "records with absolute one-day share change >= 50% or missing close are excluded from aggregates and retained in detail",
+    "caveat": "estimated amount is not exchange cash settlement, turnover, or main-force flow; classification and corporate-action flags require periodic review",
+    "rebuildMode": "reclassified from previously collected fund-level observations"
+  },
+  "sources": [
+    {
+      "name": "上海证券交易所 ETF 基金规模",
+      "url": "https://www.sse.com.cn/assortment/fund/list/etfinfo/scale/",
+      "field": "TOT_VOL"
+    },
+    {
+      "name": "深圳证券交易所 基金规模日频",
+      "url": "https://www.szse.cn/market/fund/volume/etf/index.html",
+      "field": "基金规模(份)"
+    },
+    {
+      "name": "东方财富 ETF 日线",
+      "url": "https://quote.eastmoney.com/",
+      "field": "不复权收盘价"
+    }
+  ],
+  "errors": [],
+  "daily": [
+    {
+      "date": "2026-09-08",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": -3806515700,
+      "estimatedNetFlowYi": -38.0652,
+      "grossInflowYi": 16.8017,
+      "grossOutflowYi": -54.8668,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": -14.3971,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": -0.3044,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": -0.3648,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": -0.3143,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": -0.6672,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": 9.4571,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": -0.3218,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": 2.967,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": 0.3538,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -0.4258,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -8.4178,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": -0.5737,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": -3.4046,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": -13.8478,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": -0.0594,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": -5.173,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": -3.1116,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": 0.4069,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": 0.1836,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": -0.0503,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": -3144275000,
+      "estimatedNetFlowYi": -31.4428,
+      "grossInflowYi": 12.6973,
+      "grossOutflowYi": -44.14,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": -0.6176,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": 0.0548,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": -0.0596,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": -0.159,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": 0.2067,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": 9.7568,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": -0.0823,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": -1.3063,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": -0.9753,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -1.6742,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -10.8063,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": -0.4026,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": -9.5026,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": -14.161,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": 0.0082,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": -1.2448,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": -0.2513,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": -0.1989,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": -0.0504,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": 0.0227,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-10",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": 2200402100,
+      "estimatedNetFlowYi": 22.004,
+      "grossInflowYi": 34.6906,
+      "grossOutflowYi": -12.6866,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": 3.4943,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": 0.0936,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": 0.1191,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": -0.1046,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": 0.1512,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": 10.5242,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": -0.0314,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": 2.8632,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": 4.4888,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -0.8756,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -0.57,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": 0.0571,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": 4.9279,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": -0.6899,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": 0.0677,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": -3.8893,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": 0.877,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": 0.5009,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-11",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": 3097889500,
+      "estimatedNetFlowYi": 30.9789,
+      "grossInflowYi": 80.0954,
+      "grossOutflowYi": -49.1166,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": -0.6634,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": -0.0225,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": 0.2941,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": -0.1966,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": 0.2557,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": 32.0775,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": 0.9493,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": 2.6762,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": 10.8222,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -7.7069,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -13.8459,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": 0.2141,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": -22.2192,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": 8.8992,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": 0.0975,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": 9.3781,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": 9.2123,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": -0.0465,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": 0.5649,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": -0.2423,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": 0.481,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": 1795395500,
+      "estimatedNetFlowYi": 17.954,
+      "grossInflowYi": 33.0183,
+      "grossOutflowYi": -15.0643,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": 2.6202,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": -0.0691,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": -0.0588,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": -0.2561,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": -1.3094,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": 11.7413,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": 0.2699,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": 1.3548,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": 2.791,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -1.7781,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -7.8946,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": 0.0623,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": 4.7896,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": 4.1067,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": -0.0541,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": 0.414,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": 0.597,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": 0.466,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": 0.1344,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": 0.0491,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": -0.0221,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-15",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": 3648719600,
+      "estimatedNetFlowYi": 36.4872,
+      "grossInflowYi": 66.2812,
+      "grossOutflowYi": -29.794,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": -0.6731,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": 0.3249,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": -0.0588,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": -0.1628,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": -0.0679,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": -21.878,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": 0.2597,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": 6.0474,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": 22.8477,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -1.4432,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -1.0841,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": 0.112,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": 19.5192,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": 7.2946,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": 0.0387,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": 4.2329,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": 0.2081,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": 0.747,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": 0.1341,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": 0.0886,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-16",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": 7091311500,
+      "estimatedNetFlowYi": 70.9131,
+      "grossInflowYi": 90.8471,
+      "grossOutflowYi": -19.934,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": -3.0133,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": -0.0477,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": -0.3059,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": 0.2717,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": 0.7431,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": -10.2178,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": 0.5678,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": 0.7936,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": 1.9732,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": 2.8175,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": 34.514,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": -0.1693,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": 20.8089,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": 11.3006,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": 0.0354,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": 11.9617,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": -1.17,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": 0.2999,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": -0.134,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": -0.0941,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": -0.0222,
+          "funds": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-09-17",
+      "status": "complete",
+      "exchanges": [
+        "SSE",
+        "SZSE"
+      ],
+      "estimatedNetFlowCny": -2219984300,
+      "estimatedNetFlowYi": -22.1998,
+      "grossInflowYi": 13.2464,
+      "grossOutflowYi": -35.4463,
+      "funds": 164,
+      "pricedFunds": 164,
+      "excludedRecords": 0,
+      "benchmarks": [
+        {
+          "id": "csi-a500",
+          "label": "中证A500",
+          "estimatedNetFlowYi": -6.9968,
+          "funds": 31
+        },
+        {
+          "id": "csi-a50",
+          "label": "A50系列",
+          "estimatedNetFlowYi": 0.3111,
+          "funds": 12
+        },
+        {
+          "id": "star-composite",
+          "label": "科创综指",
+          "estimatedNetFlowYi": 0.1829,
+          "funds": 2
+        },
+        {
+          "id": "star-200",
+          "label": "科创200",
+          "estimatedNetFlowYi": 0.1602,
+          "funds": 3
+        },
+        {
+          "id": "star-100",
+          "label": "科创100",
+          "estimatedNetFlowYi": -0.3377,
+          "funds": 6
+        },
+        {
+          "id": "star-50",
+          "label": "科创50",
+          "estimatedNetFlowYi": 3.7464,
+          "funds": 5
+        },
+        {
+          "id": "star-chinext-50",
+          "label": "科创创业50",
+          "estimatedNetFlowYi": -0.4034,
+          "funds": 5
+        },
+        {
+          "id": "chinext-200",
+          "label": "创业板200",
+          "estimatedNetFlowYi": 0,
+          "funds": 5
+        },
+        {
+          "id": "chinext-50",
+          "label": "创业板50",
+          "estimatedNetFlowYi": -1.3171,
+          "funds": 12
+        },
+        {
+          "id": "chinext",
+          "label": "创业板指",
+          "estimatedNetFlowYi": -13.5698,
+          "funds": 14
+        },
+        {
+          "id": "csi-2000",
+          "label": "中证/国证2000",
+          "estimatedNetFlowYi": -1.9528,
+          "funds": 12
+        },
+        {
+          "id": "csi-1000",
+          "label": "中证1000",
+          "estimatedNetFlowYi": -1.9212,
+          "funds": 5
+        },
+        {
+          "id": "csi-800",
+          "label": "中证800",
+          "estimatedNetFlowYi": 0.0377,
+          "funds": 3
+        },
+        {
+          "id": "csi-500",
+          "label": "中证500",
+          "estimatedNetFlowYi": -1.1152,
+          "funds": 10
+        },
+        {
+          "id": "csi-300",
+          "label": "沪深300",
+          "estimatedNetFlowYi": -4.1436,
+          "funds": 9
+        },
+        {
+          "id": "sse-380",
+          "label": "上证380",
+          "estimatedNetFlowYi": 0,
+          "funds": 2
+        },
+        {
+          "id": "sse-180",
+          "label": "上证180",
+          "estimatedNetFlowYi": 0.0615,
+          "funds": 5
+        },
+        {
+          "id": "sse-50",
+          "label": "上证50",
+          "estimatedNetFlowYi": 5.8835,
+          "funds": 4
+        },
+        {
+          "id": "sse-composite",
+          "label": "上证综指",
+          "estimatedNetFlowYi": -0.5672,
+          "funds": 1
+        },
+        {
+          "id": "szse-300",
+          "label": "深证300",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        },
+        {
+          "id": "szse-100",
+          "label": "深证100",
+          "estimatedNetFlowYi": -0.1896,
+          "funds": 12
+        },
+        {
+          "id": "szse-50",
+          "label": "深证50",
+          "estimatedNetFlowYi": 0.0298,
+          "funds": 2
+        },
+        {
+          "id": "szse-component",
+          "label": "深证成指",
+          "estimatedNetFlowYi": -0.0986,
+          "funds": 2
+        },
+        {
+          "id": "sme-100",
+          "label": "中小100",
+          "estimatedNetFlowYi": 0,
+          "funds": 1
+        }
+      ]
+    }
+  ],
+  "latestFunds": [
+    {
+      "date": "2026-09-17",
+      "code": "510050",
+      "name": "上证50ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "shares": 7790166800,
+      "shareChange": 198900000,
+      "shareChangePct": 2.6201,
+      "close": 2.958,
+      "estimatedNetFlowCny": 588346200,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588000",
+      "name": "科创50ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "shares": 55592668200,
+      "shareChange": 210000000,
+      "shareChangePct": 0.3792,
+      "close": 1.696,
+      "estimatedNetFlowCny": 356160000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159633",
+      "name": "中证1000ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "shares": 1008162658,
+      "shareChange": 18000000,
+      "shareChangePct": 1.8179,
+      "close": 3.231,
+      "estimatedNetFlowCny": 58158000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159681",
+      "name": "创业板50ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 1161772337,
+      "shareChange": 36000000,
+      "shareChangePct": 3.1978,
+      "close": 1.522,
+      "estimatedNetFlowCny": 54792000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159977",
+      "name": "创业板ETF天弘",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 3911872820,
+      "shareChange": 18000000,
+      "shareChangePct": 0.4623,
+      "close": 1.721,
+      "estimatedNetFlowCny": 30978000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "512500",
+      "name": "中证500ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 1832008800,
+      "shareChange": 6400000,
+      "shareChangePct": 0.3506,
+      "close": 4.348,
+      "estimatedNetFlowCny": 27827200,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588080",
+      "name": "科创50ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "shares": 26053628100,
+      "shareChange": 15000000,
+      "shareChangePct": 0.0576,
+      "close": 1.645,
+      "estimatedNetFlowCny": 24675000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159361",
+      "name": "A500ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 22373090279,
+      "shareChange": 15000000,
+      "shareChangePct": 0.0671,
+      "close": 1.204,
+      "estimatedNetFlowCny": 18060000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588230",
+      "name": "科创200ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "star-200",
+      "benchmark": "科创200",
+      "shares": 692939000,
+      "shareChange": 9000000,
+      "shareChangePct": 1.3159,
+      "close": 1.78,
+      "estimatedNetFlowCny": 16020000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "515810",
+      "name": "中证800ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-800",
+      "benchmark": "中证800",
+      "shares": 275908800,
+      "shareChange": 9000000,
+      "shareChangePct": 3.3719,
+      "close": 1.67,
+      "estimatedNetFlowCny": 15030000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "560610",
+      "name": "A500ETF招商",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 5251988400,
+      "shareChange": 12000000,
+      "shareChangePct": 0.229,
+      "close": 1.155,
+      "estimatedNetFlowCny": 13860000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "589000",
+      "name": "科创综指ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-composite",
+      "benchmark": "科创综指",
+      "shares": 1067507800,
+      "shareChange": 8000000,
+      "shareChangePct": 0.7551,
+      "close": 1.522,
+      "estimatedNetFlowCny": 12176000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159948",
+      "name": "创业板ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 1166697720,
+      "shareChange": 3000000,
+      "shareChangePct": 0.2578,
+      "close": 3.662,
+      "estimatedNetFlowCny": 10986000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563080",
+      "name": "中证A50ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 1080588400,
+      "shareChange": 8000000,
+      "shareChangePct": 0.7459,
+      "close": 1.328,
+      "estimatedNetFlowCny": 10624000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510580",
+      "name": "中证500ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 1152568300,
+      "shareChange": 2400000,
+      "shareChangePct": 0.2087,
+      "close": 4.041,
+      "estimatedNetFlowCny": 9698400,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159393",
+      "name": "沪深300ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 98746342,
+      "shareChange": 1800000,
+      "shareChangePct": 1.8567,
+      "close": 4.817,
+      "estimatedNetFlowCny": 8670600,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159628",
+      "name": "国证2000ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 332283250,
+      "shareChange": 6000000,
+      "shareChangePct": 1.8389,
+      "close": 1.374,
+      "estimatedNetFlowCny": 8244000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563350",
+      "name": "A50ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 179997600,
+      "shareChange": 6000000,
+      "shareChangePct": 3.4483,
+      "close": 1.362,
+      "estimatedNetFlowCny": 8172000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510310",
+      "name": "沪深300ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 11344244000,
+      "shareChange": 1800000,
+      "shareChangePct": 0.0159,
+      "close": 4.404,
+      "estimatedNetFlowCny": 7927200,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159595",
+      "name": "中证A50ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 970113255,
+      "shareChange": 6000000,
+      "shareChangePct": 0.6223,
+      "close": 1.319,
+      "estimatedNetFlowCny": 7914000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "589800",
+      "name": "科创综指ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-composite",
+      "benchmark": "科创综指",
+      "shares": 1095988200,
+      "shareChange": 4000000,
+      "shareChangePct": 0.3663,
+      "close": 1.528,
+      "estimatedNetFlowCny": 6112000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159592",
+      "name": "A50ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 588310460,
+      "shareChange": 4000000,
+      "shareChangePct": 0.6846,
+      "close": 1.297,
+      "estimatedNetFlowCny": 5188000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510180",
+      "name": "上证180ETF华安",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "shares": 4424057700,
+      "shareChange": 1000000,
+      "shareChangePct": 0.0226,
+      "close": 3.877,
+      "estimatedNetFlowCny": 3877000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588180",
+      "name": "科创50ETF国联安",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "shares": 780353700,
+      "shareChange": 3500000,
+      "shareChangePct": 0.4505,
+      "close": 1.052,
+      "estimatedNetFlowCny": 3682000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159367",
+      "name": "创业板50ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 188079029,
+      "shareChange": 2000000,
+      "shareChangePct": 1.0748,
+      "close": 1.63,
+      "estimatedNetFlowCny": 3260000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159500",
+      "name": "中证500ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 213338865,
+      "shareChange": 2800000,
+      "shareChangePct": 1.3299,
+      "close": 1.155,
+      "estimatedNetFlowCny": 3234000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159350",
+      "name": "深证50ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-50",
+      "benchmark": "深证50",
+      "shares": 112009642,
+      "shareChange": 2000000,
+      "shareChangePct": 1.818,
+      "close": 1.491,
+      "estimatedNetFlowCny": 2982000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510040",
+      "name": "上证180ETF鹏华",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "shares": 26480000,
+      "shareChange": 2000000,
+      "shareChangePct": 8.1699,
+      "close": 1.138,
+      "estimatedNetFlowCny": 2276000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159602",
+      "name": "中国A50ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 404542944,
+      "shareChange": 2000000,
+      "shareChangePct": 0.4968,
+      "close": 1.055,
+      "estimatedNetFlowCny": 2110000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159596",
+      "name": "A50ETF华宝",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 521683040,
+      "shareChange": 3000000,
+      "shareChangePct": 0.5784,
+      "close": 0.629,
+      "estimatedNetFlowCny": 1887000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159370",
+      "name": "创50ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 237316009,
+      "shareChange": 1000000,
+      "shareChangePct": 0.4232,
+      "close": 1.716,
+      "estimatedNetFlowCny": 1716000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510190",
+      "name": "上证50ETF华安",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "shares": 23650800,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 4.239,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510290",
+      "name": "上证380ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "sse-380",
+      "benchmark": "上证380",
+      "shares": 54448900,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 2.605,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510800",
+      "name": "上证50ETF建信",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "shares": 174576000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.373,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "512020",
+      "name": "A500ETF鹏华",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 1100012700,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.255,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "512080",
+      "name": "A500ETF中金",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 779186100,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.264,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "512150",
+      "name": "富时A50ETF汇安",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 18073400,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.856,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "515660",
+      "name": "沪深300ETF国联安",
+      "exchange": "SSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 434494200,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 5.677,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "516300",
+      "name": "中证1000ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "shares": 39012600,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 3.189,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "530000",
+      "name": "上证50ETF天弘",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "shares": 940029400,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.358,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "530180",
+      "name": "上证180ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "shares": 63952000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.174,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "530280",
+      "name": "上证180ETF平安",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "shares": 29934000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.177,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "530380",
+      "name": "上证380ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "sse-380",
+      "benchmark": "上证380",
+      "shares": 134705000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.09,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "530800",
+      "name": "上证180ETF银华",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "shares": 18201800,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.178,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "560750",
+      "name": "A500ETF申万菱信",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 75554800,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.292,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "561370",
+      "name": "中证2000ETF国泰",
+      "exchange": "SSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 32356000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.426,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563500",
+      "name": "A500ETF华宝",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 765958700,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.614,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563650",
+      "name": "中证A500ETF兴业",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 140909000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.248,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563660",
+      "name": "A500ETF银河",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 66085200,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.215,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563880",
+      "name": "A500ETF汇添富",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 1492996400,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.221,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588210",
+      "name": "科创100ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "shares": 245754000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.75,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588270",
+      "name": "科创200ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-200",
+      "benchmark": "科创200",
+      "shares": 292410000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.681,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588820",
+      "name": "科创200ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-200",
+      "benchmark": "科创200",
+      "shares": 151400000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.914,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588900",
+      "name": "科创100ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "shares": 361783000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.792,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "589270",
+      "name": "科创100ETF前海开源",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "shares": 21516600,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.1,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159012",
+      "name": "科创创业50ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "shares": 137881148,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.858,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159136",
+      "name": "A50ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 109414074,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.976,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159150",
+      "name": "深证50ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-50",
+      "benchmark": "深证50",
+      "shares": 97997623,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.527,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159211",
+      "name": "深证100ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 19683294,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.369,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159212",
+      "name": "深100ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 99204367,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.396,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159215",
+      "name": "A500ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 958582803,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.268,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159219",
+      "name": "深证100ETF融通",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 10388018,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.3,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159270",
+      "name": "创业板200ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "shares": 90763649,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.109,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159298",
+      "name": "创业板50ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 165281082,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.147,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159300",
+      "name": "沪深300ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 350158097,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 4.86,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159330",
+      "name": "沪深300ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 446801009,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.402,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159337",
+      "name": "中证500ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 281710611,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.755,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159357",
+      "name": "A500ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 1222833841,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.25,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159358",
+      "name": "中证A500ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 878106420,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.28,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159359",
+      "name": "A500ETF华安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 686140424,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.239,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159371",
+      "name": "创业板50ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 192221172,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.622,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159372",
+      "name": "创业板50ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 62451588,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.734,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159375",
+      "name": "创业板50ETF国泰",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 411595350,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.692,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159376",
+      "name": "A500ETF浦银",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 48922317,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.283,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159379",
+      "name": "A500ETF融通",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 158821471,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.32,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159380",
+      "name": "A500ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 154804337,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.318,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159383",
+      "name": "创业板50ETF华泰柏瑞",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 51092486,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.618,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159386",
+      "name": "A500ETF永赢",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 69869559,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.244,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159390",
+      "name": "中证A50ETF国联",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 109268771,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.197,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159505",
+      "name": "国证2000ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 17104786,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.586,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159521",
+      "name": "国证2000ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 18274435,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.274,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159533",
+      "name": "中证2000ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 14458785,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.942,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159535",
+      "name": "中证2000ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 19981088,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.511,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159536",
+      "name": "中证2000ETF汇添富",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 47261589,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.406,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159543",
+      "name": "国证2000ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 42196551,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.49,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159571",
+      "name": "创业板200ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "shares": 19981814,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.422,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159572",
+      "name": "创业板200ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "shares": 189749107,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.425,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159573",
+      "name": "创业板200ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "shares": 77456297,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.434,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159575",
+      "name": "创业板200ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "shares": 9410425,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.394,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159576",
+      "name": "深证100ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 51009612,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.471,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159591",
+      "name": "A50ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 327905682,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.326,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159706",
+      "name": "深证100ETF华安",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 40386800,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.886,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159716",
+      "name": "深证100ETF华宝",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 55666732,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.066,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159721",
+      "name": "深证100ETF永赢",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 67431696,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.005,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159800",
+      "name": "中证800ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-800",
+      "benchmark": "中证800",
+      "shares": 26736802,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.384,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159810",
+      "name": "创业板ETF浦银",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 57475458,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.33,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159820",
+      "name": "中证500ETF天弘",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 1356408470,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.333,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159821",
+      "name": "创业板ETF中银证券",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 65920000,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.243,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159902",
+      "name": "中小100ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "sme-100",
+      "benchmark": "中小100",
+      "shares": 75460849,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 4.442,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159907",
+      "name": "国证2000ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 179197694,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.066,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159908",
+      "name": "创业板ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 365229029,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 3.102,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159912",
+      "name": "深300ETF汇添富",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-300",
+      "benchmark": "深证300",
+      "shares": 68448991,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.848,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159925",
+      "name": "沪深300ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 606020856,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 4.607,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159935",
+      "name": "中证500ETF景顺",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 25572956,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 2.416,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159943",
+      "name": "深证成指ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-component",
+      "benchmark": "深证成指",
+      "shares": 215229922,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 1.485,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159956",
+      "name": "创业板ETF建信",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 48978674,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 2.11,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159958",
+      "name": "创业板ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 242711448,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 2.005,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159961",
+      "name": "深100ETF方正富邦",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 98245196,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 2.111,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159968",
+      "name": "中证500ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 63295098,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 10.064,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159970",
+      "name": "深100ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 12268704,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.988,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159975",
+      "name": "深100ETF招商",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 51937760,
+      "shareChange": 0,
+      "shareChangePct": 0,
+      "close": 0.724,
+      "estimatedNetFlowCny": 0,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159373",
+      "name": "创业板50ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 140557494,
+      "shareChange": -1000000,
+      "shareChangePct": -0.7064,
+      "close": 1.654,
+      "estimatedNetFlowCny": -1654000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159593",
+      "name": "中证A50ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 1869696040,
+      "shareChange": -1500000,
+      "shareChangePct": -0.0802,
+      "close": 1.31,
+      "estimatedNetFlowCny": -1965000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159216",
+      "name": "深证100ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 11048250,
+      "shareChange": -1500000,
+      "shareChangePct": -11.9539,
+      "close": 1.405,
+      "estimatedNetFlowCny": -2107500,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159673",
+      "name": "沪深300ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 1835528385,
+      "shareChange": -2000000,
+      "shareChangePct": -0.1088,
+      "close": 1.25,
+      "estimatedNetFlowCny": -2500000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159601",
+      "name": "A50ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "shares": 1395988073,
+      "shareChange": -2600000,
+      "shareChangePct": -0.1859,
+      "close": 1.084,
+      "estimatedNetFlowCny": -2818400,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159782",
+      "name": "双创50ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "shares": 600190267,
+      "shareChange": -3000000,
+      "shareChangePct": -0.4974,
+      "close": 1.042,
+      "estimatedNetFlowCny": -3126000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "560510",
+      "name": "中证A500ETF泰康",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 2540026900,
+      "shareChange": -3000000,
+      "shareChangePct": -0.118,
+      "close": 1.154,
+      "estimatedNetFlowCny": -3462000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159362",
+      "name": "A500ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 1613180191,
+      "shareChange": -3000000,
+      "shareChangePct": -0.1856,
+      "close": 1.268,
+      "estimatedNetFlowCny": -3804000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159360",
+      "name": "A500ETF天弘",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 1265184526,
+      "shareChange": -3000000,
+      "shareChangePct": -0.2366,
+      "close": 1.277,
+      "estimatedNetFlowCny": -3831000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159369",
+      "name": "创业板50ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 477753492,
+      "shareChange": -3000000,
+      "shareChangePct": -0.624,
+      "close": 1.321,
+      "estimatedNetFlowCny": -3963000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159982",
+      "name": "中证500ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 202211253,
+      "shareChange": -2000000,
+      "shareChangePct": -0.9794,
+      "close": 2.067,
+      "estimatedNetFlowCny": -4134000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159919",
+      "name": "沪深300ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 6340716676,
+      "shareChange": -900000,
+      "shareChangePct": -0.0142,
+      "close": 4.733,
+      "estimatedNetFlowCny": -4259700,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588800",
+      "name": "科创100ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "shares": 1647377000,
+      "shareChange": -2500000,
+      "shareChangePct": -0.1515,
+      "close": 1.719,
+      "estimatedNetFlowCny": -4297500,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588870",
+      "name": "科创50ETF汇添富",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "shares": 923552000,
+      "shareChange": -3000000,
+      "shareChangePct": -0.3238,
+      "close": 1.632,
+      "estimatedNetFlowCny": -4896000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "589360",
+      "name": "科创50ETF国泰",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "shares": 2711174000,
+      "shareChange": -6000000,
+      "shareChangePct": -0.2208,
+      "close": 0.831,
+      "estimatedNetFlowCny": -4986000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588190",
+      "name": "科创100ETF银华",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "shares": 1363618300,
+      "shareChange": -3000000,
+      "shareChangePct": -0.2195,
+      "close": 1.731,
+      "estimatedNetFlowCny": -5193000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159780",
+      "name": "科创创业50ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "shares": 3636848583,
+      "shareChange": -5200000,
+      "shareChangePct": -0.1428,
+      "close": 1.042,
+      "estimatedNetFlowCny": -5418400,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159339",
+      "name": "A500ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 1805086841,
+      "shareChange": -6000000,
+      "shareChangePct": -0.3313,
+      "close": 1.192,
+      "estimatedNetFlowCny": -7152000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159356",
+      "name": "A500ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 716120647,
+      "shareChange": -6000000,
+      "shareChangePct": -0.8309,
+      "close": 1.256,
+      "estimatedNetFlowCny": -7536000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563860",
+      "name": "中证A500ETF海富通",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 182844300,
+      "shareChange": -6000000,
+      "shareChangePct": -3.1772,
+      "close": 1.268,
+      "estimatedNetFlowCny": -7608000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159964",
+      "name": "创业板ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 171481881,
+      "shareChange": -4000000,
+      "shareChangePct": -2.2794,
+      "close": 2.172,
+      "estimatedNetFlowCny": -8688000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159903",
+      "name": "深成ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-component",
+      "benchmark": "深证成指",
+      "shares": 466154507,
+      "shareChange": -6000000,
+      "shareChangePct": -1.2708,
+      "close": 1.643,
+      "estimatedNetFlowCny": -9858000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159532",
+      "name": "中证2000ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 147564791,
+      "shareChange": -6000000,
+      "shareChangePct": -3.9071,
+      "close": 1.66,
+      "estimatedNetFlowCny": -9960000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "560530",
+      "name": "中证A500ETF摩根",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 3967623700,
+      "shareChange": -9000000,
+      "shareChangePct": -0.2263,
+      "close": 1.182,
+      "estimatedNetFlowCny": -10638000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "515800",
+      "name": "中证800ETF汇添富",
+      "exchange": "SSE",
+      "benchmarkId": "csi-800",
+      "benchmark": "中证800",
+      "shares": 3799937200,
+      "shareChange": -9000000,
+      "shareChangePct": -0.2363,
+      "close": 1.251,
+      "estimatedNetFlowCny": -11259000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588380",
+      "name": "科创创业ETF富国",
+      "exchange": "SSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "shares": 2882770000,
+      "shareChange": -12000000,
+      "shareChangePct": -0.4145,
+      "close": 1.063,
+      "estimatedNetFlowCny": -12756000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159247",
+      "name": "创业板ETF汇添富",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 565984966,
+      "shareChange": -14000000,
+      "shareChangePct": -2.4139,
+      "close": 0.992,
+      "estimatedNetFlowCny": -13888000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159531",
+      "name": "中证2000ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 920608406,
+      "shareChange": -10000000,
+      "shareChangePct": -1.0746,
+      "close": 1.469,
+      "estimatedNetFlowCny": -14690000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159971",
+      "name": "创业板ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 1858020288,
+      "shareChange": -14000000,
+      "shareChangePct": -0.7479,
+      "close": 1.154,
+      "estimatedNetFlowCny": -16156000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159901",
+      "name": "深证100ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "shares": 1068834930,
+      "shareChange": -4900000,
+      "shareChangePct": -0.4564,
+      "close": 3.44,
+      "estimatedNetFlowCny": -16856000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159783",
+      "name": "科创创业50ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "shares": 5347859442,
+      "shareChange": -18200000,
+      "shareChangePct": -0.3392,
+      "close": 1.046,
+      "estimatedNetFlowCny": -19037200,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "588220",
+      "name": "科创100ETF鹏华",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "shares": 3697697900,
+      "shareChange": -14000000,
+      "shareChangePct": -0.3772,
+      "close": 1.734,
+      "estimatedNetFlowCny": -24276000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159351",
+      "name": "A500ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 7196123357,
+      "shareChange": -21000000,
+      "shareChangePct": -0.291,
+      "close": 1.182,
+      "estimatedNetFlowCny": -24822000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159629",
+      "name": "中证1000ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "shares": 873252663,
+      "shareChange": -8000000,
+      "shareChangePct": -0.9078,
+      "close": 3.158,
+      "estimatedNetFlowCny": -25264000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159957",
+      "name": "创业板ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 1184784560,
+      "shareChange": -12000000,
+      "shareChangePct": -1.0027,
+      "close": 2.173,
+      "estimatedNetFlowCny": -26076000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159682",
+      "name": "创业板50ETF景顺",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 3418307670,
+      "shareChange": -20000000,
+      "shareChangePct": -0.5817,
+      "close": 1.501,
+      "estimatedNetFlowCny": -30020000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159205",
+      "name": "创业板ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 679056064,
+      "shareChange": -20000000,
+      "shareChangePct": -2.861,
+      "close": 1.623,
+      "estimatedNetFlowCny": -32460000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563220",
+      "name": "A500ETF富国",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 6287013700,
+      "shareChange": -30000000,
+      "shareChangePct": -0.4749,
+      "close": 1.231,
+      "estimatedNetFlowCny": -36930000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159353",
+      "name": "中证A500ETF景顺",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 4301161812,
+      "shareChange": -33000000,
+      "shareChangePct": -0.7614,
+      "close": 1.199,
+      "estimatedNetFlowCny": -39567000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159922",
+      "name": "中证500ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 2804676765,
+      "shareChange": -15000000,
+      "shareChangePct": -0.532,
+      "close": 3.117,
+      "estimatedNetFlowCny": -46755000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159845",
+      "name": "中证1000ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "shares": 2490425606,
+      "shareChange": -15000000,
+      "shareChangePct": -0.5987,
+      "close": 3.146,
+      "estimatedNetFlowCny": -47190000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510210",
+      "name": "上证指数ETF富国",
+      "exchange": "SSE",
+      "benchmarkId": "sse-composite",
+      "benchmark": "上证综指",
+      "shares": 14834192600,
+      "shareChange": -57000000,
+      "shareChangePct": -0.3828,
+      "close": 0.995,
+      "estimatedNetFlowCny": -56715000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510500",
+      "name": "中证500ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "shares": 5690168600,
+      "shareChange": -13200000,
+      "shareChangePct": -0.2314,
+      "close": 7.681,
+      "estimatedNetFlowCny": -101389200,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563360",
+      "name": "A500ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 31033987400,
+      "shareChange": -105000000,
+      "shareChangePct": -0.3372,
+      "close": 1.247,
+      "estimatedNetFlowCny": -130935000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159352",
+      "name": "A500ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 26571101746,
+      "shareChange": -117000000,
+      "shareChangePct": -0.4384,
+      "close": 1.23,
+      "estimatedNetFlowCny": -143910000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "512050",
+      "name": "A500ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 16003992200,
+      "shareChange": -129000000,
+      "shareChangePct": -0.7996,
+      "close": 1.177,
+      "estimatedNetFlowCny": -151833000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159949",
+      "name": "创业板50ETF华安",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "shares": 16050785113,
+      "shareChange": -101000000,
+      "shareChangePct": -0.6253,
+      "close": 1.543,
+      "estimatedNetFlowCny": -155843000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159338",
+      "name": "中证A500ETF国泰",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "shares": 21173086664,
+      "shareChange": -135000000,
+      "shareChangePct": -0.6336,
+      "close": 1.182,
+      "estimatedNetFlowCny": -159570000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "512100",
+      "name": "中证1000ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "shares": 6391217600,
+      "shareChange": -58000000,
+      "shareChangePct": -0.8993,
+      "close": 3.066,
+      "estimatedNetFlowCny": -177828000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "563300",
+      "name": "中证2000ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "shares": 3861174000,
+      "shareChange": -125000000,
+      "shareChangePct": -3.1358,
+      "close": 1.431,
+      "estimatedNetFlowCny": -178875000,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159952",
+      "name": "创业板ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 5600984929,
+      "shareChange": -171700000,
+      "shareChangePct": -2.9744,
+      "close": 2.014,
+      "estimatedNetFlowCny": -345803800,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "510300",
+      "name": "沪深300ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "shares": 23701087700,
+      "shareChange": -93600000,
+      "shareChangePct": -0.3934,
+      "close": 4.532,
+      "estimatedNetFlowCny": -424195200,
+      "status": "ready"
+    },
+    {
+      "date": "2026-09-17",
+      "code": "159915",
+      "name": "创业板ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "shares": 19995454936,
+      "shareChange": -288000000,
+      "shareChangePct": -1.4199,
+      "close": 3.319,
+      "estimatedNetFlowCny": -955872000,
+      "status": "ready"
+    }
+  ],
+  "universe": [
+    {
+      "code": "159270",
+      "name": "创业板200ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159571",
+      "name": "创业板200ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159572",
+      "name": "创业板200ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159573",
+      "name": "创业板200ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159575",
+      "name": "创业板200ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-200",
+      "benchmark": "创业板200",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159298",
+      "name": "创业板50ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159367",
+      "name": "创业板50ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159369",
+      "name": "创业板50ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159370",
+      "name": "创50ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159371",
+      "name": "创业板50ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159372",
+      "name": "创业板50ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159373",
+      "name": "创业板50ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159375",
+      "name": "创业板50ETF国泰",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159383",
+      "name": "创业板50ETF华泰柏瑞",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159681",
+      "name": "创业板50ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159682",
+      "name": "创业板50ETF景顺",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159949",
+      "name": "创业板50ETF华安",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext-50",
+      "benchmark": "创业板50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159205",
+      "name": "创业板ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159247",
+      "name": "创业板ETF汇添富",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159810",
+      "name": "创业板ETF浦银",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159821",
+      "name": "创业板ETF中银证券",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159908",
+      "name": "创业板ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159915",
+      "name": "创业板ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159948",
+      "name": "创业板ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159952",
+      "name": "创业板ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159956",
+      "name": "创业板ETF建信",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159957",
+      "name": "创业板ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159958",
+      "name": "创业板ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159964",
+      "name": "创业板ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159971",
+      "name": "创业板ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159977",
+      "name": "创业板ETF天弘",
+      "exchange": "SZSE",
+      "benchmarkId": "chinext",
+      "benchmark": "创业板指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159300",
+      "name": "沪深300ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159330",
+      "name": "沪深300ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159393",
+      "name": "沪深300ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159673",
+      "name": "沪深300ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159919",
+      "name": "沪深300ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159925",
+      "name": "沪深300ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "510300",
+      "name": "沪深300ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510310",
+      "name": "沪深300ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "515660",
+      "name": "沪深300ETF国联安",
+      "exchange": "SSE",
+      "benchmarkId": "csi-300",
+      "benchmark": "沪深300",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588190",
+      "name": "科创100ETF银华",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588210",
+      "name": "科创100ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588220",
+      "name": "科创100ETF鹏华",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588800",
+      "name": "科创100ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588900",
+      "name": "科创100ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "589270",
+      "name": "科创100ETF前海开源",
+      "exchange": "SSE",
+      "benchmarkId": "star-100",
+      "benchmark": "科创100",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588230",
+      "name": "科创200ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "star-200",
+      "benchmark": "科创200",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588270",
+      "name": "科创200ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-200",
+      "benchmark": "科创200",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588820",
+      "name": "科创200ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-200",
+      "benchmark": "科创200",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588000",
+      "name": "科创50ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588080",
+      "name": "科创50ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588180",
+      "name": "科创50ETF国联安",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "588870",
+      "name": "科创50ETF汇添富",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "589360",
+      "name": "科创50ETF国泰",
+      "exchange": "SSE",
+      "benchmarkId": "star-50",
+      "benchmark": "科创50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159012",
+      "name": "科创创业50ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159780",
+      "name": "科创创业50ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159782",
+      "name": "双创50ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159783",
+      "name": "科创创业50ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "588380",
+      "name": "科创创业ETF富国",
+      "exchange": "SSE",
+      "benchmarkId": "star-chinext-50",
+      "benchmark": "科创创业50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "589000",
+      "name": "科创综指ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "star-composite",
+      "benchmark": "科创综指",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "589800",
+      "name": "科创综指ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "star-composite",
+      "benchmark": "科创综指",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510040",
+      "name": "上证180ETF鹏华",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510180",
+      "name": "上证180ETF华安",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "530180",
+      "name": "上证180ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "530280",
+      "name": "上证180ETF平安",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "530800",
+      "name": "上证180ETF银华",
+      "exchange": "SSE",
+      "benchmarkId": "sse-180",
+      "benchmark": "上证180",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510290",
+      "name": "上证380ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "sse-380",
+      "benchmark": "上证380",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "530380",
+      "name": "上证380ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "sse-380",
+      "benchmark": "上证380",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510050",
+      "name": "上证50ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510190",
+      "name": "上证50ETF华安",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510800",
+      "name": "上证50ETF建信",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "530000",
+      "name": "上证50ETF天弘",
+      "exchange": "SSE",
+      "benchmarkId": "sse-50",
+      "benchmark": "上证50",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510210",
+      "name": "上证指数ETF富国",
+      "exchange": "SSE",
+      "benchmarkId": "sse-composite",
+      "benchmark": "上证综指",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159211",
+      "name": "深证100ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159212",
+      "name": "深100ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159216",
+      "name": "深证100ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159219",
+      "name": "深证100ETF融通",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159576",
+      "name": "深证100ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159706",
+      "name": "深证100ETF华安",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159716",
+      "name": "深证100ETF华宝",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159721",
+      "name": "深证100ETF永赢",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159901",
+      "name": "深证100ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159961",
+      "name": "深100ETF方正富邦",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159970",
+      "name": "深100ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159975",
+      "name": "深100ETF招商",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-100",
+      "benchmark": "深证100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159912",
+      "name": "深300ETF汇添富",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-300",
+      "benchmark": "深证300",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159150",
+      "name": "深证50ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-50",
+      "benchmark": "深证50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159350",
+      "name": "深证50ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-50",
+      "benchmark": "深证50",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159903",
+      "name": "深成ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-component",
+      "benchmark": "深证成指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159943",
+      "name": "深证成指ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "szse-component",
+      "benchmark": "深证成指",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159902",
+      "name": "中小100ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "sme-100",
+      "benchmark": "中小100",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159505",
+      "name": "国证2000ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159521",
+      "name": "国证2000ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159531",
+      "name": "中证2000ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159532",
+      "name": "中证2000ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159533",
+      "name": "中证2000ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159535",
+      "name": "中证2000ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159536",
+      "name": "中证2000ETF汇添富",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159543",
+      "name": "国证2000ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159628",
+      "name": "国证2000ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159907",
+      "name": "国证2000ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "561370",
+      "name": "中证2000ETF国泰",
+      "exchange": "SSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563300",
+      "name": "中证2000ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-2000",
+      "benchmark": "中证/国证2000",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159629",
+      "name": "中证1000ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159633",
+      "name": "中证1000ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159845",
+      "name": "中证1000ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "512100",
+      "name": "中证1000ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "516300",
+      "name": "中证1000ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-1000",
+      "benchmark": "中证1000",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159337",
+      "name": "中证500ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159500",
+      "name": "中证500ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159820",
+      "name": "中证500ETF天弘",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159922",
+      "name": "中证500ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159935",
+      "name": "中证500ETF景顺",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159968",
+      "name": "中证500ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159982",
+      "name": "中证500ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "510500",
+      "name": "中证500ETF南方",
+      "exchange": "SSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "510580",
+      "name": "中证500ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "512500",
+      "name": "中证500ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "csi-500",
+      "benchmark": "中证500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159800",
+      "name": "中证800ETF鹏华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-800",
+      "benchmark": "中证800",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "515800",
+      "name": "中证800ETF汇添富",
+      "exchange": "SSE",
+      "benchmarkId": "csi-800",
+      "benchmark": "中证800",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "515810",
+      "name": "中证800ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-800",
+      "benchmark": "中证800",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159215",
+      "name": "A500ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159338",
+      "name": "中证A500ETF国泰",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159339",
+      "name": "A500ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159351",
+      "name": "A500ETF嘉实",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159352",
+      "name": "A500ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159353",
+      "name": "中证A500ETF景顺",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159356",
+      "name": "A500ETF万家",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159357",
+      "name": "A500ETF博时",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159358",
+      "name": "中证A500ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159359",
+      "name": "A500ETF华安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159360",
+      "name": "A500ETF天弘",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159361",
+      "name": "A500ETF易方达",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159362",
+      "name": "A500ETF工银",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159376",
+      "name": "A500ETF浦银",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159379",
+      "name": "A500ETF融通",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159380",
+      "name": "A500ETF东财",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159386",
+      "name": "A500ETF永赢",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "512020",
+      "name": "A500ETF鹏华",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "512050",
+      "name": "A500ETF华夏",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "512080",
+      "name": "A500ETF中金",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "560510",
+      "name": "中证A500ETF泰康",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "560530",
+      "name": "中证A500ETF摩根",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "560610",
+      "name": "A500ETF招商",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "560750",
+      "name": "A500ETF申万菱信",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563220",
+      "name": "A500ETF富国",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563360",
+      "name": "A500ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563500",
+      "name": "A500ETF华宝",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563650",
+      "name": "中证A500ETF兴业",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563660",
+      "name": "A500ETF银河",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563860",
+      "name": "中证A500ETF海富通",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563880",
+      "name": "A500ETF汇添富",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a500",
+      "benchmark": "中证A500",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "159136",
+      "name": "A50ETF广发",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159390",
+      "name": "中证A50ETF国联",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159591",
+      "name": "A50ETF富国",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159592",
+      "name": "A50ETF银华",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159593",
+      "name": "中证A50ETF平安",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159595",
+      "name": "中证A50ETF大成",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159596",
+      "name": "A50ETF华宝",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159601",
+      "name": "A50ETF华夏",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "159602",
+      "name": "中国A50ETF南方",
+      "exchange": "SZSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-08-31",
+      "lastDate": "2026-09-17",
+      "observations": 14
+    },
+    {
+      "code": "512150",
+      "name": "富时A50ETF汇安",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563080",
+      "name": "中证A50ETF易方达",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    },
+    {
+      "code": "563350",
+      "name": "A50ETF华泰柏瑞",
+      "exchange": "SSE",
+      "benchmarkId": "csi-a50",
+      "benchmark": "A50系列",
+      "firstDate": "2026-09-07",
+      "lastDate": "2026-09-18",
+      "observations": 10
+    }
+  ]
+}

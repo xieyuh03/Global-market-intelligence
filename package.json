@@ -9,6 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "data:refresh-market": "tsx scripts/refresh-market-data.ts",
+    "research:etf-flow": "node scripts/analyze-broad-etf-flow.mjs",
+    "research:deviation": "node scripts/analyze-index-deviation.mjs",
     "research:volatility": "node scripts/analyze-index-volatility.mjs",
     "data:export-internal": "tsx scripts/export-internal-data.ts",
     "boundary:check": "node scripts/check-public-boundary.mjs",

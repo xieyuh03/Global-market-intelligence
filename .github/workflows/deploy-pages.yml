@@ -63,6 +63,34 @@ jobs:
           }
           NODE
 
+      - name: Refresh broad ETF flow
+        id: etf_flow_refresh
+        continue-on-error: true
+        timeout-minutes: 10
+        run: npm run research:etf-flow
+
+      - name: Verify broad ETF flow snapshot
+        env:
+          REFRESH_OUTCOME: ${{ steps.etf_flow_refresh.outcome }}
+        run: |
+          if [ "$REFRESH_OUTCOME" != "success" ]; then
+            echo "::warning::Live ETF flow refresh failed; deploying the last verified complete snapshot."
+          fi
+          node --input-type=module <<'NODE'
+          import { readFile, stat } from "node:fs/promises";
+
+          const root = "public/data/etf-flow";
+          const payload = JSON.parse(await readFile(`${root}/broad-etf-flow.json`, "utf8"));
+          if (!payload.asOf || payload.coverage?.funds < 50 || payload.daily?.length < 2) throw new Error("Broad ETF flow snapshot is incomplete");
+          if (payload.daily.some((row) => row.status !== "complete" || row.exchanges?.length !== 2)) throw new Error("Broad ETF aggregate contains partial exchange dates");
+          for (const file of ["daily.csv", "fund-daily.csv", "universe.csv"]) {
+            if ((await stat(`${root}/${file}`)).size === 0) throw new Error(`${file} is empty`);
+          }
+          NODE
+
+      - name: Refresh index deviation research
+        run: npm run research:deviation
+
       - name: Validate and export site
         run: npm run check
 
