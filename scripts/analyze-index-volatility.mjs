@@ -13,6 +13,7 @@ const CHART_DIR = path.join(OUTPUT, "charts");
 const TODAY = new Date().toISOString().slice(0, 10);
 const ANNUALIZATION = Math.sqrt(252);
 const COMPARABLE_START = "2005-01-04";
+const RETRY_DELAYS_MS = [0, 1_500, 4_000];
 
 const INDEXES = [
   { id: "sp500", name: "标普500", market: "美国", source: "Yahoo Finance", type: "yahoo", symbol: "^GSPC", period1: -1325583000 },
@@ -70,10 +71,41 @@ function linearRegression(x, y) {
   return { intercept, slope, rSquared: totalSquares ? Math.max(0, 1 - residualSquares / totalSquares) : null };
 }
 
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function fetchPayload(url, headers, parse) {
+  let lastError;
+  for (let attempt = 0; attempt < RETRY_DELAYS_MS.length; attempt += 1) {
+    if (RETRY_DELAYS_MS[attempt]) await wait(RETRY_DELAYS_MS[attempt]);
+    let response;
+    try {
+      response = await fetch(url, { headers, signal: AbortSignal.timeout(45_000) });
+    } catch (error) {
+      lastError = error;
+      if (attempt === RETRY_DELAYS_MS.length - 1) throw error;
+      continue;
+    }
+    if (!response.ok) {
+      const error = new Error(`${response.status} ${response.statusText}: ${url}`);
+      const retryable = response.status === 408 || response.status === 425 || response.status === 429 || response.status >= 500;
+      if (!retryable || attempt === RETRY_DELAYS_MS.length - 1) throw error;
+      lastError = error;
+      continue;
+    }
+    try {
+      return await parse(response);
+    } catch (error) {
+      lastError = error;
+      if (attempt === RETRY_DELAYS_MS.length - 1) throw error;
+    }
+  }
+  throw lastError;
+}
+
 async function fetchJson(url, headers = {}) {
-  const response = await fetch(url, { headers, signal: AbortSignal.timeout(45_000) });
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}: ${url}`);
-  return response.json();
+  return fetchPayload(url, headers, (response) => response.json());
 }
 
 async function fetchYahoo(definition) {
@@ -112,10 +144,21 @@ async function fetchEastmoney(definition) {
     fields1: "f1,f2,f3,f4,f5,f6",
     fields2: "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
   });
-  const payload = await fetchJson(`http://push2his.eastmoney.com/api/qt/stock/kline/get?${parameters}`, {
+  const headers = {
     Referer: "https://quote.eastmoney.com/",
     "User-Agent": "Mozilla/5.0 VolatilityResearch/1.0",
-  });
+  };
+  let payload;
+  let lastError;
+  for (const protocol of ["https", "http"]) {
+    try {
+      payload = await fetchJson(`${protocol}://push2his.eastmoney.com/api/qt/stock/kline/get?${parameters}`, headers);
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  if (!payload) throw lastError;
   return (payload.data?.klines ?? []).flatMap((line) => {
     const [date, open, close, high, low, volume, amount] = line.split(",");
     if (!date || date > TODAY) return [];
@@ -397,9 +440,12 @@ function quintileSvg(summaries) {
 }
 
 async function fetchFred(id) {
-  const response = await fetch(`https://fred.stlouisfed.org/graph/fredgraph.csv?id=${id}`, { headers: { "User-Agent": "Mozilla/5.0" } });
-  if (!response.ok) throw new Error(`FRED ${id}: ${response.status}`);
-  const lines = (await response.text()).trim().split(/\r?\n/).slice(1);
+  const csv = await fetchPayload(
+    `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${id}`,
+    { "User-Agent": "Mozilla/5.0 VolatilityResearch/1.0" },
+    (response) => response.text(),
+  );
+  const lines = csv.trim().split(/\r?\n/).slice(1);
   return new Map(lines.flatMap((line) => {
     const [date, raw] = line.split(",");
     const value = Number(raw);

@@ -36,7 +36,32 @@ jobs:
         run: npm run data:refresh-market
 
       - name: Refresh index volatility research
+        id: volatility_refresh
+        continue-on-error: true
         run: npm run research:volatility
+
+      - name: Verify index volatility snapshot
+        env:
+          REFRESH_OUTCOME: ${{ steps.volatility_refresh.outcome }}
+        run: |
+          if [ "$REFRESH_OUTCOME" != "success" ]; then
+            echo "::warning::Live volatility refresh failed; deploying the last verified complete snapshot."
+          fi
+          node --input-type=module <<'NODE'
+          import { readFile, stat } from "node:fs/promises";
+
+          const root = "public/data/volatility-analysis";
+          const ids = ["sp500", "nasdaq-composite", "shanghai-composite", "csi300"];
+          const summary = JSON.parse(await readFile(`${root}/summary.json`, "utf8"));
+          if (summary.indices?.length !== ids.length || summary.indices.some((item) => item.observations < 1_000)) {
+            throw new Error("Volatility summary is incomplete");
+          }
+          for (const id of ids) {
+            for (const directory of ["raw", "derived"]) {
+              if ((await stat(`${root}/${directory}/${id}.csv`)).size === 0) throw new Error(`${directory}/${id}.csv is empty`);
+            }
+          }
+          NODE
 
       - name: Validate and export site
         run: npm run check
