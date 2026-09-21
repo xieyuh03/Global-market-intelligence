@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "data:refresh-market": "tsx scripts/refresh-market-data.ts",
     "research:etf-flow": "node scripts/analyze-broad-etf-flow.mjs",
+    "research:etf-flow:full": "node scripts/analyze-broad-etf-flow.mjs --full-history",
     "research:deviation": "node scripts/analyze-index-deviation.mjs",
     "research:volatility": "node scripts/analyze-index-volatility.mjs",
     "data:export-internal": "tsx scripts/export-internal-data.ts",

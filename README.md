@@ -4,7 +4,7 @@
 
 `/market/volatility/` 保留为兼容入口，当前指向均线对数偏离度看板。
 
-宽基 ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估算净申购金额。均线对数偏离度页位于 `/market/deviation/`，提供可滑动日频图和分段历史概率。
+ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估算全A、宽基、行业、黄金、港股等类别的净申购金额；支持自定义日期区间，并可在宽基子类上叠加对应指数走势。上交所历史从2012年起，沪深完整覆盖从2016年9月起。均线对数偏离度页位于 `/market/deviation/`，提供可滑动日频图和分段历史概率。
 
 - Website: <https://xieyuh03.github.io/Global-market-intelligence/>
 - Source mirror: <https://github.com/xieyuh03/Global-market-intelligence>

@@ -66,7 +66,7 @@ jobs:
       - name: Refresh broad ETF flow
         id: etf_flow_refresh
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: npm run research:etf-flow
 
       - name: Verify broad ETF flow snapshot
@@ -81,11 +81,16 @@ jobs:
 
           const root = "public/data/etf-flow";
           const payload = JSON.parse(await readFile(`${root}/broad-etf-flow.json`, "utf8"));
-          if (!payload.asOf || payload.coverage?.funds < 50 || payload.daily?.length < 2) throw new Error("Broad ETF flow snapshot is incomplete");
-          if (payload.daily.some((row) => row.status !== "complete" || row.exchanges?.length !== 2)) throw new Error("Broad ETF aggregate contains partial exchange dates");
-          for (const file of ["daily.csv", "fund-daily.csv", "universe.csv"]) {
+          if (!payload.asOf || payload.coverage?.funds < 500 || payload.daily?.length < 2 || payload.categories?.length < 5) throw new Error("ETF flow snapshot is incomplete");
+          if (payload.daily.some((row) => row.date >= payload.coverage.fullMarketStartDate && (row.status !== "complete" || row.exchanges?.length !== 2))) throw new Error("ETF aggregate contains partial dates inside the full-market period");
+          for (const id of ["all-a", "broad", "industry", "gold", "hong-kong"]) {
+            if (!payload.categories.some((category) => category.id === id)) throw new Error(`Missing ETF category: ${id}`);
+          }
+          for (const file of ["etf-flow-dashboard.json", "daily.csv", "category-daily.csv", "fund-daily.csv", "universe.csv"]) {
             if ((await stat(`${root}/${file}`)).size === 0) throw new Error(`${file} is empty`);
           }
+          const csi300 = JSON.parse(await readFile(`${root}/indices/csi-300.json`, "utf8"));
+          if (csi300.points?.length < 1_000) throw new Error("CSI 300 overlay history is incomplete");
           NODE
 
       - name: Refresh index deviation research
