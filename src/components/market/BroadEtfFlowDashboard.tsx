@@ -66,6 +66,11 @@ type BenchmarkIndexData = {
   points: Array<[string, number]>;
 };
 
+type ChartTooltipEntry = {
+  dataKey?: string | number;
+  value?: string | number;
+};
+
 export type BroadEtfFlowData = {
   generatedAt: string;
   asOf: string;
@@ -100,6 +105,48 @@ function tone(value: number | null) {
 
 function indexPoints(value: number) {
   return new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 2 }).format(value);
+}
+
+function flowDirection(value: number, prefix = "日") {
+  if (value > 0) return `${prefix}净申购`;
+  if (value < 0) return `${prefix}净赎回`;
+  return `${prefix}净流量`;
+}
+
+function EtfFlowTooltip({
+  active,
+  label,
+  payload,
+  overlayMode,
+  overlayLabel,
+}: {
+  active?: boolean;
+  label?: string | number;
+  payload?: ChartTooltipEntry[];
+  overlayMode: "cumulative" | "index" | "none";
+  overlayLabel: string;
+}) {
+  if (!active || !payload?.length) return null;
+  const flow = Number(payload.find((item) => item.dataKey === "flow")?.value);
+  const overlay = Number(payload.find((item) => item.dataKey === (overlayMode === "index" ? "indexValue" : "cumulative"))?.value);
+  return (
+    <div className="border border-white/15 bg-[#111619] px-4 py-3 text-xs shadow-xl">
+      <p className="mb-3 text-sm font-medium text-[#f2f4f5]">{label}</p>
+      {Number.isFinite(flow) ? (
+        <p className="font-medium" style={{ color: tone(flow) }}>
+          {flowDirection(flow)}：{Math.abs(flow).toFixed(2)}亿元
+        </p>
+      ) : null}
+      {overlayMode === "index" && Number.isFinite(overlay) ? (
+        <p className="mt-2 font-medium text-[#d49a54]">{overlayLabel}：{indexPoints(overlay)} 点</p>
+      ) : null}
+      {overlayMode === "cumulative" && Number.isFinite(overlay) ? (
+        <p className="mt-2 font-medium" style={{ color: tone(overlay) }}>
+          {flowDirection(overlay, "累计")}：{Math.abs(overlay).toFixed(2)}亿元
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 function monthsBefore(date: string, months: number) {
@@ -256,7 +303,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
               {activeOverlayMode !== "none" ? <YAxis yAxisId="overlay" orientation="right" width={activeOverlayMode === "index" ? 64 : 52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => activeOverlayMode === "index" ? indexPoints(Number(value)) : `${value}亿`} axisLine={false} tickLine={false} /> : null}
-              <Tooltip formatter={(value, name) => [activeOverlayMode === "index" && name === overlayLabel ? `${indexPoints(Number(value))} 点` : `${Number(value).toFixed(2)}亿元`, name]} contentStyle={{ background: "#111619", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 0, fontSize: 11 }} labelStyle={{ color: "#f2f4f5", marginBottom: 6 }} />
+              <Tooltip content={<EtfFlowTooltip overlayMode={activeOverlayMode} overlayLabel={overlayLabel} />} />
               <Bar yAxisId="flow" dataKey="flow" name="日净申购" fill="#d1d5db" maxBarSize={28} isAnimationActive={false}>{chartData.map((item) => <Cell key={item.date} fill={tone(item.flow)} fillOpacity={item.status === "partial" ? 0.4 : 1} />)}</Bar>
               {activeOverlayMode !== "none" ? <Line yAxisId="overlay" dataKey={overlayDataKey} name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
             </ComposedChart>
