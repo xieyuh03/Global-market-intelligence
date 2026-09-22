@@ -98,6 +98,10 @@ function tone(value: number | null) {
   return value > 0 ? "#e7685d" : "#55a876";
 }
 
+function indexPoints(value: number) {
+  return new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 2 }).format(value);
+}
+
 function monthsBefore(date: string, months: number) {
   const value = new Date(`${date}T00:00:00Z`);
   value.setUTCMonth(value.getUTCMonth() - months);
@@ -152,12 +156,11 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
     return flow == null ? [] : [{ date: row.date, status: row.status, flow }];
   }).filter((row) => row.date >= rangeStart && row.date <= rangeEnd);
   const indexByDate = new Map(indexSeries?.id === benchmarkId ? indexSeries.points : []);
-  const firstIndexClose = selectedDaily.map((row) => indexByDate.get(row.date)).find((value) => value != null) ?? null;
   const activeOverlayMode = overlayMode === "index" && !canShowIndex ? "none" : overlayMode;
   const chartData = selectedDaily.reduce<Array<{ date: string; status: string; flow: number; cumulative: number; indexValue: number | null }>>((items, row) => {
     const cumulative = (items.at(-1)?.cumulative ?? 0) + row.flow;
     const indexClose = indexByDate.get(row.date);
-    const indexValue = firstIndexClose && indexClose ? +(indexClose / firstIndexClose * 100).toFixed(4) : null;
+    const indexValue = indexClose ?? null;
     return [...items, { ...row, cumulative: +cumulative.toFixed(4), indexValue }];
   }, []);
   const latest = data.daily.find((row) => row.date === data.asOf) ?? data.daily.at(-1);
@@ -172,7 +175,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const topOutflows = selectedFunds.slice(-8).reverse();
   const overlayDataKey = activeOverlayMode === "index" ? "indexValue" : "cumulative";
   const overlayLabel = activeOverlayMode === "index"
-    ? `${selectedBenchmark?.indexLabel ?? selectedBenchmark?.label}（区间起点=100）`
+    ? `${selectedBenchmark?.indexLabel ?? selectedBenchmark?.label}（实际点位）`
     : "区间累计净申购（亿元）";
 
   function applyRangePreset(id: string) {
@@ -252,8 +255,8 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
               <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
-              {activeOverlayMode !== "none" ? <YAxis yAxisId="overlay" orientation="right" width={52} domain={activeOverlayMode === "index" ? ["dataMin - 2", "dataMax + 2"] : ["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => activeOverlayMode === "index" ? Number(value).toFixed(0) : `${value}亿`} axisLine={false} tickLine={false} /> : null}
-              <Tooltip formatter={(value, name) => [activeOverlayMode === "index" && name === overlayLabel ? Number(value).toFixed(2) : `${Number(value).toFixed(2)}亿元`, name]} contentStyle={{ background: "#111619", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 0, fontSize: 11 }} labelStyle={{ color: "#f2f4f5", marginBottom: 6 }} />
+              {activeOverlayMode !== "none" ? <YAxis yAxisId="overlay" orientation="right" width={activeOverlayMode === "index" ? 64 : 52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => activeOverlayMode === "index" ? indexPoints(Number(value)) : `${value}亿`} axisLine={false} tickLine={false} /> : null}
+              <Tooltip formatter={(value, name) => [activeOverlayMode === "index" && name === overlayLabel ? `${indexPoints(Number(value))} 点` : `${Number(value).toFixed(2)}亿元`, name]} contentStyle={{ background: "#111619", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 0, fontSize: 11 }} labelStyle={{ color: "#f2f4f5", marginBottom: 6 }} />
               <Bar yAxisId="flow" dataKey="flow" name="日净申购" maxBarSize={28} isAnimationActive={false}>{chartData.map((item) => <Cell key={item.date} fill={tone(item.flow)} fillOpacity={item.status === "partial" ? 0.4 : 1} />)}</Bar>
               {activeOverlayMode !== "none" ? <Line yAxisId="overlay" dataKey={overlayDataKey} name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
             </ComposedChart>
@@ -282,7 +285,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
         <p><b className="text-gray-300">份额来源：</b>上海证券交易所 TOT_VOL 与深圳证券交易所基金规模（份）。</p>
         <p><b className="text-gray-300">金额口径：</b>当日份额减前一披露交易日份额，再乘当日不复权收盘价；因此是净申购金额估算，不是成交额、主力资金流或交易所现金结算值。</p>
         <p><b className="text-gray-300">覆盖边界：</b>{data.coverage.startDate} 起为沪市历史，{data.coverage.fullMarketStartDate} 起为沪深完整历史；图中低透明度柱表示单市场覆盖。</p>
-        <p><b className="text-gray-300">黄色曲线：</b>累计模式为所选区间内日净申购额逐日累加，净赎回占优时会落入负值；切换日期后从新区间重新计算。指数模式按区间首个有效点归一为100。</p>
+        <p><b className="text-gray-300">黄色曲线：</b>累计模式为所选区间内日净申购额逐日累加，净赎回占优时会落入负值；切换日期后从新区间重新计算。指数模式显示对应指数的实际收盘点位。</p>
         <p><b className="text-gray-300">异常处理：</b>单日份额变化达到50%或缺少价格的记录不进入总额，但保留在明细状态中。</p>
       </section>
     </>
