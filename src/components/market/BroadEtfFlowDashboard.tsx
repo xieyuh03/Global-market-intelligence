@@ -257,7 +257,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
               {activeOverlayMode !== "none" ? <YAxis yAxisId="overlay" orientation="right" width={activeOverlayMode === "index" ? 64 : 52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => activeOverlayMode === "index" ? indexPoints(Number(value)) : `${value}亿`} axisLine={false} tickLine={false} /> : null}
               <Tooltip formatter={(value, name) => [activeOverlayMode === "index" && name === overlayLabel ? `${indexPoints(Number(value))} 点` : `${Number(value).toFixed(2)}亿元`, name]} contentStyle={{ background: "#111619", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 0, fontSize: 11 }} labelStyle={{ color: "#f2f4f5", marginBottom: 6 }} />
-              <Bar yAxisId="flow" dataKey="flow" name="日净申购" maxBarSize={28} isAnimationActive={false}>{chartData.map((item) => <Cell key={item.date} fill={tone(item.flow)} fillOpacity={item.status === "partial" ? 0.4 : 1} />)}</Bar>
+              <Bar yAxisId="flow" dataKey="flow" name="日净申购" fill="#d1d5db" maxBarSize={28} isAnimationActive={false}>{chartData.map((item) => <Cell key={item.date} fill={tone(item.flow)} fillOpacity={item.status === "partial" ? 0.4 : 1} />)}</Bar>
               {activeOverlayMode !== "none" ? <Line yAxisId="overlay" dataKey={overlayDataKey} name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
             </ComposedChart>
           </ResponsiveContainer>
