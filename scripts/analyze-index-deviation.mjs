@@ -43,16 +43,11 @@ const BANDS = [
   { id: "bottom-1", label: "最低1%", side: "bottom", from: 0, to: .01 },
   { id: "bottom-5", label: "低位1–5%", side: "bottom", from: .01, to: .05 },
   { id: "bottom-10", label: "低位5–10%", side: "bottom", from: .05, to: .10 },
-  { id: "lower-25", label: "低位10–25%", side: "neutral", from: .10, to: .25 },
-  { id: "lower-half", label: "中低位25–50%", side: "neutral", from: .25, to: .50 },
-  { id: "upper-half", label: "中高位50–75%", side: "neutral", from: .50, to: .75 },
-  { id: "upper-90", label: "高位75–90%", side: "neutral", from: .75, to: .90 },
+  { id: "middle", label: "中间80%", side: "neutral", from: .10, to: .90 },
   { id: "top-10", label: "高位90–95%", side: "top", from: .90, to: .95 },
   { id: "top-5", label: "高位95–99%", side: "top", from: .95, to: .99 },
   { id: "top-1", label: "最高1%", side: "top", from: .99, to: 1 },
 ];
-
-const PROBABILITY_HORIZONS = [5, 10, 20];
 
 function round(value, digits = 4) {
   return value == null || !Number.isFinite(value) ? null : +value.toFixed(digits);
@@ -62,26 +57,17 @@ function mean(values) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
 }
 
-function quantile(values, probabilityValue) {
+function quantile(values, probability) {
   if (!values.length) return null;
   const sorted = [...values].sort((left, right) => left - right);
-  const position = (sorted.length - 1) * probabilityValue;
+  const position = (sorted.length - 1) * probability;
   const lower = Math.floor(position);
   const fraction = position - lower;
   return sorted[lower + 1] == null ? sorted[lower] : sorted[lower] + fraction * (sorted[lower + 1] - sorted[lower]);
 }
 
-function wilsonInterval(successes, observations) {
-  if (!observations) return { lowerPct: null, upperPct: null };
-  const z = 1.96;
-  const rate = successes / observations;
-  const denominator = 1 + z ** 2 / observations;
-  const center = (rate + z ** 2 / (2 * observations)) / denominator;
-  const margin = z * Math.sqrt((rate * (1 - rate) + z ** 2 / (4 * observations)) / observations) / denominator;
-  return {
-    lowerPct: (center - margin) * 100,
-    upperPct: (center + margin) * 100,
-  };
+function probability(rows, predicate) {
+  return rows.length ? rows.filter(predicate).length / rows.length * 100 : null;
 }
 
 function parseCsv(text) {
@@ -114,24 +100,23 @@ function futureExcursion(rows, index, horizon) {
 
 function deriveSeries(rows) {
   let sum60 = 0;
-  let sum120 = 0;
+  let sum200 = 0;
   return rows.map((row, index) => {
     sum60 += row.adjustedClose;
-    sum120 += row.adjustedClose;
+    sum200 += row.adjustedClose;
     if (index >= 60) sum60 -= rows[index - 60].adjustedClose;
-    if (index >= 120) sum120 -= rows[index - 120].adjustedClose;
+    if (index >= 200) sum200 -= rows[index - 200].adjustedClose;
     const ma60 = index >= 59 ? sum60 / 60 : null;
-    const ma120 = index >= 119 ? sum120 / 120 : null;
+    const ma200 = index >= 199 ? sum200 / 200 : null;
     const excursion = futureExcursion(rows, index, 20);
     return {
       date: row.date,
       close: row.adjustedClose,
       ma60,
-      ma120,
+      ma200,
       deviation60Pct: ma60 ? Math.log(row.adjustedClose / ma60) * 100 : null,
-      deviation120Pct: ma120 ? Math.log(row.adjustedClose / ma120) * 100 : null,
+      deviation200Pct: ma200 ? Math.log(row.adjustedClose / ma200) * 100 : null,
       forwardReturn5Pct: futureLogReturn(rows, index, 5),
-      forwardReturn10Pct: futureLogReturn(rows, index, 10),
       forwardReturn20Pct: futureLogReturn(rows, index, 20),
       forwardReturn60Pct: futureLogReturn(rows, index, 60),
       maxForwardGain20Pct: excursion.gain,
@@ -140,151 +125,71 @@ function deriveSeries(rows) {
   });
 }
 
-function outcomeStats(rows, horizon) {
-  const returnKey = `forwardReturn${horizon}Pct`;
-  const available = rows.filter((row) => Number.isFinite(row[returnKey]));
-  const upCount = available.filter((row) => row[returnKey] > 0).length;
-  const downCount = available.filter((row) => row[returnKey] < 0).length;
-  const confidence = wilsonInterval(upCount, available.length);
-  return {
-    observations: available.length,
-    upProbabilityPct: round(available.length ? upCount / available.length * 100 : null, 2),
-    downProbabilityPct: round(available.length ? downCount / available.length * 100 : null, 2),
-    averageForwardPct: round(mean(available.map((row) => row[returnKey]))),
-    upConfidenceLowerPct: round(confidence.lowerPct, 2),
-    upConfidenceUpperPct: round(confidence.upperPct, 2),
-  };
-}
-
-function bandStats(rows, key, band, lower, upper, baselineByHorizon) {
+function bandStats(rows, key, band, lower, upper) {
   const selected = rows.filter((row) => Number.isFinite(row[key])
     && row[key] >= lower
-    && (band.to === 1 ? row[key] <= upper : row[key] < upper));
-  const horizons = Object.fromEntries(PROBABILITY_HORIZONS.map((horizon) => {
-    const statistics = outcomeStats(selected, horizon);
-    const baseline = baselineByHorizon[horizon];
-    const probabilityLiftPct = statistics.upProbabilityPct - baseline.upProbabilityPct;
-    const relativeSignal = statistics.upConfidenceLowerPct > baseline.upProbabilityPct
-      ? "strong"
-      : statistics.upConfidenceUpperPct < baseline.upProbabilityPct
-        ? "weak"
-        : "neutral";
-    return [horizon, {
-      ...statistics,
-      probabilityLiftPct: round(probabilityLiftPct, 2),
-      relativeSignal,
-    }];
-  }));
+    && (band.to === 1 ? row[key] <= upper : row[key] < upper)
+    && Number.isFinite(row.forwardReturn20Pct));
+  const available5 = selected.filter((row) => Number.isFinite(row.forwardReturn5Pct));
+  const available60 = selected.filter((row) => Number.isFinite(row.forwardReturn60Pct));
+  const excursions = selected.filter((row) => Number.isFinite(row.maxForwardGain20Pct) && Number.isFinite(row.maxForwardDrawdown20Pct));
   return {
     id: band.id,
     label: band.label,
     side: band.side,
-    percentileFrom: band.from * 100,
-    percentileTo: band.to * 100,
     lowerPct: round(lower),
     upperPct: round(upper),
-    horizons,
+    observations: selected.length,
+    reboundProbability5dPct: round(probability(available5, (row) => row.forwardReturn5Pct > 0), 2),
+    reboundProbability20dPct: round(probability(selected, (row) => row.forwardReturn20Pct > 0), 2),
+    reboundProbability60dPct: round(probability(available60, (row) => row.forwardReturn60Pct > 0), 2),
+    drawdownProbability5dPct: round(probability(available5, (row) => row.forwardReturn5Pct < 0), 2),
+    drawdownProbability20dPct: round(probability(selected, (row) => row.forwardReturn20Pct < 0), 2),
+    drawdownProbability60dPct: round(probability(available60, (row) => row.forwardReturn60Pct < 0), 2),
+    gain5Within20dProbabilityPct: round(probability(excursions, (row) => row.maxForwardGain20Pct >= 5), 2),
+    loss5Within20dProbabilityPct: round(probability(excursions, (row) => row.maxForwardDrawdown20Pct <= -5), 2),
+    averageForward5dPct: round(mean(available5.map((row) => row.forwardReturn5Pct))),
+    averageForward20dPct: round(mean(selected.map((row) => row.forwardReturn20Pct))),
+    averageForward60dPct: round(mean(available60.map((row) => row.forwardReturn60Pct))),
   };
 }
 
-function buildFixedBandReference(rows, key, segmentStart) {
-  const lowerPct = -8;
-  const upperPct = 8;
-  const sample = rows.filter((row) => row.date >= segmentStart && Number.isFinite(row[key]));
-  const values = sample.map((row) => row[key]);
-  const lowerEvents = [];
-  const upperEvents = [];
-  let lastLowerIndex = Number.NEGATIVE_INFINITY;
-  let lastUpperIndex = Number.NEGATIVE_INFINITY;
-  for (let index = 1; index < sample.length; index += 1) {
-    const previous = sample[index - 1];
-    const current = sample[index];
-    if (previous[key] > lowerPct && current[key] <= lowerPct && index - lastLowerIndex >= 20) {
-      lowerEvents.push(current);
-      lastLowerIndex = index;
-    }
-    if (previous[key] < upperPct && current[key] >= upperPct && index - lastUpperIndex >= 20) {
-      upperEvents.push(current);
-      lastUpperIndex = index;
-    }
-  }
-  return {
-    lowerPct,
-    upperPct,
-    lowerPercentile: round(values.filter((value) => value <= lowerPct).length / Math.max(1, values.length) * 100, 2),
-    upperPercentile: round(values.filter((value) => value <= upperPct).length / Math.max(1, values.length) * 100, 2),
-    daysBelowLowerPct: round(values.filter((value) => value <= lowerPct).length / Math.max(1, values.length) * 100, 2),
-    daysAboveUpperPct: round(values.filter((value) => value >= upperPct).length / Math.max(1, values.length) * 100, 2),
-    lowerCrossings: {
-      observations: lowerEvents.length,
-      horizons: Object.fromEntries(PROBABILITY_HORIZONS.map((horizon) => [horizon, outcomeStats(lowerEvents, horizon)])),
-    },
-    upperCrossings: {
-      observations: upperEvents.length,
-      horizons: Object.fromEntries(PROBABILITY_HORIZONS.map((horizon) => [horizon, outcomeStats(upperEvents, horizon)])),
-    },
-  };
-}
-
-function buildWindow(rows, key, currentDeviation, segmentStart) {
-  const sample = rows.filter((row) => row.date >= segmentStart && Number.isFinite(row[key]));
-  const horizons = Object.fromEntries(PROBABILITY_HORIZONS.map((horizon) => [horizon, outcomeStats(sample, horizon)]));
-  const values = sample.map((row) => row[key]);
-  const boundaries = [...new Set(BANDS.flatMap((band) => [band.from, band.to]))]
-    .sort((left, right) => left - right)
-    .map((value) => quantile(values, value));
-  const boundaryByPercentile = new Map(
-    [...new Set(BANDS.flatMap((band) => [band.from, band.to]))]
-      .sort((left, right) => left - right)
-      .map((value, index) => [value, boundaries[index]]),
-  );
-  const bands = BANDS.map((band) => bandStats(
-    sample,
-    key,
-    band,
-    boundaryByPercentile.get(band.from),
-    boundaryByPercentile.get(band.to),
-    horizons,
-  ));
+function buildWindow(rows, key, currentDeviation) {
+  const values = rows.map((row) => row[key]).filter(Number.isFinite);
+  const boundaries = [0, .01, .05, .10, .90, .95, .99, 1].map((value) => quantile(values, value));
+  const bands = BANDS.map((band, index) => bandStats(rows, key, band, boundaries[index], boundaries[index + 1]));
   const currentPercentile = values.filter((value) => value <= currentDeviation).length / Math.max(1, values.length) * 100;
-  const currentBand = BANDS.find((band) => currentPercentile >= band.from * 100
-    && (band.to === 1 ? currentPercentile <= 100 : currentPercentile < band.to * 100));
-  return {
-    currentDeviationPct: round(currentDeviation),
-    currentPercentile: round(currentPercentile, 2),
-    currentBandId: currentBand?.id ?? null,
-    actualStart: sample[0]?.date ?? null,
-    end: sample.at(-1)?.date ?? null,
-    observations: sample.length,
-    horizons,
-    fixedBandReference: buildFixedBandReference(rows, key, segmentStart),
-    bands,
-  };
+  const currentBand = bands.find((band) => currentDeviation >= band.lowerPct
+    && (band.id === "top-1" ? currentDeviation <= band.upperPct : currentDeviation < band.upperPct));
+  return { currentDeviationPct: round(currentDeviation), currentPercentile: round(currentPercentile, 2), currentBandId: currentBand?.id ?? null, bands };
 }
 
 function buildSegment(segment, rows, current) {
+  const sample = rows.filter((row) => row.date >= segment.start && Number.isFinite(row.deviation200Pct));
   return {
     ...segment,
+    actualStart: sample[0]?.date ?? null,
+    end: sample.at(-1)?.date ?? null,
+    observations: sample.length,
     windows: {
-      60: buildWindow(rows, "deviation60Pct", current.deviation60Pct, segment.start),
-      120: buildWindow(rows, "deviation120Pct", current.deviation120Pct, segment.start),
+      60: buildWindow(sample, "deviation60Pct", current.deviation60Pct),
+      200: buildWindow(sample, "deviation200Pct", current.deviation200Pct),
     },
   };
 }
 
 function buildTailEvents(rows, segment) {
-  const sample60 = rows.filter((row) => row.date >= segment.start && Number.isFinite(row.deviation60Pct));
-  const sample120 = rows.filter((row) => row.date >= segment.start && Number.isFinite(row.deviation120Pct));
+  const sample = rows.filter((row) => row.date >= segment.start && Number.isFinite(row.deviation200Pct));
   const thresholds = {
-    low60: quantile(sample60.map((row) => row.deviation60Pct), .05),
-    high60: quantile(sample60.map((row) => row.deviation60Pct), .95),
-    low120: quantile(sample120.map((row) => row.deviation120Pct), .05),
-    high120: quantile(sample120.map((row) => row.deviation120Pct), .95),
+    low60: quantile(sample.map((row) => row.deviation60Pct), .05),
+    high60: quantile(sample.map((row) => row.deviation60Pct), .95),
+    low200: quantile(sample.map((row) => row.deviation200Pct), .05),
+    high200: quantile(sample.map((row) => row.deviation200Pct), .95),
   };
-  return rows.filter((row) => row.date >= segment.start).flatMap((row) => {
+  return sample.flatMap((row) => {
     const signal60 = row.deviation60Pct <= thresholds.low60 ? "bottom" : row.deviation60Pct >= thresholds.high60 ? "top" : "";
-    const signal120 = row.deviation120Pct <= thresholds.low120 ? "bottom" : row.deviation120Pct >= thresholds.high120 ? "top" : "";
-    return signal60 || signal120 ? [{ ...row, signal60, signal120 }] : [];
+    const signal200 = row.deviation200Pct <= thresholds.low200 ? "bottom" : row.deviation200Pct >= thresholds.high200 ? "top" : "";
+    return signal60 || signal200 ? [{ ...row, signal60, signal200 }] : [];
   });
 }
 
@@ -305,7 +210,7 @@ async function main() {
   for (const definition of INDEXES) {
     const rows = parseCsv(await readFile(path.join(SOURCE, `${definition.id}.csv`), "utf8"));
     const derived = deriveSeries(rows);
-    const current = [...derived].reverse().find((row) => Number.isFinite(row.deviation120Pct));
+    const current = [...derived].reverse().find((row) => Number.isFinite(row.deviation200Pct));
     const segments = SEGMENTS[definition.id].map((segment) => buildSegment(segment, derived, current));
     const tailEvents = buildTailEvents(derived, SEGMENTS[definition.id][0]);
     indices.push({
@@ -313,87 +218,32 @@ async function main() {
       firstDate: rows[0].date,
       lastDate: rows.at(-1).date,
       observations: rows.length,
-      current: {
-        date: current.date,
-        close: round(current.close),
-        ma60: round(current.ma60),
-        ma120: round(current.ma120),
-        deviation60Pct: round(current.deviation60Pct),
-        deviation120Pct: round(current.deviation120Pct),
-      },
+      current: { date: current.date, close: round(current.close), ma60: round(current.ma60), ma200: round(current.ma200), deviation60Pct: round(current.deviation60Pct), deviation200Pct: round(current.deviation200Pct) },
       segments,
-      files: {
-        daily: `daily/${definition.id}.csv`,
-        series: `series/${definition.id}.json`,
-        tailEvents: `tail-events/${definition.id}.csv`,
-      },
+      files: { daily: `daily/${definition.id}.csv`, series: `series/${definition.id}.json`, tailEvents: `tail-events/${definition.id}.csv` },
     });
-    await writeFile(
-      path.join(DAILY_DIR, `${definition.id}.csv`),
-      toCsv(derived, ["date", "close", "ma60", "ma120", "deviation60Pct", "deviation120Pct", "forwardReturn5Pct", "forwardReturn10Pct", "forwardReturn20Pct", "forwardReturn60Pct", "maxForwardGain20Pct", "maxForwardDrawdown20Pct"]),
-    );
-    await writeFile(
-      path.join(SERIES_DIR, `${definition.id}.json`),
-      `${JSON.stringify(derived.map((row) => ({
-        date: row.date,
-        close: round(row.close),
-        deviation60Pct: round(row.deviation60Pct),
-        deviation120Pct: round(row.deviation120Pct),
-      })))}\n`,
-    );
-    await writeFile(
-      path.join(TAIL_DIR, `${definition.id}.csv`),
-      toCsv(tailEvents, ["date", "close", "deviation60Pct", "signal60", "deviation120Pct", "signal120", "forwardReturn5Pct", "forwardReturn10Pct", "forwardReturn20Pct", "forwardReturn60Pct", "maxForwardGain20Pct", "maxForwardDrawdown20Pct"]),
-    );
+    await writeFile(path.join(DAILY_DIR, `${definition.id}.csv`), toCsv(derived, ["date", "close", "ma60", "ma200", "deviation60Pct", "deviation200Pct", "forwardReturn5Pct", "forwardReturn20Pct", "forwardReturn60Pct", "maxForwardGain20Pct", "maxForwardDrawdown20Pct"]));
+    await writeFile(path.join(SERIES_DIR, `${definition.id}.json`), `${JSON.stringify(derived.map((row) => ({ date: row.date, close: round(row.close), deviation60Pct: round(row.deviation60Pct), deviation200Pct: round(row.deviation200Pct) })))}\n`);
+    await writeFile(path.join(TAIL_DIR, `${definition.id}.csv`), toCsv(tailEvents, ["date", "close", "deviation60Pct", "signal60", "deviation200Pct", "signal200", "forwardReturn5Pct", "forwardReturn20Pct", "forwardReturn60Pct", "maxForwardGain20Pct", "maxForwardDrawdown20Pct"]));
   }
   const payload = {
     generatedAt,
     methodology: {
       frequency: "one observation per trading-day close",
-      movingAverages: "60-day and 120-day arithmetic simple moving averages",
+      movingAverages: "60-day and 200-day arithmetic simple moving averages",
       deviation: "100 * ln(close / moving average)",
-      probabilityBands: "0-1%, 1-5%, 5-10%, 10-25%, 25-50%, 50-75%, 75-90%, 90-95%, 95-99%, and 99-100% of each selected historical segment",
-      independentWindows: "60-day and 120-day samples, quantile boundaries, and forward probabilities are calculated independently for every index",
-      probabilityHorizons: "forward 5/10/20-trading-day log returns",
-      baseline: "each interval is compared with the unconditional up probability of the same index, historical segment, deviation window, and forward horizon",
-      relativeSignal: "strong or weak only when the interval's 95% Wilson interval is entirely above or below its matching baseline; otherwise neutral",
-      fixedBandReference: "entry events at -8% and +8%, de-clustered with a 20-trading-day cooldown; thresholds are visual references rather than universal reversal signals",
+      bottomBands: "lowest 1%, 1-5%, and 5-10% of each selected historical segment",
+      topBands: "90-95%, 95-99%, and highest 1% of each selected historical segment",
+      rebound: "positive forward 5/20/60-trading-day log return",
+      drawdown: "negative forward 5/20/60-trading-day log return",
       excursion: "at least +5% rebound or -5% drawdown at a close within the next 20 trading days",
       caveat: "descriptive historical frequencies; overlapping forward windows are not independent observations",
     },
     indices,
   };
   await writeFile(path.join(OUTPUT, "statistics.json"), `${JSON.stringify(payload, null, 2)}\n`);
-  await writeFile(
-    path.join(OUTPUT, "manifest.json"),
-    `${JSON.stringify({
-      generatedAt,
-      indexCount: indices.length,
-      observations: indices.reduce((sum, item) => sum + item.observations, 0),
-      files: {
-        statistics: "statistics.json",
-        daily: "daily/*.csv",
-        series: "series/*.json",
-        tailEvents: "tail-events/*.csv",
-      },
-    }, null, 2)}\n`,
-  );
-  console.log(JSON.stringify({
-    output: OUTPUT,
-    generatedAt,
-    indices: indices.map((item) => ({
-      id: item.id,
-      observations: item.observations,
-      current: item.current,
-      segments: item.segments.map((segment) => ({
-        id: segment.id,
-        windows: Object.fromEntries(Object.entries(segment.windows).map(([window, statistics]) => [
-          window,
-          { observations: statistics.observations, actualStart: statistics.actualStart },
-        ])),
-      })),
-    })),
-  }, null, 2));
+  await writeFile(path.join(OUTPUT, "manifest.json"), `${JSON.stringify({ generatedAt, indexCount: indices.length, observations: indices.reduce((sum, item) => sum + item.observations, 0), files: { statistics: "statistics.json", daily: "daily/*.csv", series: "series/*.json", tailEvents: "tail-events/*.csv" } }, null, 2)}\n`);
+  console.log(JSON.stringify({ output: OUTPUT, generatedAt, indices: indices.map((item) => ({ id: item.id, observations: item.observations, current: item.current, segments: item.segments.map((segment) => ({ id: segment.id, observations: segment.observations })) })) }, null, 2));
 }
 
 main().catch((error) => {

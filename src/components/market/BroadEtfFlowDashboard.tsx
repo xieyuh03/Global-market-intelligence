@@ -250,14 +250,16 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       : data.latestCategories.find((item) => item.id === categoryId);
   const latestBenchmarkFlow = categoryId === "broad" && benchmarkId !== "all" ? latest?.benchmarkFlows[benchmarkIndex] : null;
   const latestFlow = latestBenchmarkFlow ?? latestCategory?.estimatedNetFlowYi ?? 0;
-  const selectedFunds = data.latestFunds
+  const selectedMemberFunds = data.latestFunds
     .filter((fund) => fund.categoryIds.includes(categoryId))
     .filter((fund) => categoryId !== "broad"
       || (benchmarkId === "all"
         ? data.benchmarks.some((benchmark) => benchmark.id === fund.benchmarkId)
         : fund.benchmarkId === benchmarkId))
-    .filter((fund) => !selectedSegment || fund.segmentId === selectedSegment.id)
+    .filter((fund) => !selectedSegment || fund.segmentId === selectedSegment.id);
+  const selectedFunds = selectedMemberFunds
     .filter((fund) => fund.status === "ready" && fund.estimatedNetFlowCny != null);
+  const completeMemberFunds = [...selectedMemberFunds].sort((left, right) => left.code.localeCompare(right.code));
   const topInflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! > 0).slice(0, 8);
   const topOutflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! < 0).slice(-8).reverse();
   const overlayDataKey = activeOverlayMode === "index" ? "indexValue" : "cumulative";
@@ -366,7 +368,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       </section>
 
       <section className="mt-8 grid gap-6 lg:grid-cols-2" aria-label="ETF贡献明细">
-        {[{ title: "净申购贡献", rows: topInflows }, { title: "净赎回贡献", rows: topOutflows }].map((group) => (
+        {[{ title: "净申购前8", rows: topInflows }, { title: "净赎回前8", rows: topOutflows }].map((group) => (
           <div key={group.title} className="border-y border-white/10">
             <div className="flex items-center justify-between border-b border-white/10 py-3"><h3 className="text-sm font-medium text-white">{selectedViewLabel} · {group.title}</h3><span className="text-[10px] text-gray-600">{dateWithWeekday(data.asOf)}</span></div>
             <div className="divide-y divide-white/[0.07]">
@@ -381,6 +383,22 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
           </div>
         ))}
       </section>
+
+      <details className="mt-6 overflow-hidden border border-white/10 bg-[#0d1215]">
+        <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-2 px-4 py-3 text-xs text-gray-300">
+          <span className="font-medium text-white">完整成员清单（{completeMemberFunds.length}只）</span>
+          <span className="text-[10px] text-gray-600">贡献榜仅显示净申购/净赎回前8名，展开查看全部{selectedViewLabel}ETF</span>
+        </summary>
+        <div className="grid border-t border-white/10 lg:grid-cols-2">
+          {completeMemberFunds.map((fund) => (
+            <div className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 border-b border-white/[0.07] px-4 py-3 text-xs lg:odd:border-r" key={`${fund.exchange}-${fund.code}`}>
+              <span className="font-mono text-gray-600">{fund.code}</span>
+              <span className="min-w-0"><span className="block truncate text-gray-300">{fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
+              <span className="text-right font-medium" style={{ color: tone(fund.estimatedNetFlowCny == null ? null : fund.estimatedNetFlowCny / 100_000_000) }}>{fund.estimatedNetFlowCny == null ? "未计价" : yi(fund.estimatedNetFlowCny / 100_000_000)}</span>
+            </div>
+          ))}
+        </div>
+      </details>
 
       <section className="mt-8 border-y border-white/10 py-4 text-xs leading-6 text-gray-500" aria-label="数据口径">
         <p><b className="text-gray-300">份额来源：</b>上海证券交易所 TOT_VOL 与深圳证券交易所基金规模（份）。</p>
