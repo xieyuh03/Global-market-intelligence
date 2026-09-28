@@ -38,3 +38,10 @@ npm run check
 ```
 
 该命令依次执行公开边界扫描、ESLint、TypeScript 和静态导出构建。GitHub Pages 部署只上传 `out/`，线上站点没有数据库、写接口或服务端凭据。
+
+## Automatic Updates
+
+GitHub Pages 工作流在每个工作日北京时间 19:30 自动刷新市场快照、指数研究和 ETF
+申赎估算，然后校验并重新发布站点。ETF 快照必须不落后于最新可用交易日超过一个交易日，
+否则部署会失败而不是继续发布陈旧数据。也可以在 GitHub Actions 中手动运行
+`Deploy public site` 立即刷新。

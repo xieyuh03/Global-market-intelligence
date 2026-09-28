@@ -12,7 +12,9 @@ const CACHE = path.join(ROOT, ".cache/etf-flow");
 const TODAY = new Date().toISOString().slice(0, 10);
 const SSE_HISTORY_START = "2012-01-04";
 const SZSE_HISTORY_START = "2016-09-22";
-const DEFAULT_START_DATE = new Date(Date.now() - 21 * 86_400_000).toISOString().slice(0, 10);
+const DETAIL_DAYS = Number(optionValue("--detail-days", "45"));
+if (!Number.isInteger(DETAIL_DAYS) || DETAIL_DAYS < 2) throw new Error("Expected --detail-days to be an integer >= 2");
+const DEFAULT_START_DATE = new Date(Date.now() - (DETAIL_DAYS + 14) * 86_400_000).toISOString().slice(0, 10);
 const RETRY_DELAYS_MS = [0, 1_500, 4_000];
 const MAX_CONCURRENCY = 8;
 const PRICE_CONCURRENCY = 24;
@@ -28,8 +30,6 @@ const END_DATE = optionValue("--end-date", TODAY);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(START_DATE) || !/^\d{4}-\d{2}-\d{2}$/.test(END_DATE) || START_DATE > END_DATE) {
   throw new Error("Expected --start-date and --end-date as an ordered YYYY-MM-DD range");
 }
-const DETAIL_DAYS = Number(optionValue("--detail-days", "45"));
-if (!Number.isInteger(DETAIL_DAYS) || DETAIL_DAYS < 2) throw new Error("Expected --detail-days to be an integer >= 2");
 const DETAIL_START_DATE = formatDate(new Date(new Date(`${END_DATE}T00:00:00Z`).getTime() - DETAIL_DAYS * 86_400_000));
 
 const CLASSIFICATION_RULES = [
@@ -276,18 +276,22 @@ async function readCachedJson(file) {
 
 async function tradingDates(startDate, endDate) {
   const calendarPath = path.join(ROOT, "public/data/deviation-analysis/daily/shanghai-composite.csv");
+  let dates = [];
   try {
-    const dates = (await readFile(calendarPath, "utf8"))
+    dates = (await readFile(calendarPath, "utf8"))
       .split(/\r?\n/)
       .slice(1)
       .map((line) => line.slice(0, 10))
       .filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= startDate && date <= endDate);
-    if (dates.length) return dates;
   } catch (error) {
     if (!(error && typeof error === "object" && "code" in error && error.code === "ENOENT")) throw error;
   }
-  const dates = [];
-  for (let date = new Date(`${startDate}T00:00:00Z`), end = new Date(`${endDate}T00:00:00Z`); date <= end; date = new Date(date.getTime() + 86_400_000)) {
+
+  // The tracked price calendar can lag between deployments, so probe weekdays after its last known session.
+  const fallbackStartDate = dates.length
+    ? formatDate(new Date(new Date(`${dates.at(-1)}T00:00:00Z`).getTime() + 86_400_000))
+    : startDate;
+  for (let date = new Date(`${fallbackStartDate}T00:00:00Z`), end = new Date(`${endDate}T00:00:00Z`); date <= end; date = new Date(date.getTime() + 86_400_000)) {
     if (date.getUTCDay() !== 0 && date.getUTCDay() !== 6) dates.push(formatDate(date));
   }
   return dates;
@@ -397,7 +401,11 @@ async function fetchSzseChunk(startDate, endDate) {
   parameters.set("txtEnd", endDate);
   if (!buffer) {
     const response = await fetchResponse(`https://www.szse.cn/api/report/ShowReport?${parameters}`, {
-      headers: { Referer: "https://www.szse.cn/market/fund/volume/etf/index.html", "User-Agent": "Mozilla/5.0 BroadEtfFlow/1.0" },
+      headers: {
+        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream;q=0.9,*/*;q=0.8",
+        Referer: "https://www.szse.cn/market/fund/volume/etf/index.html",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
+      },
     });
     buffer = Buffer.from(await response.arrayBuffer());
     await mkdir(path.dirname(cacheFile), { recursive: true });

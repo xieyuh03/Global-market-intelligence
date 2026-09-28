@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "17 1 * * 1-5"
+    # 19:30 Asia/Shanghai, after exchange ETF scale data is normally available.
+    - cron: "30 11 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -63,6 +64,9 @@ jobs:
           }
           NODE
 
+      - name: Refresh index deviation research
+        run: npm run research:deviation
+
       - name: Refresh broad ETF flow
         id: etf_flow_refresh
         continue-on-error: true
@@ -74,7 +78,7 @@ jobs:
           REFRESH_OUTCOME: ${{ steps.etf_flow_refresh.outcome }}
         run: |
           if [ "$REFRESH_OUTCOME" != "success" ]; then
-            echo "::warning::Live ETF flow refresh failed; deploying the last verified complete snapshot."
+            echo "::warning::Live ETF flow refresh failed; validating whether the last complete snapshot is still fresh enough to deploy."
           fi
           node --input-type=module <<'NODE'
           import { readFile, stat } from "node:fs/promises";
@@ -82,6 +86,15 @@ jobs:
           const root = "public/data/etf-flow";
           const payload = JSON.parse(await readFile(`${root}/broad-etf-flow.json`, "utf8"));
           if (!payload.asOf || payload.coverage?.funds < 500 || payload.daily?.length < 2 || payload.categories?.length < 5) throw new Error("ETF flow snapshot is incomplete");
+          const referenceDates = (await readFile("public/data/deviation-analysis/daily/shanghai-composite.csv", "utf8"))
+            .split(/\r?\n/)
+            .slice(1)
+            .map((line) => line.slice(0, 10))
+            .filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date));
+          const minimumFreshDate = referenceDates.at(-2) ?? referenceDates.at(-1);
+          if (!minimumFreshDate || payload.asOf < minimumFreshDate) {
+            throw new Error(`ETF flow snapshot is stale: ${payload.asOf}; expected ${minimumFreshDate} or later`);
+          }
           if (payload.daily.some((row) => row.date >= payload.coverage.fullMarketStartDate && (row.status !== "complete" || row.exchanges?.length !== 2))) throw new Error("ETF aggregate contains partial dates inside the full-market period");
           for (const id of ["all-a", "broad", "industry", "gold", "hong-kong"]) {
             if (!payload.categories.some((category) => category.id === id)) throw new Error(`Missing ETF category: ${id}`);
@@ -92,9 +105,6 @@ jobs:
           const csi300 = JSON.parse(await readFile(`${root}/indices/csi-300.json`, "utf8"));
           if (csi300.points?.length < 1_000) throw new Error("CSI 300 overlay history is incomplete");
           NODE
-
-      - name: Refresh index deviation research
-        run: npm run research:deviation
 
       - name: Validate and export site
         run: npm run check
