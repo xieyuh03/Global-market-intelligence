@@ -34,6 +34,7 @@ type DailyFlow = {
   exchanges: string[];
   categoryFlows: Array<number | null>;
   benchmarkFlows: Array<number | null>;
+  segmentFlows: Array<number | null>;
 };
 
 type FundFlow = {
@@ -46,6 +47,8 @@ type FundFlow = {
   categoryIds: string[];
   benchmarkId: string | null;
   benchmark: string | null;
+  segmentId: string | null;
+  segment: string | null;
   shareChange: number;
   shareChangePct: number;
   close: number | null;
@@ -66,6 +69,12 @@ type BenchmarkIndexData = {
   points: Array<[string, number]>;
 };
 
+type SegmentOption = {
+  id: string;
+  categoryId: string;
+  label: string;
+};
+
 type ChartTooltipEntry = {
   dataKey?: string | number;
   value?: string | number;
@@ -82,14 +91,18 @@ export type BroadEtfFlowData = {
     completeTradingDays: number;
     partialTradingDays: number;
     fundDetailStartDate: string;
+    segmentStartDate: string | null;
     funds: number;
     sseFunds: number;
     szseFunds: number;
   };
   categories: Array<{ id: string; label: string; description: string }>;
+  segments: SegmentOption[];
   benchmarks: BenchmarkOption[];
   daily: DailyFlow[];
   latestCategories: CategoryFlow[];
+  latestBenchmarks: CategoryFlow[];
+  latestSegments: CategoryFlow[];
   latestFunds: FundFlow[];
 };
 
@@ -180,6 +193,7 @@ function presetStart(id: string, endDate: string, firstDate: string) {
 export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { data: BroadEtfFlowData; indexSeriesBaseUrl: string }) {
   const [categoryId, setCategoryId] = useState("all-a");
   const [benchmarkId, setBenchmarkId] = useState("all");
+  const [segmentId, setSegmentId] = useState("");
   const [rangePreset, setRangePreset] = useState("3m");
   const [rangeStart, setRangeStart] = useState(() => presetStart("3m", data.asOf, data.coverage.startDate));
   const [rangeEnd, setRangeEnd] = useState(data.asOf);
@@ -193,6 +207,9 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const benchmarkIndex = data.benchmarks.findIndex((benchmark) => benchmark.id === benchmarkId);
   const benchmarkOptions = data.benchmarks;
   const selectedBenchmark = data.benchmarks.find((benchmark) => benchmark.id === benchmarkId) ?? null;
+  const segmentOptions = data.segments.filter((segment) => segment.categoryId === categoryId);
+  const selectedSegment = segmentOptions.find((segment) => segment.id === segmentId) ?? segmentOptions[0] ?? null;
+  const segmentIndex = selectedSegment ? data.segments.findIndex((segment) => segment.id === selectedSegment.id) : -1;
   const canShowIndex = categoryId === "broad" && benchmarkId !== "all" && selectedBenchmark?.indexAvailable === true;
 
   useEffect(() => {
@@ -212,7 +229,9 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const selectedDaily = data.daily.flatMap((row) => {
     const flow = categoryId === "broad" && benchmarkId !== "all"
       ? row.benchmarkFlows[benchmarkIndex]
-      : row.categoryFlows[categoryIndex];
+      : selectedSegment
+        ? row.segmentFlows[segmentIndex]
+        : row.categoryFlows[categoryIndex];
     return flow == null ? [] : [{ date: row.date, status: row.status, flow }];
   }).filter((row) => row.date >= rangeStart && row.date <= rangeEnd);
   const indexByDate = new Map(indexSeries?.id === benchmarkId ? indexSeries.points : []);
@@ -224,19 +243,29 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
     return [...items, { ...row, cumulative: +cumulative.toFixed(4), indexValue }];
   }, []);
   const latest = data.daily.find((row) => row.date === data.asOf) ?? data.daily.at(-1);
-  const latestCategory = data.latestCategories.find((item) => item.id === categoryId);
+  const latestCategory = categoryId === "broad" && benchmarkId !== "all"
+    ? data.latestBenchmarks.find((item) => item.id === benchmarkId)
+    : selectedSegment
+      ? data.latestSegments.find((item) => item.id === selectedSegment.id)
+      : data.latestCategories.find((item) => item.id === categoryId);
   const latestBenchmarkFlow = categoryId === "broad" && benchmarkId !== "all" ? latest?.benchmarkFlows[benchmarkIndex] : null;
   const latestFlow = latestBenchmarkFlow ?? latestCategory?.estimatedNetFlowYi ?? 0;
   const selectedFunds = data.latestFunds
     .filter((fund) => fund.categoryIds.includes(categoryId))
-    .filter((fund) => categoryId !== "broad" || benchmarkId === "all" || fund.benchmarkId === benchmarkId)
+    .filter((fund) => categoryId !== "broad"
+      || (benchmarkId === "all"
+        ? data.benchmarks.some((benchmark) => benchmark.id === fund.benchmarkId)
+        : fund.benchmarkId === benchmarkId))
+    .filter((fund) => !selectedSegment || fund.segmentId === selectedSegment.id)
     .filter((fund) => fund.status === "ready" && fund.estimatedNetFlowCny != null);
-  const topInflows = selectedFunds.slice(0, 8);
-  const topOutflows = selectedFunds.slice(-8).reverse();
+  const topInflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! > 0).slice(0, 8);
+  const topOutflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! < 0).slice(-8).reverse();
   const overlayDataKey = activeOverlayMode === "index" ? "indexValue" : "cumulative";
   const overlayLabel = activeOverlayMode === "index"
     ? `${selectedBenchmark?.indexLabel ?? selectedBenchmark?.label}（实际点位）`
     : "区间累计净申购（亿元）";
+  const selectedViewLabel = selectedSegment?.label
+    ?? (categoryId === "broad" && selectedBenchmark ? selectedBenchmark.label : selectedCategory?.label);
 
   function applyRangePreset(id: string) {
     setRangePreset(id);
@@ -249,7 +278,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       <section className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 xl:grid-cols-4" aria-label="ETF流向摘要">
         <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">最新完整交易日</p><p className="mt-2 text-2xl font-semibold text-white">{dateWithWeekday(data.asOf)}</p><p className="mt-2 text-xs text-gray-500">沪深两市份额均已披露</p></div>
         <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">净申购估算</p><p className="mt-2 text-2xl font-semibold" style={{ color: tone(latestFlow) }}>{yi(latestFlow)}</p><p className="mt-2 text-xs text-gray-500">份额变化 × 当日收盘价</p></div>
-        <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">当前分类</p><p className="mt-2 text-2xl font-semibold text-white">{latestCategory?.funds ?? 0} 只</p><p className="mt-2 text-xs text-gray-500">{selectedCategory?.label} · 已计价 {latestCategory?.pricedFunds ?? 0}</p></div>
+        <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">当前分类</p><p className="mt-2 text-2xl font-semibold text-white">{latestCategory?.funds ?? 0} 只</p><p className="mt-2 text-xs text-gray-500">{selectedViewLabel} · 已计价 {latestCategory?.pricedFunds ?? 0}</p></div>
         <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">历史覆盖</p><p className="mt-2 text-2xl font-semibold text-white">{data.coverage.tradingDays} 日</p><p className="mt-2 text-xs text-gray-500">沪市 {data.coverage.startDate} 起 · 沪深 {data.coverage.fullMarketStartDate} 起</p></div>
       </section>
       <p className="mt-3 text-xs leading-5 text-gray-500">
@@ -262,7 +291,12 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
             <button
               key={category.id}
               type="button"
-              onClick={() => { setCategoryId(category.id); setBenchmarkId("all"); if (overlayMode === "index") setOverlayMode("cumulative"); }}
+              onClick={() => {
+                setCategoryId(category.id);
+                setBenchmarkId("all");
+                setSegmentId(data.segments.find((segment) => segment.categoryId === category.id)?.id ?? "");
+                if (overlayMode === "index") setOverlayMode("cumulative");
+              }}
               className={`min-w-20 flex-1 px-4 py-3 text-xs transition-colors ${category.id === categoryId ? "bg-[#d49a54] font-medium text-[#111619]" : "bg-[#111619] text-gray-400 hover:text-white"}`}
               title={category.description}
             >
@@ -276,7 +310,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
         <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Creation / Redemption</p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">{selectedCategory?.label} ETF 日净申购</h2>
+            <h2 className="mt-2 text-2xl font-semibold text-white">{selectedViewLabel} ETF 日净申购</h2>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             <div className="flex overflow-x-auto border border-white/10">
@@ -288,6 +322,10 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               <select value={benchmarkId} onChange={(event) => { const nextId = event.target.value; const nextHasIndex = data.benchmarks.find((item) => item.id === nextId)?.indexAvailable; setBenchmarkId(nextId); if (overlayMode === "index" && !nextHasIndex) setOverlayMode("cumulative"); else if (overlayMode === "index") { setIndexLoading(true); setIndexError(false); } }} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label="宽基指数族">
                 <option value="all">全部宽基</option>
                 {benchmarkOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+              </select>
+            ) : segmentOptions.length ? (
+              <select value={selectedSegment?.id ?? ""} onChange={(event) => setSegmentId(event.target.value)} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label={`${selectedCategory?.label}细分`}>
+                {segmentOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
               </select>
             ) : null}
           </div>
@@ -330,12 +368,12 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       <section className="mt-8 grid gap-6 lg:grid-cols-2" aria-label="ETF贡献明细">
         {[{ title: "净申购贡献", rows: topInflows }, { title: "净赎回贡献", rows: topOutflows }].map((group) => (
           <div key={group.title} className="border-y border-white/10">
-            <div className="flex items-center justify-between border-b border-white/10 py-3"><h3 className="text-sm font-medium text-white">{group.title}</h3><span className="text-[10px] text-gray-600">{dateWithWeekday(data.asOf)}</span></div>
+            <div className="flex items-center justify-between border-b border-white/10 py-3"><h3 className="text-sm font-medium text-white">{selectedViewLabel} · {group.title}</h3><span className="text-[10px] text-gray-600">{dateWithWeekday(data.asOf)}</span></div>
             <div className="divide-y divide-white/[0.07]">
               {group.rows.map((fund) => (
                 <div key={fund.code} className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 py-3 text-xs">
                   <span className="font-mono text-gray-600">{fund.code}</span>
-                  <span className="min-w-0"><span className="block truncate text-gray-300">{fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
+                  <span className="min-w-0"><span className="block truncate text-gray-300">{fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
                   <span className="text-right font-mono" style={{ color: tone((fund.estimatedNetFlowCny ?? 0) / 100_000_000) }}>{yi((fund.estimatedNetFlowCny ?? 0) / 100_000_000)}</span>
                 </div>
               ))}

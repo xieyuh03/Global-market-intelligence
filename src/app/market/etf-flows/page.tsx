@@ -13,10 +13,10 @@ export default function BroadEtfFlowPage() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-4xl font-bold text-white xl:text-5xl">ETF 申购流入流出</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-400">覆盖全A、宽基、行业、黄金、港股及其他资产类别，基于沪深交易所每日基金份额变化估算一级市场净申购与净赎回。</p>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-400">聚焦全A、主要宽基、10类高信号行业、恒指与恒科、黄金及分层债券，基于沪深交易所每日基金份额变化估算一级市场净申购与净赎回。</p>
           </div>
           <div className="flex gap-2">
-            <a href={`${DATA_BASE}/category-daily.csv`} download className="flex h-10 items-center gap-2 border border-white/10 px-3 text-xs text-gray-300 hover:bg-white/5"><ArrowDownToLine size={15} />分类历史</a>
+            <a href={`${DATA_BASE}/segment-daily.csv`} download className="flex h-10 items-center gap-2 border border-white/10 px-3 text-xs text-gray-300 hover:bg-white/5"><ArrowDownToLine size={15} />细分历史</a>
             <a href={`${DATA_BASE}/fund-daily.csv`} download className="flex h-10 items-center gap-2 border border-white/10 px-3 text-xs text-gray-300 hover:bg-white/5"><ArrowDownToLine size={15} />逐只明细</a>
           </div>
         </div>

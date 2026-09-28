@@ -96,10 +96,11 @@ jobs:
             throw new Error(`ETF flow snapshot is stale: ${payload.asOf}; expected ${minimumFreshDate} or later`);
           }
           if (payload.daily.some((row) => row.date >= payload.coverage.fullMarketStartDate && (row.status !== "complete" || row.exchanges?.length !== 2))) throw new Error("ETF aggregate contains partial dates inside the full-market period");
-          for (const id of ["all-a", "broad", "industry", "gold", "hong-kong"]) {
+          for (const id of ["all-a", "broad", "industry", "hong-kong", "gold", "bond"]) {
             if (!payload.categories.some((category) => category.id === id)) throw new Error(`Missing ETF category: ${id}`);
           }
-          for (const file of ["etf-flow-dashboard.json", "daily.csv", "category-daily.csv", "fund-daily.csv", "universe.csv"]) {
+          if (payload.segments?.length !== 18 || !payload.daily.at(-1)?.observedCategories?.length) throw new Error("ETF decision-useful taxonomy is incomplete");
+          for (const file of ["etf-flow-dashboard.json", "daily.csv", "category-daily.csv", "segment-daily.csv", "fund-daily.csv", "universe.csv"]) {
             if ((await stat(`${root}/${file}`)).size === 0) throw new Error(`${file} is empty`);
           }
           const csi300 = JSON.parse(await readFile(`${root}/indices/csi-300.json`, "utf8"));
