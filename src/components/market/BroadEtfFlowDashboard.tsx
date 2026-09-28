@@ -131,7 +131,7 @@ function EtfFlowTooltip({
   const overlay = Number(payload.find((item) => item.dataKey === (overlayMode === "index" ? "indexValue" : "cumulative"))?.value);
   return (
     <div className="border border-white/15 bg-[#111619] px-4 py-3 text-xs shadow-xl">
-      <p className="mb-3 text-sm font-medium text-[#f2f4f5]">{label}</p>
+      <p className="mb-3 text-sm font-medium text-[#f2f4f5]">{dateWithWeekday(String(label))}</p>
       {Number.isFinite(flow) ? (
         <p className="font-medium" style={{ color: tone(flow) }}>
           {flowDirection(flow)}：{Math.abs(flow).toFixed(2)}亿元
@@ -153,6 +153,19 @@ function monthsBefore(date: string, months: number) {
   const value = new Date(`${date}T00:00:00Z`);
   value.setUTCMonth(value.getUTCMonth() - months);
   return value.toISOString().slice(0, 10);
+}
+
+function weekdayLabel(date: string) {
+  const [year, month, day] = date.split("-").map(Number);
+  if (![year, month, day].every(Number.isInteger)) return "";
+  return ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][
+    new Date(Date.UTC(year, month - 1, day)).getUTCDay()
+  ];
+}
+
+function dateWithWeekday(date: string) {
+  const weekday = weekdayLabel(date);
+  return weekday ? `${date}（${weekday}）` : date;
 }
 
 function presetStart(id: string, endDate: string, firstDate: string) {
@@ -234,11 +247,14 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   return (
     <>
       <section className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 xl:grid-cols-4" aria-label="ETF流向摘要">
-        <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">最新完整交易日</p><p className="mt-2 text-2xl font-semibold text-white">{data.asOf}</p><p className="mt-2 text-xs text-gray-500">沪深两市份额均已披露</p></div>
+        <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">最新完整交易日</p><p className="mt-2 text-2xl font-semibold text-white">{dateWithWeekday(data.asOf)}</p><p className="mt-2 text-xs text-gray-500">沪深两市份额均已披露</p></div>
         <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">净申购估算</p><p className="mt-2 text-2xl font-semibold" style={{ color: tone(latestFlow) }}>{yi(latestFlow)}</p><p className="mt-2 text-xs text-gray-500">份额变化 × 当日收盘价</p></div>
         <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">当前分类</p><p className="mt-2 text-2xl font-semibold text-white">{latestCategory?.funds ?? 0} 只</p><p className="mt-2 text-xs text-gray-500">{selectedCategory?.label} · 已计价 {latestCategory?.pricedFunds ?? 0}</p></div>
         <div className="bg-[#111619] p-5"><p className="text-[10px] uppercase tracking-wider text-gray-500">历史覆盖</p><p className="mt-2 text-2xl font-semibold text-white">{data.coverage.tradingDays} 日</p><p className="mt-2 text-xs text-gray-500">沪市 {data.coverage.startDate} 起 · 沪深 {data.coverage.fullMarketStartDate} 起</p></div>
       </section>
+      <p className="mt-3 text-xs leading-5 text-gray-500">
+        日频估算依赖交易所收盘后的 ETF 份额披露和当日收盘价；盘中不会生成当天完整值，部分交易日会在下一交易日补齐。
+      </p>
 
       <section className="mt-8" aria-label="ETF分类切换">
         <div className="flex gap-px overflow-x-auto border-y border-white/10 bg-white/10 p-px">
@@ -300,7 +316,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
           <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 350 }}>
             <ComposedChart data={chartData} margin={{ top: 12, right: 10, left: 0, bottom: 8 }}>
               <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
-              <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
+              <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${String(value).slice(5)} ${weekdayLabel(String(value))}`} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
               {activeOverlayMode !== "none" ? <YAxis yAxisId="overlay" orientation="right" width={activeOverlayMode === "index" ? 64 : 52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => activeOverlayMode === "index" ? indexPoints(Number(value)) : `${value}亿`} axisLine={false} tickLine={false} /> : null}
               <Tooltip content={<EtfFlowTooltip overlayMode={activeOverlayMode} overlayLabel={overlayLabel} />} />
@@ -314,7 +330,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       <section className="mt-8 grid gap-6 lg:grid-cols-2" aria-label="ETF贡献明细">
         {[{ title: "净申购贡献", rows: topInflows }, { title: "净赎回贡献", rows: topOutflows }].map((group) => (
           <div key={group.title} className="border-y border-white/10">
-            <div className="flex items-center justify-between border-b border-white/10 py-3"><h3 className="text-sm font-medium text-white">{group.title}</h3><span className="text-[10px] text-gray-600">{data.asOf}</span></div>
+            <div className="flex items-center justify-between border-b border-white/10 py-3"><h3 className="text-sm font-medium text-white">{group.title}</h3><span className="text-[10px] text-gray-600">{dateWithWeekday(data.asOf)}</span></div>
             <div className="divide-y divide-white/[0.07]">
               {group.rows.map((fund) => (
                 <div key={fund.code} className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 py-3 text-xs">
