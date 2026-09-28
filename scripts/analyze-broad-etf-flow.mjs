@@ -4,7 +4,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { inflateRawSync } from "node:zlib";
 
-import { classifyStrictHangSengIndexEtf } from "./etf-index-whitelists.mjs";
+import {
+  classifyStrictCsi300Etf,
+  classifyStrictHangSengIndexEtf,
+} from "./etf-index-whitelists.mjs";
 
 dns.setDefaultResultOrder("ipv4first");
 
@@ -338,7 +341,7 @@ async function tradingDates(startDate, endDate) {
 function classifyBroadEtf(name, code) {
   const normalized = String(name ?? "").replaceAll(" ", "");
   if (NON_PLAIN_BROAD_CODES.has(String(code ?? ""))) return null;
-  const overrideId = BENCHMARK_OVERRIDES.get(String(code ?? ""));
+  const overrideId = classifyStrictCsi300Etf(code) ?? BENCHMARK_OVERRIDES.get(String(code ?? ""));
   if (overrideId) return CLASSIFICATION_RULES.find((rule) => rule.id === overrideId) ?? null;
   if (EXCLUDED_STYLES.test(normalized)) return null;
   return CLASSIFICATION_RULES.find((rule) => rule.patterns.some((pattern) => pattern.test(normalized))) ?? null;

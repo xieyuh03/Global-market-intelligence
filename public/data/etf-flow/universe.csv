@@ -698,6 +698,13 @@ code,name,exchange,primaryCategoryId,primaryCategory,categoryIds,benchmarkId,ben
 512100,1000ETF,SSE,broad,宽基,all-a|broad,csi-1000,中证1000,,,2016-11-04,2026-09-24,2401
 512150,A50ETF,SSE,broad,宽基,all-a|broad,csi-a50,A50系列,,,2019-01-21,2026-09-24,1860
 512500,中证500,SSE,broad,宽基,all-a|broad,csi-500,中证500,,,2015-05-29,2026-09-24,2751
+515130,HS300E,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2020-05-11,2026-09-24,1547
+515310,添富300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2019-12-25,2026-09-24,1634
+515330,天弘300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2019-12-26,2026-09-24,1633
+515350,民生300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2020-02-07,2026-09-24,1609
+515360,方正300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2019-11-01,2026-09-24,1672
+515380,泰康300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2020-03-23,2026-09-24,1578
+515390,HS300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2020-01-10,2026-09-24,1623
 515590,500ETFEW,SSE,broad,宽基,all-a|broad,csi-500,中证500,,,2020-01-20,2026-09-24,1617
 515660,沪深300E,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2019-12-24,2026-09-24,1635
 515800,800ETF,SSE,broad,宽基,all-a|broad,csi-800,中证800,,,2019-12-16,2026-09-24,1641
@@ -716,12 +723,14 @@ code,name,exchange,primaryCategoryId,primaryCategory,categoryIds,benchmarkId,ben
 561090,A500增,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2025-07-02,2026-09-24,299
 561370,2000ETF,SSE,broad,宽基,all-a|broad,csi-2000,中证/国证2000,,,2023-09-21,2026-09-24,725
 561680,A500红低,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2025-09-05,2026-09-24,252
+561930,招商300,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2024-09-20,2026-09-24,485
 563080,中证A50E,SSE,broad,宽基,all-a|broad,csi-a50,A50系列,,,2024-03-18,2026-09-24,611
 563220,A500富国,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2024-10-15,2026-09-24,473
 563300,中证2000,SSE,broad,宽基,all-a|broad,csi-2000,中证/国证2000,,,2023-09-14,2026-09-24,730
 563350,中证A50,SSE,broad,宽基,all-a|broad,csi-a50,A50系列,,,2024-03-18,2026-09-24,611
 563360,A500基金,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2024-10-15,2026-09-24,473
 563500,A500华宝,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2024-12-02,2026-09-24,439
+563520,300永赢,SSE,broad,宽基,all-a|broad,csi-300,沪深300,,,2024-11-18,2026-09-24,449
 563650,A500中证,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2025-04-03,2026-09-24,358
 563660,A500银河,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2025-04-02,2026-09-24,359
 563860,A500海富,SSE,broad,宽基,all-a|broad,csi-a500,中证A500,,,2025-02-12,2026-09-24,394
@@ -1291,7 +1300,6 @@ code,name,exchange,primaryCategoryId,primaryCategory,categoryIds,benchmarkId,ben
 515070,AI智能,SSE,industry,行业,all-a|industry,,,industry-ai-compute,AI/算力通信,2019-12-24,2026-09-24,1635
 515090,可持续,SSE,industry,行业,all-a|industry,,,,,2020-02-20,2026-09-24,1600
 515120,创新药,SSE,industry,行业,all-a|industry,,,industry-healthcare,医药,2021-01-04,2026-09-24,1386
-515130,HS300E,SSE,industry,行业,all-a|industry,,,,,2020-05-11,2026-09-24,1547
 515160,MSCI招商,SSE,industry,行业,all-a|industry,,,,,2020-03-02,2026-09-24,1593
 515170,食品饮料,SSE,industry,行业,all-a|industry,,,industry-consumer,消费,2021-01-13,2026-09-24,1379
 515190,BOCI500,SSE,industry,行业,all-a|industry,,,,,2020-05-27,2026-09-24,1535
@@ -1303,14 +1311,8 @@ code,name,exchange,primaryCategoryId,primaryCategory,categoryIds,benchmarkId,ben
 515260,电子ETF,SSE,industry,行业,all-a|industry,,,,,2020-07-31,2026-09-24,1490
 515280,银行龙头,SSE,industry,行业,all-a|industry,,,industry-finance,金融,2020-04-17,2024-09-24,1078
 515290,银行,SSE,industry,行业,all-a|industry,,,industry-finance,金融,2020-12-28,2026-09-24,1390
-515310,添富300,SSE,industry,行业,all-a|industry,,,,,2019-12-25,2026-09-24,1634
 515320,电子50,SSE,industry,行业,all-a|industry,,,,,2021-01-08,2026-09-24,1382
-515330,天弘300,SSE,industry,行业,all-a|industry,,,,,2019-12-26,2026-09-24,1633
-515350,民生300,SSE,industry,行业,all-a|industry,,,,,2020-02-07,2026-09-24,1609
-515360,方正300,SSE,industry,行业,all-a|industry,,,,,2019-11-01,2026-09-24,1672
 515370,中证光伏,SSE,industry,行业,all-a|industry,,,industry-new-energy,新能源,2025-11-18,2026-09-24,206
-515380,泰康300,SSE,industry,行业,all-a|industry,,,,,2020-03-23,2026-09-24,1578
-515390,HS300,SSE,industry,行业,all-a|industry,,,,,2020-01-10,2026-09-24,1623
 515400,大数据,SSE,industry,行业,all-a|industry,,,industry-ai-compute,AI/算力通信,2021-01-20,2026-09-24,1374
 515440,A股南方,SSE,industry,行业,all-a|industry,,,,,2026-09-10,2026-09-24,11
 515500,长三角LX,SSE,industry,行业,all-a|industry,,,,,2020-09-18,2023-04-07,617
@@ -1549,7 +1551,6 @@ code,name,exchange,primaryCategoryId,primaryCategory,categoryIds,benchmarkId,ben
 561890,A股E,SSE,industry,行业,all-a|industry,,,,,2026-08-07,2026-09-24,35
 561910,电池ETF,SSE,industry,行业,all-a|industry,,,industry-new-energy,新能源,2021-08-12,2026-09-24,1238
 561920,疫苗龙头,SSE,industry,行业,all-a|industry,,,industry-healthcare,医药,2023-03-29,2026-09-24,845
-561930,招商300,SSE,industry,行业,all-a|industry,,,,,2024-09-20,2026-09-24,485
 561980,芯片设备,SSE,industry,行业,all-a|industry,,,industry-semiconductor,半导体,2023-09-01,2026-09-24,739
 562000,中证A100,SSE,industry,行业,all-a|industry,,,,,2022-08-01,2026-09-24,1005
 562010,绿色能源,SSE,industry,行业,all-a|industry,,,,,2023-01-03,2026-09-24,901
@@ -1597,7 +1598,6 @@ code,name,exchange,primaryCategoryId,primaryCategory,categoryIds,benchmarkId,ben
 563320,通用航空,SSE,industry,行业,all-a|industry,,,industry-defense,军工,2025-09-03,2026-09-24,254
 563330,A股ETF,SSE,industry,行业,all-a|industry,,,,,2023-11-07,2026-09-24,698
 563380,航空航天,SSE,industry,行业,all-a|industry,,,industry-defense,军工,2025-11-07,2026-09-24,213
-563520,300永赢,SSE,industry,行业,all-a|industry,,,,,2024-11-18,2026-09-24,449
 563530,卫星E,SSE,industry,行业,all-a|industry,,,industry-defense,军工,2025-11-14,2026-09-24,208
 563570,金融科,SSE,industry,行业,all-a|industry,,,industry-finance,金融,2025-11-11,2026-09-24,211
 563670,金科基金,SSE,industry,行业,all-a|industry,,,,,2025-10-14,2026-09-24,231
