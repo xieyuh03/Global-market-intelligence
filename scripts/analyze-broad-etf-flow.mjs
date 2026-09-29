@@ -24,6 +24,7 @@ const RETRY_DELAYS_MS = [0, 1_500, 4_000];
 const MAX_CONCURRENCY = 8;
 const PRICE_CONCURRENCY = 24;
 const FULL_HISTORY = process.argv.includes("--full-history");
+let szseLatestSnapshotDate = null;
 
 function optionValue(name, fallback) {
   const index = process.argv.indexOf(name);
@@ -392,6 +393,16 @@ function parseCsv(text) {
   });
 }
 
+function stripHtml(value) {
+  return String(value ?? "")
+    .replace(/<[^>]*>/g, "")
+    .replaceAll("&nbsp;", " ")
+    .replaceAll("&amp;", "&")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .trim();
+}
+
 async function fetchSseSharesForDate(date) {
   const cacheFile = path.join(CACHE, "shares-sse", `${date}.json`);
   const cached = await readCachedJson(cacheFile);
@@ -484,9 +495,94 @@ async function fetchSzseChunk(startDate, endDate) {
   });
 }
 
+async function readPreviousShareRows(exchange) {
+  try {
+    return parseCsv(await readFile(path.join(OUTPUT, "fund-daily.csv"), "utf8"))
+      .flatMap((row) => {
+        const shares = Number(row.shares);
+        if (row.exchange !== exchange || !Number.isFinite(shares)) return [];
+        return [{
+          date: row.date,
+          code: row.code,
+          name: row.name,
+          exchange,
+          shares,
+        }];
+      });
+  } catch (error) {
+    if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
+async function fetchSzseLatestPage(pageNo) {
+  const parameters = new URLSearchParams({
+    SHOWTYPE: "JSON",
+    CATALOGID: "1945",
+    TABKEY: "tab1",
+    PAGENO: String(pageNo),
+    random: String(Math.random()),
+  });
+  const payload = await fetchJson(`https://www.szse.cn/api/report/ShowReport/data?${parameters}`, {
+    headers: {
+      Accept: "application/json,text/plain,*/*",
+      Referer: "https://www.szse.cn/market/product/list/etfList/index.html",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
+    },
+  });
+  const report = Array.isArray(payload) ? payload[0] : payload;
+  if (!report?.metadata || !Array.isArray(report.data)) {
+    throw new Error(`SZSE ETF list page ${pageNo} is malformed`);
+  }
+  return report;
+}
+
+async function fetchSzseLatestShares() {
+  const firstPage = await fetchSzseLatestPage(1);
+  const date = String(firstPage.metadata.cols?.dqgm ?? "").match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  const pageCount = Number(firstPage.metadata.pagecount);
+  if (!date || !Number.isInteger(pageCount) || pageCount < 1) {
+    throw new Error("SZSE ETF list is missing its scale date or page count");
+  }
+  const remainingPages = await mapLimit(
+    Array.from({ length: pageCount - 1 }, (_, index) => index + 2),
+    8,
+    fetchSzseLatestPage,
+  );
+  const latestRows = [firstPage, ...remainingPages].flatMap((report) =>
+    report.data.flatMap((row) => {
+      const code = stripHtml(row.sys_key).match(/\d{6}/)?.[0];
+      const sharesInTenThousands = Number(stripHtml(row.dqgm).replaceAll(",", ""));
+      if (!code || !Number.isFinite(sharesInTenThousands)) return [];
+      return [{
+        date,
+        code,
+        name: stripHtml(row.kzjcurl),
+        exchange: "SZSE",
+        shares: sharesInTenThousands * 10_000,
+      }];
+    }));
+  if (latestRows.length < 100) {
+    throw new Error(`SZSE latest ETF list is incomplete: ${latestRows.length} rows`);
+  }
+  szseLatestSnapshotDate = date;
+  const previousRows = await readPreviousShareRows("SZSE");
+  return [
+    ...previousRows.filter((row) => row.date < date),
+    ...latestRows,
+  ];
+}
+
 async function fetchSzseShares() {
   const startDate = laterDate(START_DATE, SZSE_HISTORY_START);
   if (startDate > END_DATE) return [];
+  if (!FULL_HISTORY) {
+    try {
+      return await fetchSzseLatestShares();
+    } catch (error) {
+      console.error(`[etf-flow] SZSE latest-list fallback unavailable; trying historical workbook: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
   const chunks = dateChunks(startDate, END_DATE);
   let completed = 0;
   return (await mapLimit(chunks, 2, async ([chunkStart, chunkEnd]) => {
@@ -863,6 +959,9 @@ async function main() {
       return detailRows;
     })).flat();
     calculatedDaily = materializeDaily(dailyStates);
+    if (szseLatestSnapshotDate) {
+      calculatedDaily = calculatedDaily.filter((row) => row.date >= szseLatestSnapshotDate);
+    }
     universe = histories.map(({ fund, rows }) => ({
       ...fund,
       firstDate: rows[0]?.date ?? null,
