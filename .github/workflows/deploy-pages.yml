@@ -69,6 +69,7 @@ jobs:
 
       - name: Refresh broad ETF flow
         id: etf_flow_refresh
+        if: github.event_name != 'push'
         continue-on-error: true
         timeout-minutes: 15
         run: npm run research:etf-flow
