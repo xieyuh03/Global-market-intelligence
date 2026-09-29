@@ -159,18 +159,16 @@ function EtfFlowTooltip({
   active,
   label,
   payload,
-  overlayMode,
-  overlayLabel,
+  showCumulative,
 }: {
   active?: boolean;
   label?: string | number;
   payload?: ChartTooltipEntry[];
-  overlayMode: "cumulative" | "index" | "none";
-  overlayLabel: string;
+  showCumulative: boolean;
 }) {
   if (!active || !payload?.length) return null;
   const flow = Number(payload.find((item) => item.dataKey === "flow")?.value);
-  const overlay = Number(payload.find((item) => item.dataKey === (overlayMode === "index" ? "indexValue" : "cumulative"))?.value);
+  const overlay = Number(payload.find((item) => item.dataKey === "cumulative")?.value);
   return (
     <div className="border border-white/15 bg-[#111619] px-4 py-3 text-xs shadow-xl">
       <p className="mb-3 text-sm font-medium text-[#f2f4f5]">{dateWithWeekday(String(label))}</p>
@@ -179,10 +177,7 @@ function EtfFlowTooltip({
           {flowDirection(flow)}：{Math.abs(flow).toFixed(2)}亿元
         </p>
       ) : null}
-      {overlayMode === "index" && Number.isFinite(overlay) ? (
-        <p className="mt-2 font-medium text-[#d49a54]">{overlayLabel}：{indexPoints(overlay)} 点</p>
-      ) : null}
-      {overlayMode === "cumulative" && Number.isFinite(overlay) ? (
+      {showCumulative && Number.isFinite(overlay) ? (
         <p className="mt-2 font-medium" style={{ color: tone(overlay) }}>
           {flowDirection(overlay, "累计")}：{Math.abs(overlay).toFixed(2)}亿元
         </p>
@@ -248,7 +243,8 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const [rangePreset, setRangePreset] = useState("3m");
   const [rangeStart, setRangeStart] = useState(() => presetStart("3m", data.asOf, data.coverage.startDate));
   const [rangeEnd, setRangeEnd] = useState(data.asOf);
-  const [overlayMode, setOverlayMode] = useState<"cumulative" | "index" | "none">("cumulative");
+  const [showCumulative, setShowCumulative] = useState(true);
+  const [showIndex, setShowIndex] = useState(false);
   const [indexSeries, setIndexSeries] = useState<BenchmarkIndexData | null>(null);
   const [indexLoading, setIndexLoading] = useState(false);
   const [indexError, setIndexError] = useState(false);
@@ -272,7 +268,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
     : selectedSegment?.seriesAvailable ?? selectedCategory?.seriesAvailable ?? false;
 
   useEffect(() => {
-    if (overlayMode !== "index" || !canShowIndex || !selectedSeriesId) return;
+    if (!showIndex || !canShowIndex || !selectedSeriesId) return;
     let active = true;
     fetch(`${indexSeriesBaseUrl}/${selectedSeriesId}.json`)
       .then((response) => {
@@ -283,7 +279,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       .catch(() => { if (active) setIndexError(true); })
       .finally(() => { if (active) setIndexLoading(false); });
     return () => { active = false; };
-  }, [canShowIndex, indexSeriesBaseUrl, overlayMode, selectedSeriesId]);
+  }, [canShowIndex, indexSeriesBaseUrl, selectedSeriesId, showIndex]);
 
   const selectedDaily = data.daily.flatMap((row) => {
     const flow = categoryId === "broad" && benchmarkId !== "all"
@@ -294,7 +290,6 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
     return flow == null ? [] : [{ date: row.date, status: row.status, flow }];
   }).filter((row) => row.date >= rangeStart && row.date <= rangeEnd);
   const indexByDate = new Map(indexSeries?.id === selectedSeriesId ? indexSeries.points : []);
-  const activeOverlayMode = overlayMode === "index" && !canShowIndex ? "none" : overlayMode;
   const chartData = selectedDaily.reduce<Array<{ date: string; status: string; flow: number; cumulative: number; indexValue: number | null }>>((items, row) => {
     const cumulative = (items.at(-1)?.cumulative ?? 0) + row.flow;
     const indexClose = indexByDate.get(row.date);
@@ -321,11 +316,8 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const completeMemberFunds = [...selectedMemberFunds].sort((left, right) => left.code.localeCompare(right.code));
   const topInflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! > 0).slice(0, 8);
   const topOutflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! < 0).slice(-8).reverse();
-  const showIndexChart = activeOverlayMode === "index";
-  const showCumulative = activeOverlayMode === "cumulative";
-  const overlayLabel = activeOverlayMode === "index"
-    ? `${selectedSeriesLabel ?? "对应走势"}（实际点位）`
-    : "区间累计净申购（亿元）";
+  const showIndexChart = showIndex && canShowIndex;
+  const overlayLabel = "区间累计净申购（亿元）";
   const selectedViewLabel = selectedSegment?.label
     ?? (categoryId === "broad" && selectedBenchmark ? selectedBenchmark.label : selectedCategory?.label);
 
@@ -357,7 +349,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
                 setCategoryId(category.id);
                 setBenchmarkId("all");
                 setSegmentId(data.segments.find((segment) => segment.categoryId === category.id)?.id ?? "");
-                if (overlayMode === "index") setOverlayMode("cumulative");
+                if (showIndex) { setIndexLoading(true); setIndexError(false); }
               }}
               className={`min-w-20 flex-1 px-4 py-3 text-xs transition-colors ${category.id === categoryId ? "bg-[#d49a54] font-medium text-[#111619]" : "bg-[#111619] text-gray-400 hover:text-white"}`}
               title={category.description}
@@ -381,12 +373,12 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               ))}
             </div>
             {categoryId === "broad" ? (
-              <select value={benchmarkId} onChange={(event) => { const nextId = event.target.value; const nextHasIndex = data.benchmarks.find((item) => item.id === nextId)?.indexAvailable; setBenchmarkId(nextId); if (overlayMode === "index" && !nextHasIndex) setOverlayMode("cumulative"); else if (overlayMode === "index") { setIndexLoading(true); setIndexError(false); } }} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label="宽基指数族">
+              <select value={benchmarkId} onChange={(event) => { const nextId = event.target.value; const nextHasIndex = nextId === "all" ? selectedCategory?.seriesAvailable : data.benchmarks.find((item) => item.id === nextId)?.indexAvailable; setBenchmarkId(nextId); if (showIndex && !nextHasIndex) setShowIndex(false); else if (showIndex) { setIndexLoading(true); setIndexError(false); } }} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label="宽基指数族">
                 <option value="all">全部宽基</option>
                 {benchmarkOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
               </select>
             ) : segmentOptions.length ? (
-              <select value={selectedSegment?.id ?? ""} onChange={(event) => { setSegmentId(event.target.value); if (overlayMode === "index") { setIndexLoading(true); setIndexError(false); } }} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label={`${selectedCategory?.label}细分`}>
+              <select value={selectedSegment?.id ?? ""} onChange={(event) => { setSegmentId(event.target.value); if (showIndex) { setIndexLoading(true); setIndexError(false); } }} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label={`${selectedCategory?.label}细分`}>
                 {segmentOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
               </select>
             ) : null}
@@ -400,15 +392,15 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
           <div className="flex min-w-0 max-w-full items-center gap-2">
             <span className="shrink-0 text-[10px] uppercase tracking-wider text-gray-600">叠加</span>
             <div className="flex max-w-full overflow-x-auto border border-white/10">
-              {[{ id: "cumulative", label: "累计净申购", disabled: false }, { id: "index", label: "对应指数", disabled: !canShowIndex }, { id: "none", label: "无", disabled: false }].map((item) => (
-                <button key={item.id} type="button" disabled={item.disabled} onClick={() => { if (item.id === "index") { setIndexLoading(true); setIndexError(false); } setOverlayMode(item.id as "cumulative" | "index" | "none"); }} className={`h-8 shrink-0 whitespace-nowrap px-2 text-xs sm:px-3 ${overlayMode === item.id ? "bg-[#d49a54] text-[#111619]" : item.disabled ? "cursor-not-allowed text-gray-700" : "text-gray-500 hover:text-gray-300"}`}>{item.label}</button>
-              ))}
+              <button type="button" aria-pressed={showCumulative} onClick={() => setShowCumulative((value) => !value)} className={`h-8 shrink-0 whitespace-nowrap px-2 text-xs sm:px-3 ${showCumulative ? "bg-[#d49a54] text-[#111619]" : "text-gray-500 hover:text-gray-300"}`}>累计净申购</button>
+              <button type="button" aria-pressed={showIndexChart} disabled={!canShowIndex} onClick={() => { setShowIndex((value) => !value); if (!showIndex) { setIndexLoading(true); setIndexError(false); } }} className={`h-8 shrink-0 whitespace-nowrap px-2 text-xs sm:px-3 ${showIndexChart ? "bg-[#d49a54] text-[#111619]" : !canShowIndex ? "cursor-not-allowed text-gray-700" : "text-gray-500 hover:text-gray-300"}`}>对应指数</button>
             </div>
           </div>
         </div>
         <div className="mb-3 flex flex-wrap items-center gap-4 text-[11px] text-gray-500" aria-label="图表图例">
           <span className="flex items-center gap-2"><i className="h-2.5 w-2.5 bg-[#e7685d]" />日净申购 / 净赎回</span>
-          {activeOverlayMode !== "none" ? <span className="flex items-center gap-2"><i className="h-0.5 w-5 bg-[#d49a54]" />{showIndexChart ? `上图：${overlayLabel}` : overlayLabel}</span> : null}
+          {showCumulative ? <span className="flex items-center gap-2"><i className="h-0.5 w-5 bg-[#d49a54]" />{overlayLabel}</span> : null}
+          {showIndexChart ? <span className="flex items-center gap-2"><i className="h-0.5 w-5 bg-[#aab7c4]" />上图：{selectedSeriesLabel}</span> : null}
           {indexLoading ? <span>指数加载中</span> : null}
           {indexError ? <span className="text-[#e7685d]">指数暂不可用</span> : null}
         </div>
@@ -444,7 +436,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${String(value).slice(5)} ${weekdayLabel(String(value))}`} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
               {showCumulative ? <YAxis yAxisId="overlay" orientation="right" width={52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} /> : null}
-              <Tooltip content={<EtfFlowTooltip overlayMode={activeOverlayMode} overlayLabel={overlayLabel} />} />
+              <Tooltip content={<EtfFlowTooltip showCumulative={showCumulative} />} />
               <Bar yAxisId="flow" dataKey="flow" name="日净申购" fill="#d1d5db" maxBarSize={28} isAnimationActive={false}>{chartData.map((item) => <Cell key={item.date} fill={tone(item.flow)} fillOpacity={item.status === "partial" ? 0.4 : 1} />)}</Bar>
               {showCumulative ? <Line yAxisId="overlay" dataKey="cumulative" name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
             </ComposedChart>
