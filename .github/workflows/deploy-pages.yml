@@ -2,12 +2,7 @@ name: Deploy public site
 
 on:
   push:
-    branches: [main, refresh-request]
-  schedule:
-    # 19:30 Asia/Shanghai, after exchange ETF scale data is normally available.
-    - cron: "30 11 * * 1-5"
-    # 08:30 Asia/Shanghai on the following morning, after final T+1 scale updates.
-    - cron: "30 0 * * 2-6"
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -71,20 +66,8 @@ jobs:
       - name: Refresh index deviation research
         run: npm run research:deviation
 
-      - name: Refresh broad ETF flow
-        id: etf_flow_refresh
-        if: github.event_name != 'push' || github.ref == 'refs/heads/refresh-request'
-        timeout-minutes: 15
-        run: npm run research:etf-flow
-
       - name: Verify broad ETF flow snapshot
-        env:
-          ALLOW_STALE_SNAPSHOT: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          REFRESH_OUTCOME: ${{ steps.etf_flow_refresh.outcome }}
         run: |
-          if [ "$REFRESH_OUTCOME" != "success" ]; then
-            echo "::warning::Live ETF flow refresh failed; validating whether the last complete snapshot is still fresh enough to deploy."
-          fi
           node --input-type=module <<'NODE'
           import { readFile, stat } from "node:fs/promises";
 
@@ -97,7 +80,7 @@ jobs:
             .map((line) => line.slice(0, 10))
             .filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date));
           const minimumFreshDate = referenceDates.at(-2) ?? referenceDates.at(-1);
-          if (process.env.ALLOW_STALE_SNAPSHOT !== "true" && (!minimumFreshDate || payload.asOf < minimumFreshDate)) {
+          if (!minimumFreshDate || payload.asOf < minimumFreshDate) {
             throw new Error(`ETF flow snapshot is stale: ${payload.asOf}; expected ${minimumFreshDate} or later`);
           }
           if (payload.daily.some((row) => row.date >= payload.coverage.fullMarketStartDate && (row.status !== "complete" || row.exchanges?.length !== 2))) throw new Error("ETF aggregate contains partial dates inside the full-market period");
@@ -111,20 +94,6 @@ jobs:
           const csi300 = JSON.parse(await readFile(`${root}/indices/csi-300.json`, "utf8"));
           if (csi300.points?.length < 1_000) throw new Error("CSI 300 overlay history is incomplete");
           NODE
-
-      - name: Persist refreshed snapshots
-        if: github.event_name != 'push' || github.ref == 'refs/heads/refresh-request'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data
-          if git diff --cached --quiet; then
-            echo "Published data is already current"
-            exit 0
-          fi
-          git commit -m "data: refresh public snapshots [skip ci]"
-          git pull --rebase origin main
-          git push origin HEAD:main
 
       - name: Validate and export site
         run: npm run check
