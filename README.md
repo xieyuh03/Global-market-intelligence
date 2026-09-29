@@ -6,6 +6,8 @@
 
 ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估算全A、宽基、行业、黄金、港股等类别的净申购金额；支持自定义日期区间，并可在宽基子类上叠加对应指数走势。上交所历史从2012年起，沪深完整覆盖从2016年9月起。均线对数偏离度页位于 `/market/deviation/`，提供可滑动日频图和分段历史概率。
 
+恒生指数领航页位于 `/market/hk-leading/`，将香港 M2 总额同比、内地 PPI 同比、内地社零同比和信用脉冲代理（6个月新增社融除以最近两个季度名义 GDP，取3个月均值）按 25% 等权合成。数据近似按发布月对齐，每项使用最长36个月滚动标准化，并公开全量月频 CSV、因子贡献、探索性拐点配对和未来3/6/9/12个月统计。
+
 - Website: <https://xieyuh03.github.io/Global-market-intelligence/>
 - Source mirror: <https://github.com/xieyuh03/Global-market-intelligence>
 - Data boundary: 公开价格、模型结果和经过裁剪的账本快照，不包含账户、持仓、交易、成本、Futu 或数据库凭据
@@ -20,6 +22,11 @@ ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估�
 - `global-context.json`: 黄金储备、能源通道、贸易结构和事件/地缘监测图层
 - `global-capital-CN-A.json`: A 股公开资金账本的裁剪快照
 - `global-capital-HK.json`: 港股南向资金账本的裁剪快照
+- `hk-leading-indicator/summary.json`: 恒指四因子领航模型、来源、覆盖和历史检验
+- `hk-leading-indicator/components.csv`: 四项底层因子的最长可得观察月数据
+- `hk-leading-indicator/components.json`: 个人中枢因子下钻使用的月度结构化数据
+- `hk-leading-indicator/daily.json`: 恒指日线、约36个月滚动标准分与月度合成值锚点
+- `hk-leading-indicator/monthly.csv`: 按近似发布月对齐的恒指、四项原始数据、滚动标准分与合成值
 
 价格与成交量只能作为偏好代理，不等于基金申赎或真实跨境资金。账本过期或质量不足时，页面会显式降级为代理证据。
 
@@ -28,6 +35,7 @@ ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估�
 ```bash
 npm ci
 npm run data:refresh-market
+npm run research:hk-leading
 npm run dev
 ```
 

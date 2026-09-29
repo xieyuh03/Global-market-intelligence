@@ -95,6 +95,38 @@ jobs:
           if (csi300.points?.length < 1_000) throw new Error("CSI 300 overlay history is incomplete");
           NODE
 
+      - name: Refresh Hang Seng leading indicator
+        id: hk_leading_refresh
+        continue-on-error: true
+        run: npm run research:hk-leading
+
+      - name: Verify Hang Seng leading indicator snapshot
+        env:
+          REFRESH_OUTCOME: ${{ steps.hk_leading_refresh.outcome }}
+        run: |
+          if [ "$REFRESH_OUTCOME" != "success" ]; then
+            echo "::warning::Live Hang Seng indicator refresh failed; deploying the last verified complete snapshot."
+          fi
+          node --input-type=module <<'NODE'
+          import { readFile, stat } from "node:fs/promises";
+
+          const root = "public/data/hk-leading-indicator";
+          const payload = JSON.parse(await readFile(`${root}/summary.json`, "utf8"));
+          if (payload.series?.length < 90 || payload.coverage?.observations < 80) throw new Error("Hang Seng leading indicator history is incomplete");
+          if (payload.latest?.components?.length !== 4 || payload.horizonStats?.length !== 4) throw new Error("Hang Seng leading indicator summary is incomplete");
+          const now = new Date();
+          const currentMonthOrdinal = now.getUTCFullYear() * 12 + now.getUTCMonth();
+          const monthOrdinal = (value) => {
+            const [year, month] = value.split("-").map(Number);
+            return year * 12 + month - 1;
+          };
+          if (currentMonthOrdinal - monthOrdinal(payload.coverage.lastCompositeDate) > 2) throw new Error(`Hang Seng composite is stale: ${payload.coverage.lastCompositeDate}`);
+          if (monthOrdinal(payload.coverage.lastHsiDate) < currentMonthOrdinal - 1) throw new Error(`Hang Seng monthly close is stale: ${payload.coverage.lastHsiDate}`);
+          for (const file of ["summary.json", "components.csv", "components.json", "daily.json", "monthly.csv", "source-cache.json"]) {
+            if ((await stat(`${root}/${file}`)).size === 0) throw new Error(`${file} is empty`);
+          }
+          NODE
+
       - name: Validate and export site
         run: npm run check
 
