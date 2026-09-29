@@ -7,6 +7,7 @@ import {
   Cell,
   ComposedChart,
   Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -41,6 +42,8 @@ type FundFlow = {
   date: string;
   code: string;
   name: string;
+  fullName: string | null;
+  fundManager: string | null;
   exchange: string;
   primaryCategoryId: string;
   primaryCategory: string;
@@ -73,6 +76,18 @@ type SegmentOption = {
   id: string;
   categoryId: string;
   label: string;
+  seriesId: string;
+  seriesAvailable: boolean;
+  seriesLabel: string | null;
+};
+
+type CategoryOption = {
+  id: string;
+  label: string;
+  description: string;
+  seriesId: string | null;
+  seriesAvailable: boolean;
+  seriesLabel: string | null;
 };
 
 type ChartTooltipEntry = {
@@ -96,7 +111,7 @@ export type BroadEtfFlowData = {
     sseFunds: number;
     szseFunds: number;
   };
-  categories: Array<{ id: string; label: string; description: string }>;
+  categories: CategoryOption[];
   segments: SegmentOption[];
   benchmarks: BenchmarkOption[];
   daily: DailyFlow[];
@@ -124,6 +139,13 @@ function flowDirection(value: number, prefix = "日") {
   if (value > 0) return `${prefix}净申购`;
   if (value < 0) return `${prefix}净赎回`;
   return `${prefix}净流量`;
+}
+
+function fundManagerLabel(value: string | null) {
+  return value
+    ?.replace(/基金管理(?:股份|有限责任)?有限公司$/, "")
+    .replace(/基金管理有限公司$/, "")
+    .trim() || null;
 }
 
 function EtfFlowTooltip({
@@ -158,6 +180,28 @@ function EtfFlowTooltip({
           {flowDirection(overlay, "累计")}：{Math.abs(overlay).toFixed(2)}亿元
         </p>
       ) : null}
+    </div>
+  );
+}
+
+function EtfIndexTooltip({
+  active,
+  label,
+  payload,
+  indexLabel,
+}: {
+  active?: boolean;
+  label?: string | number;
+  payload?: ChartTooltipEntry[];
+  indexLabel: string;
+}) {
+  if (!active || !payload?.length) return null;
+  const value = Number(payload.find((item) => item.dataKey === "indexValue")?.value);
+  if (!Number.isFinite(value)) return null;
+  return (
+    <div className="border border-white/15 bg-[#111619] px-4 py-3 text-xs shadow-xl">
+      <p className="mb-3 text-sm font-medium text-[#f2f4f5]">{dateWithWeekday(String(label))}</p>
+      <p className="font-medium text-[#d49a54]">{indexLabel}：{indexPoints(value)} 点</p>
     </div>
   );
 }
@@ -210,12 +254,20 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const segmentOptions = data.segments.filter((segment) => segment.categoryId === categoryId);
   const selectedSegment = segmentOptions.find((segment) => segment.id === segmentId) ?? segmentOptions[0] ?? null;
   const segmentIndex = selectedSegment ? data.segments.findIndex((segment) => segment.id === selectedSegment.id) : -1;
-  const canShowIndex = categoryId === "broad" && benchmarkId !== "all" && selectedBenchmark?.indexAvailable === true;
+  const selectedSeriesId = categoryId === "broad" && benchmarkId !== "all"
+    ? selectedBenchmark?.id ?? null
+    : selectedSegment?.seriesId ?? selectedCategory?.seriesId ?? null;
+  const selectedSeriesLabel = categoryId === "broad" && benchmarkId !== "all"
+    ? selectedBenchmark?.indexLabel ?? selectedBenchmark?.label ?? null
+    : selectedSegment?.seriesLabel ?? selectedCategory?.seriesLabel ?? null;
+  const canShowIndex = categoryId === "broad" && benchmarkId !== "all"
+    ? selectedBenchmark?.indexAvailable === true
+    : selectedSegment?.seriesAvailable ?? selectedCategory?.seriesAvailable ?? false;
 
   useEffect(() => {
-    if (overlayMode !== "index" || !canShowIndex) return;
+    if (overlayMode !== "index" || !canShowIndex || !selectedSeriesId) return;
     let active = true;
-    fetch(`${indexSeriesBaseUrl}/${benchmarkId}.json`)
+    fetch(`${indexSeriesBaseUrl}/${selectedSeriesId}.json`)
       .then((response) => {
         if (!response.ok) throw new Error(`Index series ${response.status}`);
         return response.json() as Promise<BenchmarkIndexData>;
@@ -224,7 +276,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
       .catch(() => { if (active) setIndexError(true); })
       .finally(() => { if (active) setIndexLoading(false); });
     return () => { active = false; };
-  }, [benchmarkId, canShowIndex, indexSeriesBaseUrl, overlayMode]);
+  }, [canShowIndex, indexSeriesBaseUrl, overlayMode, selectedSeriesId]);
 
   const selectedDaily = data.daily.flatMap((row) => {
     const flow = categoryId === "broad" && benchmarkId !== "all"
@@ -234,7 +286,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
         : row.categoryFlows[categoryIndex];
     return flow == null ? [] : [{ date: row.date, status: row.status, flow }];
   }).filter((row) => row.date >= rangeStart && row.date <= rangeEnd);
-  const indexByDate = new Map(indexSeries?.id === benchmarkId ? indexSeries.points : []);
+  const indexByDate = new Map(indexSeries?.id === selectedSeriesId ? indexSeries.points : []);
   const activeOverlayMode = overlayMode === "index" && !canShowIndex ? "none" : overlayMode;
   const chartData = selectedDaily.reduce<Array<{ date: string; status: string; flow: number; cumulative: number; indexValue: number | null }>>((items, row) => {
     const cumulative = (items.at(-1)?.cumulative ?? 0) + row.flow;
@@ -262,9 +314,10 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
   const completeMemberFunds = [...selectedMemberFunds].sort((left, right) => left.code.localeCompare(right.code));
   const topInflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! > 0).slice(0, 8);
   const topOutflows = selectedFunds.filter((fund) => fund.estimatedNetFlowCny! < 0).slice(-8).reverse();
-  const overlayDataKey = activeOverlayMode === "index" ? "indexValue" : "cumulative";
+  const showIndexChart = activeOverlayMode === "index";
+  const showCumulative = activeOverlayMode === "cumulative";
   const overlayLabel = activeOverlayMode === "index"
-    ? `${selectedBenchmark?.indexLabel ?? selectedBenchmark?.label}（实际点位）`
+    ? `${selectedSeriesLabel ?? "对应走势"}（实际点位）`
     : "区间累计净申购（亿元）";
   const selectedViewLabel = selectedSegment?.label
     ?? (categoryId === "broad" && selectedBenchmark ? selectedBenchmark.label : selectedCategory?.label);
@@ -326,7 +379,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
                 {benchmarkOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
               </select>
             ) : segmentOptions.length ? (
-              <select value={selectedSegment?.id ?? ""} onChange={(event) => setSegmentId(event.target.value)} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label={`${selectedCategory?.label}细分`}>
+              <select value={selectedSegment?.id ?? ""} onChange={(event) => { setSegmentId(event.target.value); if (overlayMode === "index") { setIndexLoading(true); setIndexError(false); } }} className="h-9 border border-white/10 bg-[#111619] px-3 text-xs text-gray-300 outline-none" aria-label={`${selectedCategory?.label}细分`}>
                 {segmentOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
               </select>
             ) : null}
@@ -348,20 +401,39 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
         </div>
         <div className="mb-3 flex flex-wrap items-center gap-4 text-[11px] text-gray-500" aria-label="图表图例">
           <span className="flex items-center gap-2"><i className="h-2.5 w-2.5 bg-[#e7685d]" />日净申购 / 净赎回</span>
-          {activeOverlayMode !== "none" ? <span className="flex items-center gap-2"><i className="h-0.5 w-5 bg-[#d49a54]" />{overlayLabel}</span> : null}
+          {activeOverlayMode !== "none" ? <span className="flex items-center gap-2"><i className="h-0.5 w-5 bg-[#d49a54]" />{showIndexChart ? `上图：${overlayLabel}` : overlayLabel}</span> : null}
           {indexLoading ? <span>指数加载中</span> : null}
           {indexError ? <span className="text-[#e7685d]">指数暂不可用</span> : null}
         </div>
+        {showIndexChart ? (
+          <div className="mb-3 border border-white/10 bg-[#0d1215]">
+            <div className="border-b border-white/10 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-wider text-gray-600">INDEX</p>
+              <h3 className="mt-1 text-sm font-medium text-white">{selectedSeriesLabel ?? "对应"}走势</h3>
+            </div>
+            <div className="h-[220px] px-2 py-4 sm:px-4">
+              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 190 }}>
+                <LineChart data={chartData} margin={{ top: 12, right: 10, left: 0, bottom: 0 }} syncId="etf-flow-charts" syncMethod="value">
+                  <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
+                  <XAxis dataKey="date" hide />
+                  <YAxis width={50} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => indexPoints(Number(value))} axisLine={false} tickLine={false} />
+                  <Tooltip content={<EtfIndexTooltip indexLabel={selectedSeriesLabel ?? "对应走势"} />} />
+                  <Line dataKey="indexValue" name={selectedSeriesLabel ?? "对应走势"} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ) : null}
         <div className="h-[390px] border border-white/10 bg-[#0d1215] px-2 py-4 sm:px-4">
           <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 350 }}>
-            <ComposedChart data={chartData} margin={{ top: 12, right: 10, left: 0, bottom: 8 }}>
+            <ComposedChart data={chartData} margin={{ top: 12, right: 10, left: 0, bottom: 8 }} syncId="etf-flow-charts" syncMethod="value">
               <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
               <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${String(value).slice(5)} ${weekdayLabel(String(value))}`} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
-              {activeOverlayMode !== "none" ? <YAxis yAxisId="overlay" orientation="right" width={activeOverlayMode === "index" ? 64 : 52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => activeOverlayMode === "index" ? indexPoints(Number(value)) : `${value}亿`} axisLine={false} tickLine={false} /> : null}
+              {showCumulative ? <YAxis yAxisId="overlay" orientation="right" width={52} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} /> : null}
               <Tooltip content={<EtfFlowTooltip overlayMode={activeOverlayMode} overlayLabel={overlayLabel} />} />
               <Bar yAxisId="flow" dataKey="flow" name="日净申购" fill="#d1d5db" maxBarSize={28} isAnimationActive={false}>{chartData.map((item) => <Cell key={item.date} fill={tone(item.flow)} fillOpacity={item.status === "partial" ? 0.4 : 1} />)}</Bar>
-              {activeOverlayMode !== "none" ? <Line yAxisId="overlay" dataKey={overlayDataKey} name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
+              {showCumulative ? <Line yAxisId="overlay" dataKey="cumulative" name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
             </ComposedChart>
           </ResponsiveContainer>
         </div>
@@ -375,7 +447,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               {group.rows.map((fund) => (
                 <div key={fund.code} className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 py-3 text-xs">
                   <span className="font-mono text-gray-600">{fund.code}</span>
-                  <span className="min-w-0"><span className="block truncate text-gray-300">{fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
+                  <span className="min-w-0"><span className="block truncate text-gray-300">{fund.fullName ?? fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fundManagerLabel(fund.fundManager) ? `${fundManagerLabel(fund.fundManager)} · ` : ""}{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
                   <span className="text-right font-mono" style={{ color: tone((fund.estimatedNetFlowCny ?? 0) / 100_000_000) }}>{yi((fund.estimatedNetFlowCny ?? 0) / 100_000_000)}</span>
                 </div>
               ))}
@@ -393,7 +465,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
           {completeMemberFunds.map((fund) => (
             <div className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 border-b border-white/[0.07] px-4 py-3 text-xs lg:odd:border-r" key={`${fund.exchange}-${fund.code}`}>
               <span className="font-mono text-gray-600">{fund.code}</span>
-              <span className="min-w-0"><span className="block truncate text-gray-300">{fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
+              <span className="min-w-0"><span className="block truncate text-gray-300">{fund.fullName ?? fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fundManagerLabel(fund.fundManager) ? `${fundManagerLabel(fund.fundManager)} · ` : ""}{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
               <span className="text-right font-medium" style={{ color: tone(fund.estimatedNetFlowCny == null ? null : fund.estimatedNetFlowCny / 100_000_000) }}>{fund.estimatedNetFlowCny == null ? "未计价" : yi(fund.estimatedNetFlowCny / 100_000_000)}</span>
             </div>
           ))}

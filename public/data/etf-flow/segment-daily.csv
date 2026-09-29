@@ -541,7 +541,7 @@ date,status,exchanges,id,label,estimatedNetFlowCny,estimatedNetFlowYi,grossInflo
 2026-09-24,complete,SSE|SZSE,bond-credit,信用债,6476082160,64.7608,64.7608,0,33,33,0
 2026-09-28,complete,SSE|SZSE,industry-semiconductor,半导体,760709607,7.6071,12.4942,-4.8871,32,32,0
 2026-09-28,complete,SSE|SZSE,industry-advanced-manufacturing,机器人/高端制造,204814623,2.0481,2.5857,-0.5375,42,42,0
-2026-09-28,complete,SSE|SZSE,industry-ai-compute,AI/算力通信,3593550023,35.9355,36.1093,-0.1738,101,101,0
+2026-09-28,complete,SSE|SZSE,industry-ai-compute,AI/算力通信,3731670930,37.3167,37.4905,-0.1738,103,103,0
 2026-09-28,complete,SSE|SZSE,industry-defense,军工,245236234,2.4524,2.4607,-0.0083,26,26,0
 2026-09-28,complete,SSE|SZSE,industry-automotive,汽车,11401384,0.114,0.157,-0.043,19,19,0
 2026-09-28,complete,SSE|SZSE,industry-new-energy,新能源,109724982,1.0972,2.2265,-1.1293,76,76,0

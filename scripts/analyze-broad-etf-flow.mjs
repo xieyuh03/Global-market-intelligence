@@ -96,6 +96,29 @@ const BENCHMARK_INDEXES = [
   { id: "sme-100", label: "中小100", symbol: "sz399005" },
   { id: "bse-50", label: "北证50", symbol: "bj899050" },
 ];
+const VIEW_SERIES = [
+  { id: "market-all-a", label: "中证全指", symbol: "sh000985" },
+  { id: "industry-semiconductor", label: "半导体ETF（512480）", symbol: "sh512480" },
+  { id: "industry-advanced-manufacturing", label: "机器人ETF（159530）", symbol: "sz159530" },
+  { id: "industry-ai-compute", label: "通信ETF（515880）", symbol: "sh515880" },
+  { id: "industry-defense", label: "军工ETF（512660）", symbol: "sh512660" },
+  { id: "industry-automotive", label: "汽车ETF（516110）", symbol: "sh516110" },
+  { id: "industry-new-energy", label: "新能源ETF（516160）", symbol: "sh516160" },
+  { id: "industry-healthcare", label: "医药ETF（512010）", symbol: "sh512010" },
+  { id: "industry-consumer", label: "消费ETF（159928）", symbol: "sz159928" },
+  { id: "industry-finance", label: "证券ETF（512880）", symbol: "sh512880" },
+  { id: "industry-resources", label: "有色ETF（512400）", symbol: "sh512400" },
+  { id: "hong-kong-hsi", label: "恒生指数", symbol: "hkHSI" },
+  { id: "hong-kong-hstech", label: "恒生科技指数", symbol: "hkHSTECH" },
+  { id: "bond-ultra-long-government", label: "30年国债ETF（511090）", symbol: "sh511090" },
+  { id: "bond-government", label: "国债ETF（511010）", symbol: "sh511010" },
+  { id: "bond-policy-bank", label: "政金债ETF（511520）", symbol: "sh511520" },
+  { id: "bond-local-government", label: "10年地方债ETF（511270）", symbol: "sh511270" },
+  { id: "bond-convertible", label: "可转债ETF（511380）", symbol: "sh511380" },
+  { id: "bond-credit", label: "信用债ETF（511190）", symbol: "sh511190" },
+  { id: "gold-proxy", label: "黄金ETF（518880）", symbol: "sh518880" },
+];
+const ALL_VIEW_SERIES = [...BENCHMARK_INDEXES, ...VIEW_SERIES];
 
 const EXCLUDED_STYLES = /增强|指增|增指|红利|低波|价值|成长|质量|自由现金流|等权|基本面|策略|ESG|央企|国企|民企|行业|主题|精选|优选|领先|龙头|标普|纳斯达克|纳指|日经|德国|法国|印度|巴西|香港|港股|沪港深|跨境/;
 const ETF_CATEGORIES = [
@@ -114,6 +137,11 @@ const ETF_CATEGORIES = [
 
 const DASHBOARD_CATEGORY_IDS = ["all-a", "broad", "industry", "hong-kong", "gold", "bond"];
 const DASHBOARD_BENCHMARK_IDS = ["sse-composite", "sse-50", "csi-300", "csi-a500", "csi-500", "csi-1000", "chinext", "star-50"];
+const CATEGORY_SERIES_IDS = new Map([
+  ["all-a", "market-all-a"],
+  ["broad", "market-all-a"],
+  ["gold", "gold-proxy"],
+]);
 const ETF_SEGMENT_RULES = [
   { id: "industry-semiconductor", categoryId: "industry", label: "半导体", patterns: [/半导体|芯片|集成电路|晶圆/i] },
   { id: "industry-advanced-manufacturing", categoryId: "industry", label: "机器人/高端制造", patterns: [/机器人|工业母机|机床|高端装备|高端制造|智能制造|机械|工程机械|工业互联网|自动化|专精特新|工业4\.0/i] },
@@ -447,6 +475,26 @@ async function fetchSseShares() {
   })).flat();
 }
 
+async function fetchSseFundMetadata() {
+  const parameters = new URLSearchParams({
+    sqlId: "FUND_LIST",
+    isPagination: "true",
+    "pageHelp.pageSize": "2000",
+    "pageHelp.pageNo": "1",
+  });
+  const payload = await fetchJson(`https://query.sse.com.cn/commonSoaQuery.do?${parameters}`, {
+    headers: {
+      Referer: "https://www.sse.com.cn/assortment/fund/list/etfinfo/basic/",
+      "User-Agent": "Mozilla/5.0 BroadEtfFlow/1.0",
+    },
+  });
+  return new Map((payload.result ?? []).flatMap((row) =>
+    row.fundCode ? [[String(row.fundCode), {
+      fundManager: row.companyName ? String(row.companyName) : null,
+      fullName: row.secNameFull ? String(row.secNameFull) : null,
+    }]] : []));
+}
+
 async function fetchSzseChunk(startDate, endDate) {
   const cacheFile = path.join(CACHE, "shares-szse", `${startDate}_${endDate}.xlsx`);
   let buffer;
@@ -505,6 +553,8 @@ async function readPreviousShareRows(exchange) {
           date: row.date,
           code: row.code,
           name: row.name,
+          fundManager: row.fundManager || null,
+          fullName: row.fullName || row.name,
           exchange,
           shares,
         }];
@@ -558,7 +608,9 @@ async function fetchSzseLatestShares() {
         date,
         code,
         name: stripHtml(row.kzjcurl),
+        fullName: stripHtml(row.kzjcurl),
         exchange: "SZSE",
+        fundManager: stripHtml(row.glrmc) || null,
         shares: sharesInTenThousands * 10_000,
       }];
     }));
@@ -880,7 +932,19 @@ async function main() {
     for (const row of fundRows) addDailyFlow(dailyStates, row);
     calculatedDaily = materializeDaily(dailyStates);
   } else {
-    const [sseShareRows, szseShareRows] = await Promise.all([fetchSseShares(), fetchSzseShares()]);
+    const [rawSseShareRows, szseShareRows, sseFundMetadata] = await Promise.all([
+      fetchSseShares(),
+      fetchSzseShares(),
+      fetchSseFundMetadata().catch((error) => {
+        console.error(`[etf-flow] SSE fund metadata unavailable: ${error instanceof Error ? error.message : String(error)}`);
+        return new Map();
+      }),
+    ]);
+    const sseShareRows = rawSseShareRows.map((row) => ({
+      ...row,
+      fundManager: sseFundMetadata.get(row.code)?.fundManager ?? row.fundManager ?? null,
+      fullName: sseFundMetadata.get(row.code)?.fullName ?? row.fullName ?? row.name,
+    }));
     if (process.argv.includes("--probe-sources")) {
       console.log(JSON.stringify({
         requestedRange: { startDate: START_DATE, endDate: END_DATE },
@@ -907,7 +971,13 @@ async function main() {
     const sharesByFund = new Map();
     for (const row of [...sseShareRows, ...szseShareRows]) {
       const key = `${row.exchange}:${row.code}`;
-      const fund = { code: row.code, name: row.name, exchange: row.exchange };
+      const fund = {
+        code: row.code,
+        name: row.name,
+        exchange: row.exchange,
+        fundManager: row.fundManager ?? null,
+        fullName: row.fullName ?? row.name,
+      };
       const existing = sharesByFund.get(key) ?? { fund, rows: [] };
       existing.rows.push(row);
       existing.fund = fund;
@@ -916,7 +986,16 @@ async function main() {
     const histories = [...sharesByFund.values()].filter((item) => item.rows.length >= 2).map(({ fund, rows }) => {
       const sorted = [...rows].sort((left, right) => left.date.localeCompare(right.date));
       const latestRow = sorted.at(-1);
-      return { fund: { ...fund, name: latestRow.name, ...classifyEtf(latestRow.name, latestRow.code) }, rows: sorted };
+      return {
+        fund: {
+          ...fund,
+          name: latestRow.name,
+          fundManager: latestRow.fundManager ?? fund.fundManager ?? null,
+          fullName: latestRow.fullName ?? fund.fullName ?? latestRow.name,
+          ...classifyEtf(latestRow.name, latestRow.code),
+        },
+        rows: sorted,
+      };
     });
     const dailyStates = new Map();
     let completedPrices = 0;
@@ -936,6 +1015,8 @@ async function main() {
           date: row.date,
           code: fund.code,
           name: fund.name,
+          fundManager: fund.fundManager,
+          fullName: fund.fullName,
           exchange: fund.exchange,
           primaryCategoryId: fund.primaryCategoryId,
           primaryCategory: fund.primaryCategory,
@@ -993,7 +1074,7 @@ async function main() {
   const completeDaily = daily.filter((row) => row.status === "complete");
   const categoryDaily = daily.flatMap((row) => (row.observedCategories ?? []).map((category) => ({ date: row.date, status: row.status, exchanges: row.exchanges.join("|"), ...category })));
   const segmentDaily = daily.flatMap((row) => (row.segments ?? []).map((segment) => ({ date: row.date, status: row.status, exchanges: row.exchanges.join("|"), ...segment })));
-  const benchmarkIndexSeries = (await mapLimit(BENCHMARK_INDEXES, 6, async (index) => {
+  const benchmarkIndexSeries = (await mapLimit(ALL_VIEW_SERIES, 6, async (index) => {
     try {
       return await fetchBenchmarkIndex(index);
     } catch (error) {
@@ -1003,6 +1084,23 @@ async function main() {
   })).filter(Boolean);
   const publishedBenchmarkIndexSeries = benchmarkIndexSeries.filter((series) => series.points.length >= 20);
   const availableBenchmarkIndexes = new Map(publishedBenchmarkIndexSeries.map((series) => [series.id, series]));
+  const dashboardCategories = DASHBOARD_CATEGORIES.map((category) => {
+    const seriesId = CATEGORY_SERIES_IDS.get(category.id) ?? null;
+    return {
+      ...category,
+      seriesId,
+      seriesAvailable: seriesId ? availableBenchmarkIndexes.has(seriesId) : false,
+      seriesLabel: seriesId ? availableBenchmarkIndexes.get(seriesId)?.label ?? null : null,
+    };
+  });
+  const dashboardSegments = ETF_SEGMENT_RULES.map(({ id, categoryId, label }) => ({
+    id,
+    categoryId,
+    label,
+    seriesId: id,
+    seriesAvailable: availableBenchmarkIndexes.has(id),
+    seriesLabel: availableBenchmarkIndexes.get(id)?.label ?? null,
+  }));
   const publishedDaily = daily.map((row) => ({
     date: row.date,
     status: row.status,
@@ -1024,9 +1122,9 @@ async function main() {
     generatedAt: new Date().toISOString(),
     asOf: latestDate,
     coverage: { startDate: daily[0]?.date ?? null, fullMarketStartDate: completeDaily[0]?.date ?? null, endDate: latestDate, tradingDays: daily.length, completeTradingDays: completeDaily.length, partialTradingDays: daily.length - completeDaily.length, fundDetailStartDate: fundRows[0]?.date ?? null, segmentStartDate, funds: universe.length, sseFunds: universe.filter((item) => item.exchange === "SSE").length, szseFunds: universe.filter((item) => item.exchange === "SZSE").length },
-    categories: DASHBOARD_CATEGORIES,
+    categories: dashboardCategories,
     rawCategories: ETF_CATEGORIES,
-    segments: ETF_SEGMENT_RULES.map(({ id, categoryId, label }) => ({ id, categoryId, label })),
+    segments: dashboardSegments,
     methodology: {
       scope: "All exchange-reported ETFs classified into overlapping parent and primary asset groups; 全A contains A-share broad, industry, and strategy ETFs while the dashboard exposes only decision-useful categories and segments",
       shareChange: "current exchange-reported shares minus prior reported trading-day shares",
@@ -1052,8 +1150,8 @@ async function main() {
     generatedAt: payload.generatedAt,
     asOf: payload.asOf,
     coverage: payload.coverage,
-    categories: DASHBOARD_CATEGORIES,
-    segments: ETF_SEGMENT_RULES.map(({ id, categoryId, label }) => ({ id, categoryId, label })),
+    categories: dashboardCategories,
+    segments: dashboardSegments,
     benchmarks: DASHBOARD_BENCHMARKS.map(({ id, label }) => ({
       id,
       label,
@@ -1092,8 +1190,8 @@ async function main() {
     writeFile(path.join(OUTPUT, "daily.csv"), toCsv(daily.map((row) => ({ ...row, exchanges: row.exchanges.join("|") })), ["date", "status", "exchanges", "estimatedNetFlowCny", "estimatedNetFlowYi", "grossInflowYi", "grossOutflowYi", "funds", "pricedFunds", "excludedRecords"])),
     writeFile(path.join(OUTPUT, "category-daily.csv"), toCsv(categoryDaily, ["date", "status", "exchanges", "id", "label", "estimatedNetFlowCny", "estimatedNetFlowYi", "grossInflowYi", "grossOutflowYi", "funds", "pricedFunds", "excludedRecords"])),
     writeFile(path.join(OUTPUT, "segment-daily.csv"), toCsv(segmentDaily, ["date", "status", "exchanges", "id", "label", "estimatedNetFlowCny", "estimatedNetFlowYi", "grossInflowYi", "grossOutflowYi", "funds", "pricedFunds", "excludedRecords"])),
-    writeFile(path.join(OUTPUT, "fund-daily.csv"), toCsv(fundRows.map((row) => ({ ...row, categoryIds: row.categoryIds.join("|") })), ["date", "code", "name", "exchange", "primaryCategoryId", "primaryCategory", "categoryIds", "benchmarkId", "benchmark", "segmentId", "segment", "shares", "shareChange", "shareChangePct", "close", "estimatedNetFlowCny", "status"])),
-    writeFile(path.join(OUTPUT, "universe.csv"), toCsv(universe.map((row) => ({ ...row, categoryIds: row.categoryIds.join("|") })), ["code", "name", "exchange", "primaryCategoryId", "primaryCategory", "categoryIds", "benchmarkId", "benchmark", "segmentId", "segment", "firstDate", "lastDate", "observations"])),
+    writeFile(path.join(OUTPUT, "fund-daily.csv"), toCsv(fundRows.map((row) => ({ ...row, categoryIds: row.categoryIds.join("|") })), ["date", "code", "name", "fullName", "fundManager", "exchange", "primaryCategoryId", "primaryCategory", "categoryIds", "benchmarkId", "benchmark", "segmentId", "segment", "shares", "shareChange", "shareChangePct", "close", "estimatedNetFlowCny", "status"])),
+    writeFile(path.join(OUTPUT, "universe.csv"), toCsv(universe.map((row) => ({ ...row, categoryIds: row.categoryIds.join("|") })), ["code", "name", "fullName", "fundManager", "exchange", "primaryCategoryId", "primaryCategory", "categoryIds", "benchmarkId", "benchmark", "segmentId", "segment", "firstDate", "lastDate", "observations"])),
   ]);
   console.log(JSON.stringify({ output: OUTPUT, coverage: payload.coverage, latest: latest ? { date: latest.date, estimatedNetFlowYi: latest.estimatedNetFlowYi, grossInflowYi: latest.grossInflowYi, grossOutflowYi: latest.grossOutflowYi, funds: latest.funds, pricedFunds: latest.pricedFunds, excludedRecords: latest.excludedRecords } : null, priceErrors: priceErrors.length, topInflows: latestFunds.slice(0, 5).map((row) => ({ code: row.code, name: row.name, flowYi: round(row.estimatedNetFlowCny / 100_000_000) })), topOutflows: latestFunds.slice(-5).reverse().map((row) => ({ code: row.code, name: row.name, flowYi: round(row.estimatedNetFlowCny / 100_000_000) })) }, null, 2));
 }
