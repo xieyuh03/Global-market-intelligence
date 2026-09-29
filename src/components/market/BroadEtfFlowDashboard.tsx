@@ -143,9 +143,16 @@ function flowDirection(value: number, prefix = "日") {
 
 function fundManagerLabel(value: string | null) {
   return value
-    ?.replace(/基金管理(?:股份|有限责任)?有限公司$/, "")
-    .replace(/基金管理有限公司$/, "")
+    ?.replace(/基金管理（中国）有限公司$/, "")
+    .replace(/基金管理(?:股份|有限责任)?有限公司$/, "")
+    .replace(/(?:股份|有限责任)?有限公司$/, "")
     .trim() || null;
+}
+
+function fundDisplayName(fund: FundFlow) {
+  const name = fund.fullName ?? fund.name;
+  const manager = fundManagerLabel(fund.fundManager);
+  return manager && !name.includes(manager) ? `${name}（${manager}）` : name;
 }
 
 function EtfFlowTooltip({
@@ -405,15 +412,16 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
           {indexLoading ? <span>指数加载中</span> : null}
           {indexError ? <span className="text-[#e7685d]">指数暂不可用</span> : null}
         </div>
+        <div className="border border-white/10 bg-[#0d1215]" data-testid="linked-etf-charts">
         {showIndexChart ? (
-          <div className="mb-3 border border-white/10 bg-[#0d1215]">
-            <div className="border-b border-white/10 px-4 py-3">
-              <p className="text-[10px] uppercase tracking-wider text-gray-600">INDEX</p>
-              <h3 className="mt-1 text-sm font-medium text-white">{selectedSeriesLabel ?? "对应"}走势</h3>
+          <div className="border-b border-white/10 px-2 pb-2 pt-4 sm:px-4">
+            <div className="mb-2 flex items-center justify-between gap-3 px-2 text-[10px] text-gray-500">
+              <span className="uppercase tracking-[0.18em] text-gray-600">Index</span>
+              <span>{selectedSeriesLabel ?? "对应走势"}</span>
             </div>
-            <div className="h-[220px] px-2 py-4 sm:px-4">
-              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 190 }}>
-                <LineChart data={chartData} margin={{ top: 12, right: 10, left: 0, bottom: 0 }} syncId="etf-flow-charts" syncMethod="value">
+            <div className="h-[260px]" data-testid="index-chart">
+              <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 260 }}>
+                <LineChart data={chartData} margin={{ top: 8, right: 12, left: 4, bottom: 0 }} syncId="etf-flow-charts" syncMethod="value">
                   <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
                   <XAxis dataKey="date" hide />
                   <YAxis width={50} domain={["auto", "auto"]} tick={{ fill: "#a88b65", fontSize: 10 }} tickFormatter={(value) => indexPoints(Number(value))} axisLine={false} tickLine={false} />
@@ -424,9 +432,14 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
             </div>
           </div>
         ) : null}
-        <div className="h-[390px] border border-white/10 bg-[#0d1215] px-2 py-4 sm:px-4">
-          <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 350 }}>
-            <ComposedChart data={chartData} margin={{ top: 12, right: 10, left: 0, bottom: 8 }} syncId="etf-flow-charts" syncMethod="value">
+        <div className="px-2 pb-4 pt-3 sm:px-4">
+          <div className="mb-2 flex items-center justify-between gap-3 px-2 text-[10px] text-gray-500">
+            <span className="uppercase tracking-[0.18em] text-gray-600">ETF Flow</span>
+            <span>{selectedViewLabel} · 日净申购 / 净赎回</span>
+          </div>
+          <div className="h-[360px]" data-testid="flow-chart">
+          <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1200, height: 360 }}>
+            <ComposedChart data={chartData} margin={{ top: 8, right: 12, left: 4, bottom: 8 }} syncId="etf-flow-charts" syncMethod="value">
               <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
               <XAxis dataKey="date" tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${String(value).slice(5)} ${weekdayLabel(String(value))}`} axisLine={{ stroke: "rgba(255,255,255,0.12)" }} tickLine={false} />
               <YAxis yAxisId="flow" width={50} tick={{ fill: "#7f8992", fontSize: 10 }} tickFormatter={(value) => `${value}亿`} axisLine={false} tickLine={false} />
@@ -436,6 +449,8 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               {showCumulative ? <Line yAxisId="overlay" dataKey="cumulative" name={overlayLabel} stroke="#d49a54" strokeWidth={2} dot={false} activeDot={{ r: 3 }} connectNulls isAnimationActive={false} /> : null}
             </ComposedChart>
           </ResponsiveContainer>
+          </div>
+        </div>
         </div>
       </section>
 
@@ -447,7 +462,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
               {group.rows.map((fund) => (
                 <div key={fund.code} className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 py-3 text-xs">
                   <span className="font-mono text-gray-600">{fund.code}</span>
-                  <span className="min-w-0"><span className="block truncate text-gray-300">{fund.fullName ?? fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fundManagerLabel(fund.fundManager) ? `${fundManagerLabel(fund.fundManager)} · ` : ""}{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
+                  <span className="min-w-0"><span className="block truncate text-gray-300">{fundDisplayName(fund)}</span><span className="mt-1 block text-[10px] text-gray-600">{fundManagerLabel(fund.fundManager) ? `${fundManagerLabel(fund.fundManager)} · ` : ""}{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
                   <span className="text-right font-mono" style={{ color: tone((fund.estimatedNetFlowCny ?? 0) / 100_000_000) }}>{yi((fund.estimatedNetFlowCny ?? 0) / 100_000_000)}</span>
                 </div>
               ))}
@@ -465,7 +480,7 @@ export default function BroadEtfFlowDashboard({ data, indexSeriesBaseUrl }: { da
           {completeMemberFunds.map((fund) => (
             <div className="grid grid-cols-[56px_minmax(0,1fr)_82px] items-center gap-3 border-b border-white/[0.07] px-4 py-3 text-xs lg:odd:border-r" key={`${fund.exchange}-${fund.code}`}>
               <span className="font-mono text-gray-600">{fund.code}</span>
-              <span className="min-w-0"><span className="block truncate text-gray-300">{fund.fullName ?? fund.name}</span><span className="mt-1 block text-[10px] text-gray-600">{fundManagerLabel(fund.fundManager) ? `${fundManagerLabel(fund.fundManager)} · ` : ""}{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
+              <span className="min-w-0"><span className="block truncate text-gray-300">{fundDisplayName(fund)}</span><span className="mt-1 block text-[10px] text-gray-600">{fundManagerLabel(fund.fundManager) ? `${fundManagerLabel(fund.fundManager)} · ` : ""}{fund.segment ?? fund.benchmark ?? fund.primaryCategory} · {fund.exchange === "SSE" ? "沪市" : "深市"}</span></span>
               <span className="text-right font-medium" style={{ color: tone(fund.estimatedNetFlowCny == null ? null : fund.estimatedNetFlowCny / 100_000_000) }}>{fund.estimatedNetFlowCny == null ? "未计价" : yi(fund.estimatedNetFlowCny / 100_000_000)}</span>
             </div>
           ))}
