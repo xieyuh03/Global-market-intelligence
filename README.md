@@ -8,6 +8,8 @@ ETF 申赎页位于 `/market/etf-flows/`，使用沪深交易所份额变化估�
 
 恒生指数领航页位于 `/market/hk-leading/`，将香港 M2 总额同比、内地 PPI 同比、内地社零同比和信用脉冲代理（6个月新增社融除以最近两个季度名义 GDP，取3个月均值）按 25% 等权合成。数据近似按发布月对齐，每项使用最长36个月滚动标准化，并公开全量月频 CSV、因子贡献、探索性拐点配对和未来3/6/9/12个月统计。
 
+中美货币承载页位于 `/market/monetary/`。它用“货币与生产偏差 + 货币流通偏差 + 市场边界偏差”计算方向性总分，并展开每项对总分的贡献。运行 `npm run data:refresh-monetary` 可刷新世界银行年度数据。
+
 - Website: <https://xieyuh03.github.io/Global-market-intelligence/>
 - Source mirror: <https://github.com/xieyuh03/Global-market-intelligence>
 - Data boundary: 公开价格、模型结果和经过裁剪的账本快照，不包含账户、持仓、交易、成本、Futu 或数据库凭据

@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-22T07:47:19.012Z",
+  "methodology": {
+    "version": "1.0.0",
+    "scoreRange": "-100（货币不足）至 +100（货币过量）",
+    "matchFormula": "100 - |货币承载偏差指数|",
+    "supplyFormula": "20%×1年偏差 + 50%×3年偏差 + 30%×5年偏差；每1个百分点记10分",
+    "circulationFormula": "当期价格GDP÷广义货币，相对过去10年中间水平；偏离30%记100分",
+    "boundaryFormula": "约五年前国际使用指数 - 当前指数；每1点记10分",
+    "resultMetricsInScore": false
+  },
+  "countries": [
+    {
+      "code": "US",
+      "name": "美国",
+      "currency": "美元",
+      "asOf": "2025",
+      "score": 11.7,
+      "matchScore": 88.3,
+      "state": "balanced",
+      "stateLabel": "总体接近匹配",
+      "summary": "货币、真实生产和使用范围目前没有形成明显的单向失衡。",
+      "weights": {
+        "supply": 0.5,
+        "circulation": 0.2,
+        "boundary": 0.3
+      },
+      "horizons": [
+        {
+          "years": 1,
+          "weight": 0.2,
+          "moneyGrowthPct": 6.04,
+          "realOutputGrowthPct": 2.16,
+          "gapPct": 3.88
+        },
+        {
+          "years": 3,
+          "weight": 0.5,
+          "moneyGrowthPct": 4.37,
+          "realOutputGrowthPct": 2.63,
+          "gapPct": 1.74
+        },
+        {
+          "years": 5,
+          "weight": 0.3,
+          "moneyGrowthPct": 5.24,
+          "realOutputGrowthPct": 3.3,
+          "gapPct": 1.93
+        }
+      ],
+      "weightedGapPct": 2.22,
+      "currentOutputPerMoney": 1.0028,
+      "normalOutputPerMoney": 1.0123,
+      "boundary": {
+        "currentIndex": 67.5,
+        "referenceIndex": 67.5,
+        "currentLabel": "2024",
+        "referenceLabel": "约2019",
+        "asOf": "2024",
+        "estimated": true,
+        "source": "Federal Reserve FEDS Notes：美元国际使用指数自2010年以来处于65至70，近五年基本稳定",
+        "sourceUrl": "https://www.federalreserve.gov/econres/notes/feds-notes/the-international-role-of-the-u-s-dollar-2025-edition-20250718.html"
+      },
+      "components": [
+        {
+          "id": "supply",
+          "label": "货币与生产偏差",
+          "score": 22.2,
+          "weight": 0.5,
+          "contribution": 11.1,
+          "formula": "广义货币增速 - 实际GDP增速",
+          "explanation": "1年、3年和5年偏差加权后为 2.22 个百分点。"
+        },
+        {
+          "id": "circulation",
+          "label": "货币流通偏差",
+          "score": 3.1,
+          "weight": 0.2,
+          "contribution": 0.6,
+          "formula": "当期价格GDP ÷ 广义货币，与过去10年中间水平比较",
+          "explanation": "当前每单位货币支撑 1.003 单位年产出，过去10年中间水平为 1.012。"
+        },
+        {
+          "id": "boundary",
+          "label": "货币市场边界偏差",
+          "score": 0,
+          "weight": 0.3,
+          "contribution": 0,
+          "formula": "五年前国际使用指数 - 当前国际使用指数",
+          "explanation": "约2019约 67.5，2024约 67.5，为报告图表近似值。"
+        }
+      ],
+      "history": [
+        {
+          "year": 2005,
+          "broadMoney": 9447094076739.34,
+          "nominalGdp": 13039197000000,
+          "realGdp": 16847695210000,
+          "moneyGrowthPct": null,
+          "realOutputGrowthPct": null,
+          "gapPct": null,
+          "outputPerMoney": 1.3802
+        },
+        {
+          "year": 2006,
+          "broadMoney": 10297599323202.7,
+          "nominalGdp": 13815583000000,
+          "realGdp": 17316825961000,
+          "moneyGrowthPct": 9,
+          "realOutputGrowthPct": 2.78,
+          "gapPct": 6.22,
+          "outputPerMoney": 1.3416
+        },
+        {
+          "year": 2007,
+          "broadMoney": 11503807526482.2,
+          "nominalGdp": 14474228000000,
+          "realGdp": 17663830616000,
+          "moneyGrowthPct": 11.71,
+          "realOutputGrowthPct": 2,
+          "gapPct": 9.71,
+          "outputPerMoney": 1.2582
+        },
+        {
+          "year": 2008,
+          "broadMoney": 12444255813345.6,
+          "nominalGdp": 14769862000000,
+          "realGdp": 17683894475000,
+          "moneyGrowthPct": 8.18,
+          "realOutputGrowthPct": 0.11,
+          "gapPct": 8.06,
+          "outputPerMoney": 1.1869
+        },
+        {
+          "year": 2009,
+          "broadMoney": 13130258002953,
+          "nominalGdp": 14478067000000,
+          "realGdp": 17228268892000,
+          "moneyGrowthPct": 5.51,
+          "realOutputGrowthPct": -2.58,
+          "gapPct": 8.09,
+          "outputPerMoney": 1.1026
+        },
+        {
+          "year": 2010,
+          "broadMoney": 12768868670908.1,
+          "nominalGdp": 15048971000000,
+          "realGdp": 17692603918000,
+          "moneyGrowthPct": -2.75,
+          "realOutputGrowthPct": 2.7,
+          "gapPct": -5.45,
+          "outputPerMoney": 1.1786
+        },
+        {
+          "year": 2011,
+          "broadMoney": 13622257521129.8,
+          "nominalGdp": 15599732000000,
+          "realGdp": 17969388226000,
+          "moneyGrowthPct": 6.68,
+          "realOutputGrowthPct": 1.56,
+          "gapPct": 5.12,
+          "outputPerMoney": 1.1452
+        },
+        {
+          "year": 2012,
+          "broadMoney": 14289978816859.1,
+          "nominalGdp": 16253970000000,
+          "realGdp": 18380727898000,
+          "moneyGrowthPct": 4.9,
+          "realOutputGrowthPct": 2.29,
+          "gapPct": 2.61,
+          "outputPerMoney": 1.1374
+        },
+        {
+          "year": 2013,
+          "broadMoney": 14933186984470.5,
+          "nominalGdp": 16880683000000,
+          "realGdp": 18770000485000,
+          "moneyGrowthPct": 4.5,
+          "realOutputGrowthPct": 2.12,
+          "gapPct": 2.38,
+          "outputPerMoney": 1.1304
+        },
+        {
+          "year": 2014,
+          "broadMoney": 15706487072700,
+          "nominalGdp": 17608138000000,
+          "realGdp": 19243721477000,
+          "moneyGrowthPct": 5.18,
+          "realOutputGrowthPct": 2.52,
+          "gapPct": 2.65,
+          "outputPerMoney": 1.1211
+        },
+        {
+          "year": 2015,
+          "broadMoney": 16200148206841,
+          "nominalGdp": 18295019000000,
+          "realGdp": 19810555002000,
+          "moneyGrowthPct": 3.14,
+          "realOutputGrowthPct": 2.95,
+          "gapPct": 0.2,
+          "outputPerMoney": 1.1293
+        },
+        {
+          "year": 2016,
+          "broadMoney": 16823761856960.4,
+          "nominalGdp": 18804913000000,
+          "realGdp": 20170998438000,
+          "moneyGrowthPct": 3.85,
+          "realOutputGrowthPct": 1.82,
+          "gapPct": 2.03,
+          "outputPerMoney": 1.1178
+        },
+        {
+          "year": 2017,
+          "broadMoney": 17631631156299,
+          "nominalGdp": 19612102000000,
+          "realGdp": 20666725394000,
+          "moneyGrowthPct": 4.8,
+          "realOutputGrowthPct": 2.46,
+          "gapPct": 2.34,
+          "outputPerMoney": 1.1123
+        },
+        {
+          "year": 2018,
+          "broadMoney": 18342259948911.8,
+          "nominalGdp": 20656516000000,
+          "realGdp": 21279804850000,
+          "moneyGrowthPct": 4.03,
+          "realOutputGrowthPct": 2.97,
+          "gapPct": 1.06,
+          "outputPerMoney": 1.1262
+        },
+        {
+          "year": 2019,
+          "broadMoney": 19881523881838,
+          "nominalGdp": 21539982000000,
+          "realGdp": 21829637838000,
+          "moneyGrowthPct": 8.39,
+          "realOutputGrowthPct": 2.58,
+          "gapPct": 5.81,
+          "outputPerMoney": 1.0834
+        },
+        {
+          "year": 2020,
+          "broadMoney": 23770313723022.1,
+          "nominalGdp": 21375281000000,
+          "realGdp": 21375281000000,
+          "moneyGrowthPct": 19.56,
+          "realOutputGrowthPct": -2.08,
+          "gapPct": 21.64,
+          "outputPerMoney": 0.8992
+        },
+        {
+          "year": 2021,
+          "broadMoney": 27226400122735.2,
+          "nominalGdp": 23725645000000,
+          "realGdp": 22690293092000,
+          "moneyGrowthPct": 14.54,
+          "realOutputGrowthPct": 6.15,
+          "gapPct": 8.39,
+          "outputPerMoney": 0.8714
+        },
+        {
+          "year": 2022,
+          "broadMoney": 26990850883895.3,
+          "nominalGdp": 26054614000000,
+          "realGdp": 23263044613000,
+          "moneyGrowthPct": -0.87,
+          "realOutputGrowthPct": 2.52,
+          "gapPct": -3.39,
+          "outputPerMoney": 0.9653
+        },
+        {
+          "year": 2023,
+          "broadMoney": 27482023571609.9,
+          "nominalGdp": 27811517000000,
+          "realGdp": 23945666839000,
+          "moneyGrowthPct": 1.82,
+          "realOutputGrowthPct": 2.93,
+          "gapPct": -1.11,
+          "outputPerMoney": 1.012
+        },
+        {
+          "year": 2024,
+          "broadMoney": 28933621460271.9,
+          "nominalGdp": 29298013000000,
+          "realGdp": 24614514129000,
+          "moneyGrowthPct": 5.28,
+          "realOutputGrowthPct": 2.79,
+          "gapPct": 2.49,
+          "outputPerMoney": 1.0126
+        },
+        {
+          "year": 2025,
+          "broadMoney": 30682266669837.5,
+          "nominalGdp": 30769700000000,
+          "realGdp": 25146527796000,
+          "moneyGrowthPct": 6.04,
+          "realOutputGrowthPct": 2.16,
+          "gapPct": 3.88,
+          "outputPerMoney": 1.0028
+        }
+      ]
+    },
+    {
+      "code": "CN",
+      "name": "中国",
+      "currency": "人民币",
+      "asOf": "2024",
+      "score": 38.5,
+      "matchScore": 61.5,
+      "state": "excess",
+      "stateLabel": "货币偏多",
+      "summary": "货币增长快于承载能力，但偏差可能仍被存款、资产或外部市场吸收。",
+      "weights": {
+        "supply": 0.7,
+        "circulation": 0.25,
+        "boundary": 0.05
+      },
+      "horizons": [
+        {
+          "years": 1,
+          "weight": 0.2,
+          "moneyGrowthPct": 6.81,
+          "realOutputGrowthPct": 4.96,
+          "gapPct": 1.85
+        },
+        {
+          "years": 3,
+          "weight": 0.5,
+          "moneyGrowthPct": 9.42,
+          "realOutputGrowthPct": 4.5,
+          "gapPct": 4.92
+        },
+        {
+          "years": 5,
+          "weight": 0.3,
+          "moneyGrowthPct": 9.47,
+          "realOutputGrowthPct": 4.86,
+          "gapPct": 4.61
+        }
+      ],
+      "weightedGapPct": 4.21,
+      "currentOutputPerMoney": 0.4392,
+      "normalOutputPerMoney": 0.4961,
+      "boundary": {
+        "currentIndex": 3,
+        "referenceIndex": 2,
+        "currentLabel": "2024",
+        "referenceLabel": "约2019",
+        "asOf": "2024",
+        "estimated": true,
+        "source": "Federal Reserve FEDS Notes：人民币国际使用指数升至约3，仍低于日元和英镑",
+        "sourceUrl": "https://www.federalreserve.gov/econres/notes/feds-notes/the-international-role-of-the-u-s-dollar-2025-edition-20250718.html"
+      },
+      "components": [
+        {
+          "id": "supply",
+          "label": "货币与生产偏差",
+          "score": 42.1,
+          "weight": 0.7,
+          "contribution": 29.5,
+          "formula": "广义货币增速 - 实际GDP增速",
+          "explanation": "1年、3年和5年偏差加权后为 4.21 个百分点。"
+        },
+        {
+          "id": "circulation",
+          "label": "货币流通偏差",
+          "score": 38.2,
+          "weight": 0.25,
+          "contribution": 9.5,
+          "formula": "当期价格GDP ÷ 广义货币，与过去10年中间水平比较",
+          "explanation": "当前每单位货币支撑 0.439 单位年产出，过去10年中间水平为 0.496。"
+        },
+        {
+          "id": "boundary",
+          "label": "货币市场边界偏差",
+          "score": -10,
+          "weight": 0.05,
+          "contribution": -0.5,
+          "formula": "五年前国际使用指数 - 当前国际使用指数",
+          "explanation": "约2019约 2，2024约 3，为报告图表近似值。"
+        }
+      ],
+      "history": [
+        {
+          "year": 2005,
+          "broadMoney": 28301227000000,
+          "nominalGdp": 18990750000000,
+          "realGdp": 31339491366000,
+          "moneyGrowthPct": null,
+          "realOutputGrowthPct": null,
+          "gapPct": null,
+          "outputPerMoney": 0.671
+        },
+        {
+          "year": 2006,
+          "broadMoney": 34560360000000,
+          "nominalGdp": 22257840000000,
+          "realGdp": 35311860972300,
+          "moneyGrowthPct": 22.12,
+          "realOutputGrowthPct": 12.68,
+          "gapPct": 9.44,
+          "outputPerMoney": 0.644
+        },
+        {
+          "year": 2007,
+          "broadMoney": 40344221000000,
+          "nominalGdp": 27417970000000,
+          "realGdp": 40308761572200,
+          "moneyGrowthPct": 16.74,
+          "realOutputGrowthPct": 14.15,
+          "gapPct": 2.58,
+          "outputPerMoney": 0.6796
+        },
+        {
+          "year": 2008,
+          "broadMoney": 47516660000000,
+          "nominalGdp": 32431780000000,
+          "realGdp": 44206125469900,
+          "moneyGrowthPct": 17.78,
+          "realOutputGrowthPct": 9.67,
+          "gapPct": 8.11,
+          "outputPerMoney": 0.6825
+        },
+        {
+          "year": 2009,
+          "broadMoney": 61022452307585.9,
+          "nominalGdp": 35452160000000,
+          "realGdp": 48364197901100,
+          "moneyGrowthPct": 28.42,
+          "realOutputGrowthPct": 9.41,
+          "gapPct": 19.02,
+          "outputPerMoney": 0.581
+        },
+        {
+          "year": 2010,
+          "broadMoney": 72585178555593.3,
+          "nominalGdp": 41925330000000,
+          "realGdp": 53486784001700,
+          "moneyGrowthPct": 18.95,
+          "realOutputGrowthPct": 10.59,
+          "gapPct": 8.36,
+          "outputPerMoney": 0.5776
+        },
+        {
+          "year": 2011,
+          "broadMoney": 85159087106100,
+          "nominalGdp": 49570760000000,
+          "realGdp": 58547731575400,
+          "moneyGrowthPct": 17.32,
+          "realOutputGrowthPct": 9.46,
+          "gapPct": 7.86,
+          "outputPerMoney": 0.5821
+        },
+        {
+          "year": 2012,
+          "broadMoney": 97414886583000,
+          "nominalGdp": 54751060000000,
+          "realGdp": 63148307023400,
+          "moneyGrowthPct": 14.39,
+          "realOutputGrowthPct": 7.86,
+          "gapPct": 6.53,
+          "outputPerMoney": 0.562
+        },
+        {
+          "year": 2013,
+          "broadMoney": 110652500263258,
+          "nominalGdp": 60366040000000,
+          "realGdp": 68060253595700,
+          "moneyGrowthPct": 13.59,
+          "realOutputGrowthPct": 7.78,
+          "gapPct": 5.81,
+          "outputPerMoney": 0.5455
+        },
+        {
+          "year": 2014,
+          "broadMoney": 122837482925283,
+          "nominalGdp": 65578290000000,
+          "realGdp": 73138234124200,
+          "moneyGrowthPct": 11.01,
+          "realOutputGrowthPct": 7.46,
+          "gapPct": 3.55,
+          "outputPerMoney": 0.5339
+        },
+        {
+          "year": 2015,
+          "broadMoney": 139227813190717,
+          "nominalGdp": 70251150000000,
+          "realGdp": 78244469574600,
+          "moneyGrowthPct": 13.34,
+          "realOutputGrowthPct": 6.98,
+          "gapPct": 6.36,
+          "outputPerMoney": 0.5046
+        },
+        {
+          "year": 2016,
+          "broadMoney": 155006666873100,
+          "nominalGdp": 76119300000000,
+          "realGdp": 83544506358200,
+          "moneyGrowthPct": 11.33,
+          "realOutputGrowthPct": 6.77,
+          "gapPct": 4.56,
+          "outputPerMoney": 0.4911
+        },
+        {
+          "year": 2017,
+          "broadMoney": 167577363382557,
+          "nominalGdp": 84738290000000,
+          "realGdp": 89301758101700,
+          "moneyGrowthPct": 8.11,
+          "realOutputGrowthPct": 6.89,
+          "gapPct": 1.22,
+          "outputPerMoney": 0.5057
+        },
+        {
+          "year": 2018,
+          "broadMoney": 179292800240995,
+          "nominalGdp": 93601010000000,
+          "realGdp": 95336597795900,
+          "moneyGrowthPct": 6.99,
+          "realOutputGrowthPct": 6.76,
+          "gapPct": 0.23,
+          "outputPerMoney": 0.5221
+        },
+        {
+          "year": 2019,
+          "broadMoney": 195218087092332,
+          "nominalGdp": 100587240000000,
+          "realGdp": 101121029616900,
+          "moneyGrowthPct": 8.88,
+          "realOutputGrowthPct": 6.07,
+          "gapPct": 2.81,
+          "outputPerMoney": 0.5153
+        },
+        {
+          "year": 2020,
+          "broadMoney": 214766371891765,
+          "nominalGdp": 103486760000000,
+          "realGdp": 103486760000000,
+          "moneyGrowthPct": 10.01,
+          "realOutputGrowthPct": 2.34,
+          "gapPct": 7.67,
+          "outputPerMoney": 0.4819
+        },
+        {
+          "year": 2021,
+          "broadMoney": 234258021725870,
+          "nominalGdp": 117382300000000,
+          "realGdp": 112355972876200,
+          "moneyGrowthPct": 9.08,
+          "realOutputGrowthPct": 8.57,
+          "gapPct": 0.51,
+          "outputPerMoney": 0.5011
+        },
+        {
+          "year": 2022,
+          "broadMoney": 261580238098694,
+          "nominalGdp": 123402940000000,
+          "realGdp": 115877045457800,
+          "moneyGrowthPct": 11.66,
+          "realOutputGrowthPct": 3.13,
+          "gapPct": 8.53,
+          "outputPerMoney": 0.4718
+        },
+        {
+          "year": 2023,
+          "broadMoney": 287342842925609,
+          "nominalGdp": 129427170000000,
+          "realGdp": 122152950115800,
+          "moneyGrowthPct": 9.85,
+          "realOutputGrowthPct": 5.42,
+          "gapPct": 4.43,
+          "outputPerMoney": 0.4504
+        },
+        {
+          "year": 2024,
+          "broadMoney": 306912922284009,
+          "nominalGdp": 134806620000000,
+          "realGdp": 128209664468400,
+          "moneyGrowthPct": 6.81,
+          "realOutputGrowthPct": 4.96,
+          "gapPct": 1.85,
+          "outputPerMoney": 0.4392
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Broad money (current LCU)",
+      "organization": "World Bank",
+      "url": "https://data.worldbank.org/indicator/FM.LBL.BMNY.CN",
+      "note": "作为中美广义货币的统一近似口径。"
+    },
+    {
+      "name": "GDP (current and constant LCU)",
+      "organization": "World Bank",
+      "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CN",
+      "note": "实际GDP用于生产增长，当期价格GDP用于计算每单位货币支撑的年产出。"
+    },
+    {
+      "name": "The International Role of the U.S. Dollar – 2025 Edition",
+      "organization": "Federal Reserve Board",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/the-international-role-of-the-u-s-dollar-2025-edition-20250718.html",
+      "note": "提供美元和人民币国际使用综合指数；历史参考值由报告图表近似读取。"
+    }
+  ]
+}
