@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-20T06:52:05.193Z",
+  "generatedAt": "2026-10-29T09:46:38.333Z",
   "methodology": {
     "return": "daily log return from adjustedClose (indices have no distributions)",
     "realizedVolatility": "trailing 20/60 trading-day sample standard deviation, annualized with sqrt(252); forwardVol20 uses the next 20 returns",
@@ -38,41 +38,41 @@
       "id": "sp500",
       "name": "标普500",
       "source": "Yahoo Finance",
-      "received": 24796,
-      "valid": 24796,
+      "received": 24824,
+      "valid": 24824,
       "dropped": 0,
       "firstDate": "1927-12-30",
-      "lastDate": "2026-09-18"
+      "lastDate": "2026-10-28"
     },
     {
       "id": "nasdaq-composite",
       "name": "纳斯达克综合指数",
       "source": "Yahoo Finance",
-      "received": 14022,
-      "valid": 14022,
+      "received": 14050,
+      "valid": 14050,
       "dropped": 0,
       "firstDate": "1971-02-05",
-      "lastDate": "2026-09-18"
+      "lastDate": "2026-10-28"
     },
     {
       "id": "shanghai-composite",
       "name": "上证指数",
       "source": "东方财富",
-      "received": 8729,
-      "valid": 8729,
+      "received": 8752,
+      "valid": 8752,
       "dropped": 0,
       "firstDate": "1990-12-19",
-      "lastDate": "2026-09-18"
+      "lastDate": "2026-10-29"
     },
     {
       "id": "csi300",
       "name": "沪深300",
       "source": "东方财富",
-      "received": 5275,
-      "valid": 5275,
+      "received": 5298,
+      "valid": 5298,
       "dropped": 0,
       "firstDate": "2005-01-04",
-      "lastDate": "2026-09-18"
+      "lastDate": "2026-10-29"
     }
   ],
   "crossValidation": [
@@ -88,7 +88,7 @@
       "comparison": "FRED NASDAQCOM",
       "overlap": 500,
       "medianAbsolutePctError": 0.000002,
-      "maxAbsolutePctError": 0.035748
+      "maxAbsolutePctError": 0.006671
     }
   ],
   "files": {
