@@ -1,6 +1,6 @@
 {
   "manifest": {
-    "generatedAt": "2026-10-29T09:46:38.333Z",
+    "generatedAt": "2026-11-07T00:31:40.136Z",
     "methodology": {
       "return": "daily log return from adjustedClose (indices have no distributions)",
       "realizedVolatility": "trailing 20/60 trading-day sample standard deviation, annualized with sqrt(252); forwardVol20 uses the next 20 returns",
@@ -39,41 +39,41 @@
         "id": "sp500",
         "name": "标普500",
         "source": "Yahoo Finance",
-        "received": 24824,
-        "valid": 24824,
+        "received": 24831,
+        "valid": 24831,
         "dropped": 0,
         "firstDate": "1927-12-30",
-        "lastDate": "2026-10-28"
+        "lastDate": "2026-11-06"
       },
       {
         "id": "nasdaq-composite",
         "name": "纳斯达克综合指数",
         "source": "Yahoo Finance",
-        "received": 14050,
-        "valid": 14050,
+        "received": 14057,
+        "valid": 14057,
         "dropped": 0,
         "firstDate": "1971-02-05",
-        "lastDate": "2026-10-28"
+        "lastDate": "2026-11-06"
       },
       {
         "id": "shanghai-composite",
         "name": "上证指数",
         "source": "东方财富",
-        "received": 8752,
-        "valid": 8752,
+        "received": 8758,
+        "valid": 8758,
         "dropped": 0,
         "firstDate": "1990-12-19",
-        "lastDate": "2026-10-29"
+        "lastDate": "2026-11-06"
       },
       {
         "id": "csi300",
         "name": "沪深300",
         "source": "东方财富",
-        "received": 5298,
-        "valid": 5298,
+        "received": 5304,
+        "valid": 5304,
         "dropped": 0,
         "firstDate": "2005-01-04",
-        "lastDate": "2026-10-29"
+        "lastDate": "2026-11-06"
       }
     ],
     "crossValidation": [
@@ -107,22 +107,22 @@
       "market": "美国",
       "source": "Yahoo Finance",
       "firstDate": "1927-12-30",
-      "lastDate": "2026-10-28",
-      "observations": 24824,
-      "annualizedReturnPct": 6.37,
-      "annualizedVolatilityPct": 18.929,
-      "averageDailyReturnPct": 0.02451,
+      "lastDate": "2026-11-06",
+      "observations": 24831,
+      "annualizedReturnPct": 6.316,
+      "annualizedVolatilityPct": 18.933,
+      "averageDailyReturnPct": 0.0243,
       "worstDayPct": -22.9,
       "bestDayPct": 15.366,
-      "leverageEffectCorrelation": -0.0621,
-      "returnFutureVolatilityCorrelation": -0.0938,
-      "volatilityForward20ReturnCorrelation": 0.0138,
+      "leverageEffectCorrelation": -0.0629,
+      "returnFutureVolatilityCorrelation": -0.0939,
+      "volatilityForward20ReturnCorrelation": 0.0139,
       "volatilityPersistenceCorrelation": 0.8645,
       "forward20Regression": {
-        "intercept": 0.3878,
-        "slopePerVolPoint": 0.00673,
+        "intercept": 0.3862,
+        "slopePerVolPoint": 0.00677,
         "rSquared": 0.00019,
-        "samples": 24784
+        "samples": 24791
       },
       "shockAnalysis": {
         "negativeShockCutoffPct": -1.694,
@@ -138,84 +138,84 @@
         {
           "quintile": 1,
           "label": "最低波动",
-          "count": 4957,
+          "count": 4958,
           "volatilityRange": [
             2.38,
             8.6
           ],
-          "averageForward20ReturnPct": 0.411,
-          "medianForward20ReturnPct": 0.819,
-          "positiveRatePct": 61.37
+          "averageForward20ReturnPct": 0.41,
+          "medianForward20ReturnPct": 0.818,
+          "positiveRatePct": 61.36
         },
         {
           "quintile": 2,
           "label": "Q2",
-          "count": 4957,
+          "count": 4958,
           "volatilityRange": [
             8.6,
-            11.05
+            11.04
           ],
-          "averageForward20ReturnPct": 0.564,
-          "medianForward20ReturnPct": 0.863,
-          "positiveRatePct": 60.32
+          "averageForward20ReturnPct": 0.559,
+          "medianForward20ReturnPct": 0.86,
+          "positiveRatePct": 60.25
         },
         {
           "quintile": 3,
           "label": "Q3",
-          "count": 4956,
+          "count": 4958,
           "volatilityRange": [
-            11.05,
-            14.03
+            11.04,
+            14.02
           ],
-          "averageForward20ReturnPct": 0.493,
-          "medianForward20ReturnPct": 1.026,
-          "positiveRatePct": 60.88
+          "averageForward20ReturnPct": 0.492,
+          "medianForward20ReturnPct": 1.023,
+          "positiveRatePct": 60.87
         },
         {
           "quintile": 4,
           "label": "Q4",
-          "count": 4957,
+          "count": 4958,
           "volatilityRange": [
-            14.03,
+            14.02,
             19.83
           ],
-          "averageForward20ReturnPct": 0.595,
-          "medianForward20ReturnPct": 1.275,
+          "averageForward20ReturnPct": 0.596,
+          "medianForward20ReturnPct": 1.284,
           "positiveRatePct": 61.13
         },
         {
           "quintile": 5,
           "label": "最高波动",
-          "count": 4957,
+          "count": 4959,
           "volatilityRange": [
             19.83,
             107.47
           ],
           "averageForward20ReturnPct": 0.399,
           "medianForward20ReturnPct": 1.309,
-          "positiveRatePct": 57.72
+          "positiveRatePct": 57.73
         }
       ],
       "comparableSince2005": {
         "startDate": "2005-01-04",
-        "endDate": "2026-10-28",
-        "observations": 5489,
-        "annualizedReturnPct": 8.929,
-        "annualizedVolatilityPct": 18.986,
-        "leverageEffectCorrelation": -0.0822,
+        "endDate": "2026-11-06",
+        "observations": 5496,
+        "annualizedReturnPct": 8.675,
+        "annualizedVolatilityPct": 19.006,
+        "leverageEffectCorrelation": -0.0859,
         "returnFutureVolatilityCorrelation": -0.1256,
-        "volatilityForward20ReturnCorrelation": 0.0297,
+        "volatilityForward20ReturnCorrelation": 0.0302,
         "forward20Regression": {
-          "intercept": 0.49371,
-          "slopePerVolPoint": 0.01235,
-          "rSquared": 0.00088,
-          "samples": 5469
+          "intercept": 0.48608,
+          "slopePerVolPoint": 0.01255,
+          "rSquared": 0.00091,
+          "samples": 5476
         },
         "shockAnalysis": {
-          "negativeShockCutoffPct": -1.775,
+          "negativeShockCutoffPct": -1.774,
           "negativeShockCount": 274,
           "averageForwardVol20AfterNegativeShockPct": 30.307,
-          "positiveShockCutoffPct": 1.632,
+          "positiveShockCutoffPct": 1.631,
           "positiveShockCount": 274,
           "averageForwardVol20AfterPositiveShockPct": 25.064
         },
@@ -223,62 +223,62 @@
           {
             "quintile": 1,
             "label": "最低波动",
-            "count": 1094,
+            "count": 1095,
             "volatilityRange": [
               3.28,
               8.72
             ],
-            "averageForward20ReturnPct": 0.623,
-            "medianForward20ReturnPct": 1.126,
-            "positiveRatePct": 69.2
+            "averageForward20ReturnPct": 0.625,
+            "medianForward20ReturnPct": 1.129,
+            "positiveRatePct": 69.22
           },
           {
             "quintile": 2,
             "label": "Q2",
-            "count": 1094,
+            "count": 1095,
             "volatilityRange": [
               8.72,
-              11.1
+              11.09
             ],
-            "averageForward20ReturnPct": 0.346,
-            "medianForward20ReturnPct": 0.667,
-            "positiveRatePct": 60.24
+            "averageForward20ReturnPct": 0.325,
+            "medianForward20ReturnPct": 0.656,
+            "positiveRatePct": 60
           },
           {
             "quintile": 3,
             "label": "Q3",
-            "count": 1093,
+            "count": 1095,
             "volatilityRange": [
-              11.1,
+              11.09,
               14.52
             ],
-            "averageForward20ReturnPct": 0.728,
-            "medianForward20ReturnPct": 1.614,
-            "positiveRatePct": 68.34
+            "averageForward20ReturnPct": 0.725,
+            "medianForward20ReturnPct": 1.611,
+            "positiveRatePct": 68.31
           },
           {
             "quintile": 4,
             "label": "Q4",
-            "count": 1094,
+            "count": 1095,
             "volatilityRange": [
               14.52,
               20.15
             ],
-            "averageForward20ReturnPct": 0.854,
-            "medianForward20ReturnPct": 1.98,
-            "positiveRatePct": 68.19
+            "averageForward20ReturnPct": 0.868,
+            "medianForward20ReturnPct": 1.981,
+            "positiveRatePct": 68.22
           },
           {
             "quintile": 5,
             "label": "最高波动",
-            "count": 1094,
+            "count": 1096,
             "volatilityRange": [
               20.15,
               97.9
             ],
-            "averageForward20ReturnPct": 0.887,
-            "medianForward20ReturnPct": 1.994,
-            "positiveRatePct": 63.35
+            "averageForward20ReturnPct": 0.87,
+            "medianForward20ReturnPct": 1.99,
+            "positiveRatePct": 63.23
           }
         ]
       },
@@ -345,9 +345,9 @@
         },
         {
           "decade": "2020s",
-          "observations": 1715,
-          "annualizedReturnPct": 13.707,
-          "annualizedVolatilityPct": 20.175
+          "observations": 1722,
+          "annualizedReturnPct": 12.843,
+          "annualizedVolatilityPct": 20.231
         }
       ]
     },
@@ -357,25 +357,25 @@
       "market": "美国",
       "source": "Yahoo Finance",
       "firstDate": "1971-02-05",
-      "lastDate": "2026-10-28",
-      "observations": 14050,
-      "annualizedReturnPct": 10.53,
-      "annualizedVolatilityPct": 20.145,
-      "averageDailyReturnPct": 0.03973,
+      "lastDate": "2026-11-06",
+      "observations": 14057,
+      "annualizedReturnPct": 10.372,
+      "annualizedVolatilityPct": 20.162,
+      "averageDailyReturnPct": 0.03916,
       "worstDayPct": -13.149,
       "bestDayPct": 13.255,
-      "leverageEffectCorrelation": -0.0671,
+      "leverageEffectCorrelation": -0.0689,
       "returnFutureVolatilityCorrelation": -0.1137,
-      "volatilityForward20ReturnCorrelation": -0.0093,
+      "volatilityForward20ReturnCorrelation": -0.0091,
       "volatilityPersistenceCorrelation": 0.8762,
       "forward20Regression": {
-        "intercept": 0.87315,
-        "slopePerVolPoint": -0.00494,
-        "rSquared": 0.00009,
-        "samples": 14010
+        "intercept": 0.86742,
+        "slopePerVolPoint": -0.00486,
+        "rSquared": 0.00008,
+        "samples": 14017
       },
       "shockAnalysis": {
-        "negativeShockCutoffPct": -2.031,
+        "negativeShockCutoffPct": -2.03,
         "negativeShockCount": 702,
         "averageForward20AfterNegativeShockPct": 0.125,
         "averageForwardVol20AfterNegativeShockPct": 32.902,
@@ -388,81 +388,81 @@
         {
           "quintile": 1,
           "label": "最低波动",
-          "count": 2802,
+          "count": 2804,
           "volatilityRange": [
             3.33,
             8.85
           ],
-          "averageForward20ReturnPct": 0.871,
-          "medianForward20ReturnPct": 1.004,
-          "positiveRatePct": 61.92
+          "averageForward20ReturnPct": 0.87,
+          "medianForward20ReturnPct": 1,
+          "positiveRatePct": 61.91
         },
         {
           "quintile": 2,
           "label": "Q2",
-          "count": 2802,
+          "count": 2803,
           "volatilityRange": [
             8.85,
             11.76
           ],
           "averageForward20ReturnPct": 0.267,
           "medianForward20ReturnPct": 1.106,
-          "positiveRatePct": 60.17
+          "positiveRatePct": 60.19
         },
         {
           "quintile": 3,
           "label": "Q3",
-          "count": 2802,
+          "count": 2803,
           "volatilityRange": [
             11.76,
-            15.5
+            15.49
           ],
-          "averageForward20ReturnPct": 0.745,
-          "medianForward20ReturnPct": 1.25,
-          "positiveRatePct": 60.67
+          "averageForward20ReturnPct": 0.72,
+          "medianForward20ReturnPct": 1.234,
+          "positiveRatePct": 60.51
         },
         {
           "quintile": 4,
           "label": "Q4",
-          "count": 2802,
+          "count": 2803,
           "volatilityRange": [
-            15.5,
+            15.49,
             22.16
           ],
-          "averageForward20ReturnPct": 1.63,
-          "medianForward20ReturnPct": 2.296,
-          "positiveRatePct": 67.95
+          "averageForward20ReturnPct": 1.632,
+          "medianForward20ReturnPct": 2.294,
+          "positiveRatePct": 67.93
         },
         {
           "quintile": 5,
           "label": "最高波动",
-          "count": 2802,
+          "count": 2804,
           "volatilityRange": [
             22.16,
             95.51
           ],
-          "averageForward20ReturnPct": 0.442,
-          "medianForward20ReturnPct": 1.578,
-          "positiveRatePct": 57.07
+          "averageForward20ReturnPct": 0.443,
+          "medianForward20ReturnPct": 1.589,
+          "positiveRatePct": 57.1
         }
       ],
       "comparableSince2005": {
         "startDate": "2005-01-04",
-        "endDate": "2026-10-28",
-        "observations": 5489,
-        "annualizedReturnPct": 12.227,
-        "annualizedVolatilityPct": 21.638,
-        "leverageEffectCorrelation": -0.0754,
+        "endDate": "2026-11-06",
+        "observations": 5496,
+        "annualizedReturnPct": 11.814,
+        "annualizedVolatilityPct": 21.676,
+        "leverageEffectCorrelation": -0.0794,
         "returnFutureVolatilityCorrelation": -0.1244,
-        "volatilityForward20ReturnCorrelation": 0.0416,
+        "volatilityForward20ReturnCorrelation": 0.0424,
         "forward20Regression": {
-          "intercept": 0.55309,
-          "slopePerVolPoint": 0.02042,
-          "rSquared": 0.00173,
-          "samples": 5469
+          "intercept": 0.534,
+          "slopePerVolPoint": 0.02085,
+          "rSquared": 0.0018,
+          "samples": 5476
         },
         "shockAnalysis": {
-          "negativeShockCutoffPct": -2.182,
+          "negativeShockCutoffPct": -2.18,
           "negativeShockCount": 274,
           "averageForwardVol20AfterNegativeShockPct": 32.887,
           "positiveShockCutoffPct": 1.98,
@@ -473,62 +473,62 @@
           {
             "quintile": 1,
             "label": "最低波动",
-            "count": 1094,
+            "count": 1095,
             "volatilityRange": [
               5.43,
               11.25
             ],
-            "averageForward20ReturnPct": 0.707,
-            "medianForward20ReturnPct": 1.254,
-            "positiveRatePct": 66.27
+            "averageForward20ReturnPct": 0.711,
+            "medianForward20ReturnPct": 1.258,
+            "positiveRatePct": 66.3
           },
           {
             "quintile": 2,
             "label": "Q2",
-            "count": 1094,
+            "count": 1095,
             "volatilityRange": [
               11.25,
               14.03
             ],
-            "averageForward20ReturnPct": 0.494,
-            "medianForward20ReturnPct": 1.104,
-            "positiveRatePct": 61.79
+            "averageForward20ReturnPct": 0.477,
+            "medianForward20ReturnPct": 1.094,
+            "positiveRatePct": 61.64
           },
           {
             "quintile": 3,
             "label": "Q3",
-            "count": 1093,
+            "count": 1095,
             "volatilityRange": [
               14.03,
-              18.03
+              18
             ],
-            "averageForward20ReturnPct": 1.17,
-            "medianForward20ReturnPct": 1.779,
-            "positiveRatePct": 68.16
+            "averageForward20ReturnPct": 1.128,
+            "medianForward20ReturnPct": 1.773,
+            "positiveRatePct": 67.95
           },
           {
             "quintile": 4,
             "label": "Q4",
-            "count": 1094,
+            "count": 1095,
             "volatilityRange": [
-              18.03,
-              24.28
+              18,
+              24.26
             ],
-            "averageForward20ReturnPct": 1.392,
-            "medianForward20ReturnPct": 2.762,
-            "positiveRatePct": 68.74
+            "averageForward20ReturnPct": 1.381,
+            "medianForward20ReturnPct": 2.757,
+            "positiveRatePct": 68.68
           },
           {
             "quintile": 5,
             "label": "最高波动",
-            "count": 1094,
+            "count": 1096,
             "volatilityRange": [
-              24.28,
+              24.26,
               95.51
             ],
-            "averageForward20ReturnPct": 0.921,
+            "averageForward20ReturnPct": 0.93,
             "medianForward20ReturnPct": 1.755,
-            "positiveRatePct": 59.14
+            "positiveRatePct": 59.12
           }
         ]
       },
@@ -565,9 +565,9 @@
         },
         {
           "decade": "2020s",
-          "observations": 1715,
-          "annualizedReturnPct": 17.281,
-          "annualizedVolatilityPct": 24.63
+          "observations": 1722,
+          "annualizedReturnPct": 15.89,
+          "annualizedVolatilityPct": 24.724
         }
       ]
     },
@@ -577,29 +577,29 @@
       "market": "中国",
       "source": "东方财富",
       "firstDate": "1990-12-19",
-      "lastDate": "2026-10-29",
-      "observations": 8752,
-      "annualizedReturnPct": 10.917,
-      "annualizedVolatilityPct": 33.168,
-      "averageDailyReturnPct": 0.04111,
+      "lastDate": "2026-11-06",
+      "observations": 8758,
+      "annualizedReturnPct": 10.907,
+      "annualizedVolatilityPct": 33.161,
+      "averageDailyReturnPct": 0.04108,
       "worstDayPct": -17.905,
       "bestDayPct": 71.915,
       "leverageEffectCorrelation": 0.2842,
-      "returnFutureVolatilityCorrelation": 0.0197,
-      "volatilityForward20ReturnCorrelation": 0.0053,
-      "volatilityPersistenceCorrelation": 0.7992,
+      "returnFutureVolatilityCorrelation": 0.0198,
+      "volatilityForward20ReturnCorrelation": 0.0056,
+      "volatilityPersistenceCorrelation": 0.7993,
       "forward20Regression": {
-        "intercept": 0.70414,
-        "slopePerVolPoint": 0.00262,
+        "intercept": 0.69717,
+        "slopePerVolPoint": 0.00274,
         "rSquared": 0.00003,
-        "samples": 8712
+        "samples": 8718
       },
       "shockAnalysis": {
         "negativeShockCutoffPct": -2.654,
         "negativeShockCount": 437,
         "averageForward20AfterNegativeShockPct": 0.582,
         "averageForwardVol20AfterNegativeShockPct": 46.279,
-        "positiveShockCutoffPct": 2.606,
+        "positiveShockCutoffPct": 2.605,
         "positiveShockCount": 437,
         "averageForward20AfterPositiveShockPct": 3.071,
         "averageForwardVol20AfterPositiveShockPct": 47.345
@@ -608,147 +608,147 @@
         {
           "quintile": 1,
           "label": "最低波动",
-          "count": 1743,
+          "count": 1744,
           "volatilityRange": [
             0.49,
-            12.33
+            12.32
           ],
-          "averageForward20ReturnPct": 1.369,
-          "medianForward20ReturnPct": 0.642,
-          "positiveRatePct": 55.25
+          "averageForward20ReturnPct": 1.359,
+          "medianForward20ReturnPct": 0.638,
+          "positiveRatePct": 55.16
         },
         {
           "quintile": 2,
           "label": "Q2",
-          "count": 1742,
+          "count": 1743,
           "volatilityRange": [
-            12.33,
-            16.42
+            12.32,
+            16.41
           ],
-          "averageForward20ReturnPct": 0.573,
-          "medianForward20ReturnPct": -0.113,
-          "positiveRatePct": 49.08
+          "averageForward20ReturnPct": 0.571,
+          "medianForward20ReturnPct": -0.119,
+          "positiveRatePct": 49
         },
         {
           "quintile": 3,
           "label": "Q3",
-          "count": 1742,
+          "count": 1744,
           "volatilityRange": [
-            16.42,
+            16.41,
             21.78
           ],
-          "averageForward20ReturnPct": 0.886,
+          "averageForward20ReturnPct": 0.876,
           "medianForward20ReturnPct": 0.199,
-          "positiveRatePct": 51.89
+          "positiveRatePct": 51.83
         },
         {
           "quintile": 4,
           "label": "Q4",
-          "count": 1742,
+          "count": 1743,
           "volatilityRange": [
             21.78,
             33
           ],
-          "averageForward20ReturnPct": 0.943,
-          "medianForward20ReturnPct": 0.271,
-          "positiveRatePct": 51.26
+          "averageForward20ReturnPct": 0.942,
+          "medianForward20ReturnPct": 0.27,
+          "positiveRatePct": 51.29
         },
         {
           "quintile": 5,
           "label": "最高波动",
-          "count": 1743,
+          "count": 1744,
           "volatilityRange": [
             33,
             267.05
           ],
-          "averageForward20ReturnPct": 0.076,
-          "medianForward20ReturnPct": 0.445,
-          "positiveRatePct": 51.58
+          "averageForward20ReturnPct": 0.078,
+          "medianForward20ReturnPct": 0.447,
+          "positiveRatePct": 51.61
         }
       ],
       "comparableSince2005": {
         "startDate": "2005-01-04",
-        "endDate": "2026-10-29",
-        "observations": 5298,
-        "annualizedReturnPct": 5.165,
-        "annualizedVolatilityPct": 23.262,
-        "leverageEffectCorrelation": -0.1078,
-        "returnFutureVolatilityCorrelation": -0.0475,
-        "volatilityForward20ReturnCorrelation": -0.0945,
+        "endDate": "2026-11-06",
+        "observations": 5304,
+        "annualizedReturnPct": 5.156,
+        "annualizedVolatilityPct": 23.259,
+        "leverageEffectCorrelation": -0.1074,
+        "returnFutureVolatilityCorrelation": -0.0472,
+        "volatilityForward20ReturnCorrelation": -0.0937,
         "forward20Regression": {
-          "intercept": 1.63807,
-          "slopePerVolPoint": -0.05983,
-          "rSquared": 0.00893,
-          "samples": 5278
+          "intercept": 1.62061,
+          "slopePerVolPoint": -0.05931,
+          "rSquared": 0.00877,
+          "samples": 5284
         },
         "shockAnalysis": {
-          "negativeShockCutoffPct": -2.289,
-          "negativeShockCount": 264,
-          "averageForwardVol20AfterNegativeShockPct": 33.133,
-          "positiveShockCutoffPct": 2.203,
-          "positiveShockCount": 264,
-          "averageForwardVol20AfterPositiveShockPct": 30.727
+          "negativeShockCutoffPct": -2.288,
+          "negativeShockCount": 265,
+          "averageForwardVol20AfterNegativeShockPct": 33.081,
+          "positiveShockCutoffPct": 2.202,
+          "positiveShockCount": 265,
+          "averageForwardVol20AfterPositiveShockPct": 30.792
         },
         "volatilityQuintiles": [
           {
             "quintile": 1,
             "label": "最低波动",
-            "count": 1056,
+            "count": 1057,
             "volatilityRange": [
               4.37,
-              11.98
+              11.97
             ],
-            "averageForward20ReturnPct": 0.829,
-            "medianForward20ReturnPct": 0.716,
-            "positiveRatePct": 57.01
+            "averageForward20ReturnPct": 0.801,
+            "medianForward20ReturnPct": 0.679,
+            "positiveRatePct": 56.76
           },
           {
             "quintile": 2,
             "label": "Q2",
-            "count": 1055,
+            "count": 1057,
             "volatilityRange": [
-              11.98,
-              15.1
+              11.97,
+              15.09
             ],
-            "averageForward20ReturnPct": 0.652,
+            "averageForward20ReturnPct": 0.649,
             "medianForward20ReturnPct": 0.1,
-            "positiveRatePct": 50.81
+            "positiveRatePct": 50.71
           },
           {
             "quintile": 3,
             "label": "Q3",
             "count": 1056,
             "volatilityRange": [
-              15.1,
-              19.17
+              15.09,
+              19.14
             ],
-            "averageForward20ReturnPct": 0.829,
-            "medianForward20ReturnPct": -0.042,
-            "positiveRatePct": 49.72
+            "averageForward20ReturnPct": 0.837,
+            "medianForward20ReturnPct": -0.015,
+            "positiveRatePct": 49.91
           },
           {
             "quintile": 4,
             "label": "Q4",
-            "count": 1055,
+            "count": 1057,
             "volatilityRange": [
-              19.17,
-              27.6
+              19.14,
+              27.59
             ],
-            "averageForward20ReturnPct": 0.318,
-            "medianForward20ReturnPct": 0.785,
-            "positiveRatePct": 53.93
+            "averageForward20ReturnPct": 0.308,
+            "medianForward20ReturnPct": 0.715,
+            "positiveRatePct": 53.74
           },
           {
             "quintile": 5,
             "label": "最高波动",
-            "count": 1056,
+            "count": 1057,
             "volatilityRange": [
-              27.6,
+              27.59,
               68.06
             ],
-            "averageForward20ReturnPct": -0.525,
-            "medianForward20ReturnPct": 0.938,
-            "positiveRatePct": 54.73
+            "averageForward20ReturnPct": -0.523,
+            "medianForward20ReturnPct": 0.956,
+            "positiveRatePct": 54.78
           }
         ]
       },
@@ -773,9 +773,9 @@
         },
         {
           "decade": "2020s",
-          "observations": 1652,
-          "annualizedReturnPct": 2.783,
-          "annualizedVolatilityPct": 16.529
+          "observations": 1658,
+          "annualizedReturnPct": 2.763,
+          "annualizedVolatilityPct": 16.544
         }
       ]
     },
@@ -785,55 +785,55 @@
       "market": "中国",
       "source": "东方财富",
       "firstDate": "2005-01-04",
-      "lastDate": "2026-10-29",
-      "observations": 5298,
-      "annualizedReturnPct": 6.959,
-      "annualizedVolatilityPct": 25.076,
-      "averageDailyReturnPct": 0.0267,
+      "lastDate": "2026-11-06",
+      "observations": 5304,
+      "annualizedReturnPct": 6.966,
+      "annualizedVolatilityPct": 25.071,
+      "averageDailyReturnPct": 0.02672,
       "worstDayPct": -9.695,
       "bestDayPct": 8.931,
-      "leverageEffectCorrelation": -0.0875,
-      "returnFutureVolatilityCorrelation": -0.0439,
-      "volatilityForward20ReturnCorrelation": -0.0809,
+      "leverageEffectCorrelation": -0.0871,
+      "returnFutureVolatilityCorrelation": -0.0435,
+      "volatilityForward20ReturnCorrelation": -0.0799,
       "volatilityPersistenceCorrelation": 0.8597,
       "forward20Regression": {
-        "intercept": 1.74419,
-        "slopePerVolPoint": -0.05424,
-        "rSquared": 0.00655,
-        "samples": 5258
+        "intercept": 1.71945,
+        "slopePerVolPoint": -0.05355,
+        "rSquared": 0.00638,
+        "samples": 5264
       },
       "shockAnalysis": {
-        "negativeShockCutoffPct": -2.395,
-        "negativeShockCount": 264,
-        "averageForward20AfterNegativeShockPct": -0.596,
-        "averageForwardVol20AfterNegativeShockPct": 35.841,
+        "negativeShockCutoffPct": -2.394,
+        "negativeShockCount": 265,
+        "averageForward20AfterNegativeShockPct": -0.614,
+        "averageForwardVol20AfterNegativeShockPct": 35.762,
         "positiveShockCutoffPct": 2.459,
-        "positiveShockCount": 264,
-        "averageForward20AfterPositiveShockPct": 1.174,
-        "averageForwardVol20AfterPositiveShockPct": 32.114
+        "positiveShockCount": 265,
+        "averageForward20AfterPositiveShockPct": 1.179,
+        "averageForwardVol20AfterPositiveShockPct": 32.069
       },
       "volatilityQuintiles": [
         {
           "quintile": 1,
           "label": "最低波动",
-          "count": 1052,
+          "count": 1053,
           "volatilityRange": [
             4.26,
-            13.72
+            13.69
           ],
-          "averageForward20ReturnPct": 1.002,
-          "medianForward20ReturnPct": 0.844,
-          "positiveRatePct": 56.56
+          "averageForward20ReturnPct": 0.953,
+          "medianForward20ReturnPct": 0.815,
+          "positiveRatePct": 56.32
         },
         {
           "quintile": 2,
           "label": "Q2",
-          "count": 1051,
+          "count": 1053,
           "volatilityRange": [
-            13.72,
+            13.69,
             17.02
           ],
-          "averageForward20ReturnPct": 0.89,
+          "averageForward20ReturnPct": 0.901,
           "medianForward20ReturnPct": -0.058,
           "positiveRatePct": 49.57
         },
@@ -843,82 +843,82 @@
           "count": 1052,
           "volatilityRange": [
             17.02,
-            21.23
+            21.21
           ],
-          "averageForward20ReturnPct": 0.646,
-          "medianForward20ReturnPct": -0.038,
-          "positiveRatePct": 49.71
+          "averageForward20ReturnPct": 0.656,
+          "medianForward20ReturnPct": -0.019,
+          "positiveRatePct": 49.81
         },
         {
           "quintile": 4,
           "label": "Q4",
-          "count": 1051,
+          "count": 1053,
           "volatilityRange": [
-            21.23,
-            29.59
+            21.21,
+            29.57
           ],
-          "averageForward20ReturnPct": 0.178,
-          "medianForward20ReturnPct": 0.29,
-          "positiveRatePct": 51
+          "averageForward20ReturnPct": 0.16,
+          "medianForward20ReturnPct": 0.264,
+          "positiveRatePct": 50.81
         },
         {
           "quintile": 5,
           "label": "最高波动",
-          "count": 1052,
+          "count": 1053,
           "volatilityRange": [
-            29.59,
+            29.57,
             73.29
           ],
-          "averageForward20ReturnPct": -0.032,
-          "medianForward20ReturnPct": 1.377,
-          "positiveRatePct": 57.22
+          "averageForward20ReturnPct": -0.03,
+          "medianForward20ReturnPct": 1.375,
+          "positiveRatePct": 57.26
         }
       ],
       "comparableSince2005": {
         "startDate": "2005-01-04",
-        "endDate": "2026-10-29",
-        "observations": 5298,
-        "annualizedReturnPct": 6.959,
-        "annualizedVolatilityPct": 25.076,
-        "leverageEffectCorrelation": -0.0875,
-        "returnFutureVolatilityCorrelation": -0.0439,
-        "volatilityForward20ReturnCorrelation": -0.0809,
+        "endDate": "2026-11-06",
+        "observations": 5304,
+        "annualizedReturnPct": 6.966,
+        "annualizedVolatilityPct": 25.071,
+        "leverageEffectCorrelation": -0.0871,
+        "returnFutureVolatilityCorrelation": -0.0435,
+        "volatilityForward20ReturnCorrelation": -0.0799,
         "forward20Regression": {
-          "intercept": 1.74419,
-          "slopePerVolPoint": -0.05424,
-          "rSquared": 0.00655,
-          "samples": 5258
+          "intercept": 1.71945,
+          "slopePerVolPoint": -0.05355,
+          "rSquared": 0.00638,
+          "samples": 5264
         },
         "shockAnalysis": {
-          "negativeShockCutoffPct": -2.395,
-          "negativeShockCount": 264,
-          "averageForwardVol20AfterNegativeShockPct": 35.841,
+          "negativeShockCutoffPct": -2.394,
+          "negativeShockCount": 265,
+          "averageForwardVol20AfterNegativeShockPct": 35.762,
           "positiveShockCutoffPct": 2.459,
-          "positiveShockCount": 264,
-          "averageForwardVol20AfterPositiveShockPct": 32.114
+          "positiveShockCount": 265,
+          "averageForwardVol20AfterPositiveShockPct": 32.069
         },
         "volatilityQuintiles": [
           {
             "quintile": 1,
             "label": "最低波动",
-            "count": 1052,
+            "count": 1053,
             "volatilityRange": [
               4.26,
-              13.72
+              13.69
             ],
-            "averageForward20ReturnPct": 1.002,
-            "medianForward20ReturnPct": 0.844,
-            "positiveRatePct": 56.56
+            "averageForward20ReturnPct": 0.953,
+            "medianForward20ReturnPct": 0.815,
+            "positiveRatePct": 56.32
           },
           {
             "quintile": 2,
             "label": "Q2",
-            "count": 1051,
+            "count": 1053,
             "volatilityRange": [
-              13.72,
+              13.69,
               17.02
             ],
-            "averageForward20ReturnPct": 0.89,
+            "averageForward20ReturnPct": 0.901,
             "medianForward20ReturnPct": -0.058,
             "positiveRatePct": 49.57
           },
@@ -928,35 +928,35 @@
             "count": 1052,
             "volatilityRange": [
               17.02,
-              21.23
+              21.21
             ],
-            "averageForward20ReturnPct": 0.646,
-            "medianForward20ReturnPct": -0.038,
-            "positiveRatePct": 49.71
+            "averageForward20ReturnPct": 0.656,
+            "medianForward20ReturnPct": -0.019,
+            "positiveRatePct": 49.81
           },
           {
             "quintile": 4,
             "label": "Q4",
-            "count": 1051,
+            "count": 1053,
             "volatilityRange": [
-              21.23,
-              29.59
+              21.21,
+              29.57
             ],
-            "averageForward20ReturnPct": 0.178,
-            "medianForward20ReturnPct": 0.29,
-            "positiveRatePct": 51
+            "averageForward20ReturnPct": 0.16,
+            "medianForward20ReturnPct": 0.264,
+            "positiveRatePct": 50.81
           },
           {
             "quintile": 5,
             "label": "最高波动",
-            "count": 1052,
+            "count": 1053,
             "volatilityRange": [
-              29.59,
+              29.57,
               73.29
             ],
-            "averageForward20ReturnPct": -0.032,
-            "medianForward20ReturnPct": 1.377,
-            "positiveRatePct": 57.22
+            "averageForward20ReturnPct": -0.03,
+            "medianForward20ReturnPct": 1.375,
+            "positiveRatePct": 57.26
           }
         ]
       },
@@ -975,9 +975,9 @@
         },
         {
           "decade": "2020s",
-          "observations": 1652,
-          "annualizedReturnPct": -0.205,
-          "annualizedVolatilityPct": 18.935
+          "observations": 1658,
+          "annualizedReturnPct": -0.158,
+          "annualizedVolatilityPct": 18.941
         }
       ]
     }
